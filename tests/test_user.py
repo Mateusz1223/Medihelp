@@ -102,3 +102,53 @@ def test_user_remove_illness_typical():
     assert user.illnesses() == ['illness2']
     user.remove_illness('illness2')
     assert user.illnesses() == []
+
+
+def test_user_add_allergy_typical():
+    user = User(name='Dad', age=43)
+    assert user.allergies() == []
+    user.add_allergy('substance1')
+    assert user.allergies() == ['substance1']
+    user.add_allergy('substance2')
+    assert user.allergies() == ['substance1', 'substance2']
+
+
+def test_user_add_allergy_uppercase():
+    user = User(name='Dad', age=43)
+    assert user.allergies() == []
+    user.add_allergy('suBstaNce1')
+    assert user.allergies() == ['substance1']
+    user.add_allergy('Substance2')
+    assert user.allergies() == ['substance1', 'substance2']
+
+
+def test_user_add_allergy_empty_name():
+    user = User(name='Dad', age=43)
+    assert user.allergies() == []
+    with raises(InvalidNameError):
+        user.add_allergy('')
+
+
+def test_user_remove_allergy_typical():
+    user = User(name='Dad', age=43, allergies=['substance1', 'substance2'])
+    assert user.allergies() == ['substance1', 'substance2']
+    user.remove_allergy('substance1')
+    assert user.allergies() == ['substance2']
+    user.remove_allergy('substance2')
+    assert user.allergies() == []
+
+
+def test_user_add_prescription_typical():
+    user = User(name='Dad', age=43)
+    prescription1 = Prescription(medicine_name='Rutinorut', dosage=2, weekday=1)
+    prescription2 = Prescription(medicine_name='Ivermectin', dosage=1, weekday=7)
+    user.add_prescription(prescription1)
+    assert user.prescriptions() == [prescription1]
+    user.add_prescription(prescription2)
+    assert user.prescriptions() == [prescription1, prescription2]
+
+
+def test_user_add_prescription_different_type():
+    user = User(name='Dad', age=43)
+    with raises(ValueError):
+        user.add_prescription("Two doses of ivermectin every sunday")

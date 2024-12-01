@@ -1,4 +1,6 @@
 from .errors import InvalidNameError, InvalidAgeError
+from .prescription import Prescription
+
 
 class User:
     '''
@@ -11,11 +13,11 @@ class User:
     :ivar _age: Age of the user.
     :vartype _age: int
     :ivar _illnesses: List of illnesses that are cured by this medicine. Names should be written in lowercase.
-    :vartype _illnesses: list[str]
+    :vartype _illnesses: List[str]
     :ivar _allergies: List of active substances to which the user is allergic to. Names should be written in lowercase.
-    :vartype _allergies: list[str]
+    :vartype _allergies: List[str]
     :ivar _prescriptions: List of prescriptions that the user is subject to.
-    :vartype _prescriptions: list[Prescription]
+    :vartype _prescriptions: List[Prescription]
     '''
 
     def __init__(self, name, age, illnesses=[], allergies=[], prescriptions=[]):
@@ -24,12 +26,12 @@ class User:
         :type name: str
         :param age: Age of the user.
         :type age: int
-        :param illnesses: List of illnesses that are cured by this medicine. Names should be written in lowercase.
-        :type illnesses: list[str]
-        :param allergies: List of active substances to which the user is allergic to. Names should be written in lowercase.
-        :type allergies: list[str]
+        :param illnesses: List of illnesses that are cured by this medicine. Names of illneses are written in lowercase.
+        :type illnesses: List[str]
+        :param allergies: List of active substances to which the user is allergic to. Names of substances are written in lowercase.
+        :type allergies: List[str]
         :param prescriptions: List of prescriptions that the user is subject to.
-        :type prescriptions: list[Prescription]
+        :type prescriptions: List[Prescription]
         '''
 
         self.set_name(name)
@@ -40,6 +42,7 @@ class User:
         self._allergies = []
         for e in allergies:
             self.add_allergy(e)
+        self._prescriptions = []
         for e in prescriptions:
             self.add_prescription(e)
 
@@ -78,7 +81,7 @@ class User:
         '''
         Setter for _age
 
-        :param age: age to be set
+        :param age: new age
         :type age: int
         '''
 
@@ -107,7 +110,7 @@ class User:
         illness = str(illness).lower()
         if not illness:
             raise (InvalidNameError)
-        self._illnesses.insert(len(self._illnesses), illness)
+        self._illnesses.append(illness)
 
     def remove_illness(self, illness):
         '''
@@ -128,8 +131,28 @@ class User:
         '''
         return self._allergies
 
-    def add_allergy(self, allergy):
-        pass
+    def add_allergy(self, substance):
+        '''
+        Adds substance to the __allergies list
+
+        :param substance: substance name
+        :type substance: str
+        '''
+
+        substance = str(substance).lower()
+        if not substance:
+            raise (InvalidNameError)
+        self._allergies.append(substance)
+
+    def remove_allergy(self, substance):
+        '''
+        Removes substance from the _allergies list
+
+        :param substance: substance name
+        :type substance: str
+        '''
+
+        self._allergies.remove(substance)
 
     def prescriptions(self):
         '''
@@ -140,5 +163,22 @@ class User:
         '''
         return self._prescriptions
 
-    def add_prescription(self):
-        pass
+    def add_prescription(self, prescription):
+        '''
+        Adds prescription to the _prescriptions list
+
+        :param prescription: prescription
+        :type prescription: Prescription
+        '''
+        if type(prescription) is not Prescription:
+            raise (ValueError)
+        self._prescriptions.append(prescription)
+
+    def remove_prescription(self, prescription):
+        '''
+        Removes prescription from the _prescriptions list
+
+        :param prescription: prescription
+        :type prescription: Prescription
+        '''
+        self._prescriptions.remove(prescription)

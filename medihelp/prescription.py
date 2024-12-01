@@ -27,7 +27,7 @@ class Prescription:
 
     Attributes
     ----------
-    :ivar _medicine_name: Name of the prescribed medicine
+    :ivar _medicine_name: Name of the prescribed medicine. Name starts with uppercase.
     :vartype _medicine_name: str
     :ivar _dosage: how many doses of the medicine should the user take
     :vartype _dosage: int
@@ -45,7 +45,7 @@ class Prescription:
         :type weekday: int
         '''
 
-        medicine_name = str(medicine_name).lower()
+        medicine_name = str(medicine_name).title()
         if not medicine_name:
             raise (InvalidNameError)
         self._medicine_name = medicine_name
@@ -84,3 +84,6 @@ class Prescription:
         :rtype: int
         '''
         return self._weekday
+
+    def __str__(self):
+        return f'{self.dosage()} doses of {self.medicine_name()} every {weekday_number_to_name[self.weekday()]}.'
