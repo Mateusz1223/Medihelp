@@ -1,5 +1,7 @@
-from .errors import InvalidNameError, InvalidAgeError
+from .errors import InvalidNameError, InvalidBirthdateError
 from .prescription import Prescription
+from typing import Iterable, Optional
+from datetime import date
 
 
 class User:
@@ -10,41 +12,49 @@ class User:
     ----------
     :ivar _name: Username. Should be unique as it serves as an id.
     :vartype _name: str
-    :ivar _age: Age of the user.
-    :vartype _age: int
-    :ivar _illnesses: List of illnesses that are cured by this medicine. Names should be written in lowercase.
-    :vartype _illnesses: List[str]
-    :ivar _allergies: List of active substances to which the user is allergic to. Names should be written in lowercase.
-    :vartype _allergies: List[str]
-    :ivar _prescriptions: List of prescriptions that the user is subject to.
-    :vartype _prescriptions: List[Prescription]
+    :ivar _birth_date: User birthdate. Used to calculate the age
+    :vartype _birth_date: date
+    :ivar _illnesses: list of illnesses that are cured by this medicine. Names should be written in lowercase.
+    :vartype _illnesses: iterable of str
+    :ivar _allergies: list of active substances to which the user is allergic to. Names should be written in lowercase.
+    :vartype _allergies: iterable of str
+    :ivar _prescriptions: list of prescriptions that the user is subject to.
+    :vartype _prescriptions: list[Prescription]
     '''
 
-    def __init__(self, name, age, illnesses=[], allergies=[], prescriptions=[]):
+    def __init__(self,
+                 name: str,
+                 birth_date: date,
+                 illnesses: Optional[Iterable[str]] = None,
+                 allergies: Optional[Iterable[str]] = None,
+                 prescriptions: Optional[Iterable[Prescription]] = None):
         '''
         :param name: Username. Should be unique as it serves as an id.
         :type name: str
-        :param age: Age of the user.
-        :type age: int
-        :param illnesses: List of illnesses that are cured by this medicine. Names of illneses are written in lowercase.
-        :type illnesses: List[str]
-        :param allergies: List of active substances to which the user is allergic to. Names of substances are written in lowercase.
-        :type allergies: List[str]
-        :param prescriptions: List of prescriptions that the user is subject to.
-        :type prescriptions: List[Prescription]
+        :param birth_date: Age of the user.
+        :type birth_date: int
+        :param illnesses: (optional) list of illnesses that are cured by this medicine. Names of illneses are written in lowercase.
+        :type illnesses: iterable of str
+        :param allergies: (optional) list of active substances to which the user is allergic to. Names of substances are written in lowercase.
+        :type allergies: iterable of str
+        :param prescriptions: (optional) list of prescriptions that the user is subject to.
+        :type prescriptions: list[Prescription]
         '''
 
         self.set_name(name)
-        self.set_age(age)
-        self._illnesses = []
-        for e in illnesses:
-            self.add_illness(e)
-        self._allergies = []
-        for e in allergies:
-            self.add_allergy(e)
-        self._prescriptions = []
-        for e in prescriptions:
-            self.add_prescription(e)
+        self.set_birth_date(birth_date)
+        self._illnesses = set()
+        if illnesses:
+            for e in illnesses:
+                self.add_illness(e)
+        self._allergies = set()
+        if allergies:
+            for e in allergies:
+                self.add_allergy(e)
+        self._prescriptions = set()
+        if prescriptions:
+            for e in prescriptions:
+                self.add_prescription(e)
 
     def name(self):
         '''
@@ -55,7 +65,7 @@ class User:
         '''
         return self._name
 
-    def set_name(self, name):
+    def set_name(self, name: str):
         '''
         Setter for _name
 
@@ -68,27 +78,20 @@ class User:
             raise (InvalidNameError)
         self._name = name.title()
 
-    def age(self):
+    def birth_date(self):
         '''
-        Getter for _age
-
-        :return: _age
-        :rtype: int
+        Getter for _birth_date
         '''
-        return self._age
+        return self._birth_date
 
-    def set_age(self, age):
+    def set_birth_date(self, birth_date: date):
         '''
-        Setter for _age
-
-        :param age: new age
-        :type age: int
+        Setter for _birth_date. Makes sure birthdate is not a date in the future
         '''
 
-        age = int(age)
-        if age < 0:
-            raise (InvalidAgeError)
-        self._age = age
+        if date.today() < birth_date:
+            raise (InvalidBirthdateError)
+        self._birth_date = birth_date
 
     def illnesses(self):
         '''
@@ -110,7 +113,7 @@ class User:
         illness = str(illness).lower()
         if not illness:
             raise (InvalidNameError)
-        self._illnesses.append(illness)
+        self._illnesses.add(illness)
 
     def remove_illness(self, illness):
         '''
@@ -131,6 +134,20 @@ class User:
         '''
         return self._allergies
 
+    def age(self):
+        '''
+        :return: Age of the user
+        :rtype: int
+        '''
+        today = date.today()
+        age = today.year - self.birth_date().year
+
+        # Adjust if the birthday has not occurred yet this year
+        if (today.month, today.day) < (self.birth_date().month, self.birth_date().day):
+            age -= 1
+
+        return age
+
     def add_allergy(self, substance):
         '''
         Adds substance to the __allergies list
@@ -142,7 +159,7 @@ class User:
         substance = str(substance).lower()
         if not substance:
             raise (InvalidNameError)
-        self._allergies.append(substance)
+        self._allergies.add(substance)
 
     def remove_allergy(self, substance):
         '''
@@ -172,7 +189,7 @@ class User:
         '''
         if type(prescription) is not Prescription:
             raise (ValueError)
-        self._prescriptions.append(prescription)
+        self._prescriptions.add(prescription)
 
     def remove_prescription(self, prescription):
         '''

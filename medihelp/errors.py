@@ -18,6 +18,11 @@ class InvalidAgeError(Exception):
         super().__init__('Age must be greater or equal to zero.')
 
 
+class InvalidBirthdateError(Exception):
+    def __init__(self):
+        super().__init__('Birthdate cannot be a date in the future')
+
+
 class EmptyListError(Exception):
     def __init__(self):
         super().__init__('This list cannot be empty.')

@@ -35,13 +35,13 @@ class Prescription:
     :vartype _weekday: int
     '''
 
-    def __init__(self, medicine_name, dosage, weekday):
+    def __init__(self, medicine_name: str, dosage: int, weekday: int):
         '''
         :param medicine_name: Name of the prescribed medicine
         :type medicine_name: str
         :param dosage: how many doses of the medicine should the user take
         :type dosage: int
-        :param weekday: what day should the user take the medicine
+        :param weekday: what day should the user take the medicine. Number from 1 to 7
         :type weekday: int
         '''
 

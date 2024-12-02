@@ -13,8 +13,8 @@ def test_medicine_create():
                         recommended_age=0, doses=10, expiration_date=date_instance)
     assert medicine.name() == 'Ivermectin'
     assert medicine.manufacturer() == 'Polfarma'
-    assert medicine.illnesses() == ['illness1', 'illness2', 'illness3']
-    assert medicine.substances() == ['nicotine', 'caffeine']
+    assert medicine.illnesses() == {'illness1', 'illness2', 'illness3'}
+    assert medicine.substances() == {'nicotine', 'caffeine'}
     assert medicine.recommended_age() == 0
     assert medicine.doses() == 10
     assert medicine.expiration_date() == date_instance
