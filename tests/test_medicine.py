@@ -76,3 +76,53 @@ def test_medicine_create_invalid_doses():
         Medicine(name='iveRmectin', manufacturer='polfARma',
                  illnesses=illneses, substances=substances,
                  recommended_age=0, doses=0, expiration_date=date_instance)
+
+
+def test_medicine_is_expired_false(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(2024, 12, 2)
+    monkeypatch.setattr('medihelp.user.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine']
+    date_instance = date(2025, 12, 31)
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=0, doses=10, expiration_date=date_instance)
+
+    assert not medicine.is_expired()
+
+
+def test_medicine_is_expired_true(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(2024, 12, 2)
+    monkeypatch.setattr('medihelp.user.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=0, doses=10, expiration_date=date(2024, 12, 1))
+
+    assert medicine.is_expired()
+
+
+def test_medicine_is_expired_edge_case(monkeypatch):
+    # FIX ME
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(2024, 12, 2)
+    monkeypatch.setattr('medihelp.user.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=0, doses=10, expiration_date=date(2024, 12, 2))
+    
+    assert not medicine.is_expired()

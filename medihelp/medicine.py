@@ -84,7 +84,7 @@ class Medicine:
         self._doses = doses
         self._doses_left = doses
 
-        self._expiration_date = date
+        self._expiration_date = expiration_date
 
         self._notes = []
 
@@ -147,5 +147,5 @@ class Medicine:
         '''
         pass
 
-    def is_expired(self):
-        pass
+    def is_expired(self) -> bool:
+        return date.today() > self.expiration_date()
