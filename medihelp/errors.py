@@ -1,3 +1,6 @@
+from typing import Iterable
+
+
 class InvalidNameError(Exception):
     def __init__(self):
         super().__init__('Invalid name.')
@@ -29,14 +32,27 @@ class EmptyListError(Exception):
 
 
 class AllergyWarning(Exception):
-    def __init__(self, substance: str):
+    def __init__(self, substances: Iterable[str]):
         '''
         :param substance: name of the substance the user is allergic to
         :type substance: str
         '''
-        super().__init__(f'Medicine cannot be given to the user because he is allergic to {substance}.')
+        substances = list(substances)
+        substances.sort()
+        info = f'Medicine cannot be given to the user because he is allergic to {', '.join([word for word in substances])}.'
+        super().__init__(info)
 
 
 class AgeWarning(Exception):
     def __init__(self):
         super().__init__('User is not old enough to take the medicine.')
+
+
+class NotEnoughDosesError(Exception):
+    def __init__(self):
+        super().__init__('There is not enough doses of the medicine.')
+
+
+class ExpiredMedicineError(Exception):
+    def __init__(self):
+        super().__init__('This medicine is expired!')

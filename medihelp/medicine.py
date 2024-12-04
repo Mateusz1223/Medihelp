@@ -1,5 +1,12 @@
 from datetime import date
-from .errors import InvalidNameError, InvalidDoseError, InvalidAgeError, EmptyListError
+from .errors import (InvalidNameError,
+                     InvalidDoseError,
+                     InvalidAgeError,
+                     EmptyListError,
+                     AllergyWarning,
+                     AgeWarning,
+                     NotEnoughDosesError,
+                     ExpiredMedicineError)
 from typing import List, Iterable
 
 
@@ -145,6 +152,16 @@ class Medicine:
         Checks if the user can take the medicine based on his age the medicine reccomended age. If not raises AgeWarning
         Substracts doses from _doses_left if there is enough of them.
         '''
+        if self.is_expired():
+            raise (ExpiredMedicineError)
+        allergies = self.substances().intersection(user.allergies())
+        if allergies:
+            raise (AllergyWarning(allergies))
+        if self.recommended_age() > user.age():
+            raise (AgeWarning)
+        if self.doses_left() < doses:
+            raise (NotEnoughDosesError)
+        self._doses_left -= doses
         pass
 
     def is_expired(self) -> bool:

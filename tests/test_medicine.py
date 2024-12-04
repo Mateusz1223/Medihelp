@@ -1,7 +1,15 @@
 from medihelp.medicine import Medicine
+from medihelp.user import User
 from datetime import date
 from pytest import raises
-from medihelp.errors import EmptyListError, InvalidNameError, InvalidDoseError, InvalidAgeError
+from medihelp.errors import (InvalidNameError,
+                             InvalidDoseError,
+                             InvalidAgeError,
+                             EmptyListError,
+                             AllergyWarning,
+                             AgeWarning,
+                             NotEnoughDosesError,
+                             ExpiredMedicineError)
 
 
 def test_medicine_create():
@@ -100,7 +108,7 @@ def test_medicine_is_expired_true(monkeypatch):
         @classmethod
         def today(cls):
             return cls(2024, 12, 2)
-    monkeypatch.setattr('medihelp.user.date', MockDate)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
 
     illneses = ['Illness1', 'illness2', 'IllNess3']
     substances = ['nicoTine', 'Caffeine']
@@ -112,17 +120,99 @@ def test_medicine_is_expired_true(monkeypatch):
 
 
 def test_medicine_is_expired_edge_case(monkeypatch):
-    # FIX ME
     class MockDate(date):
         @classmethod
         def today(cls):
             return cls(2024, 12, 2)
-    monkeypatch.setattr('medihelp.user.date', MockDate)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
 
     illneses = ['Illness1', 'illness2', 'IllNess3']
     substances = ['nicoTine', 'Caffeine']
     medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
                         illnesses=illneses, substances=substances,
                         recommended_age=0, doses=10, expiration_date=date(2024, 12, 2))
-    
     assert not medicine.is_expired()
+
+
+def test_medicine_take_doses_typical(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(1900, 12, 2)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=0, doses=10, expiration_date=date(2024, 12, 2))
+    assert medicine.doses_left() == 10
+    dad = User(name='Dad', birth_date=date(1980, 1, 2))
+    medicine.take_doses(2, dad)
+    assert medicine.doses_left() == 8
+
+
+def test_medicine_take_doses_allergy_warning(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(1900, 12, 2)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine', 'substance1']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=0, doses=10, expiration_date=date(2024, 12, 2))
+    assert medicine.doses_left() == 10
+    dad = User(name='Dad', birth_date=date(1980, 1, 2), allergies=['nicotine', 'substance1'])
+    with raises(AllergyWarning, match=r'Medicine cannot be given to the user because he is allergic to nicotine, substance1.'):
+        medicine.take_doses(1, dad)
+
+
+def test_medicine_take_doses_age_warning(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(1900, 12, 2)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine', 'substance1']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=100, doses=10, expiration_date=date(2024, 12, 2))
+    assert medicine.doses_left() == 10
+    dad = User(name='Dad', birth_date=date(1980, 1, 2))
+    with raises(AgeWarning):
+        medicine.take_doses(3, dad)
+
+
+def test_medicine_take_doses_not_enough_doses(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(1900, 12, 2)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
+
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine', 'substance1']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=10, doses=2, expiration_date=date(2024, 12, 2))
+    assert medicine.doses_left() == 2
+    dad = User(name='Dad', birth_date=date(1980, 1, 2))
+    with raises(NotEnoughDosesError):
+        medicine.take_doses(3, dad)
+
+
+def test_medicine_take_doses_expired():
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine', 'substance1']
+    medicine = Medicine(name='iveRmectin', manufacturer='polfARma',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=10, doses=10, expiration_date=date(1900, 12, 2))
+    assert medicine.doses_left() == 10
+    dad = User(name='Dad', birth_date=date(1980, 1, 2))
+    with raises(ExpiredMedicineError):
+        medicine.take_doses(3, dad)
