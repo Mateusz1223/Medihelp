@@ -1,5 +1,5 @@
 from .medicine import Medicine
-from .errors import MalformedDataError
+from .errors import MalformedDataError, IdAlreadyInUseError, NoSuchIdInTheDatabaseError
 from datetime import date
 import csv
 import ast
@@ -7,18 +7,18 @@ import ast
 
 class MedicineDatabase:
     '''
-    Class that stores a list of all medicines registered in the system.
+    Class that stores a dictionary with all medicines registered in the system. Id of the medicine being the key.
     Can load the list from .csv file
     Can store the list in .csv file
 
     Atributes
     ---------
-    :ivar _medicines: List of all medicines registered in the system
-    :vartype _medicines: list[Medicine]
+    :ivar _medicines: Dictionary with all medicines registered in the system. Id of the medicine being the key.
+    :vartype _medicines: dict{id: Medicine}
     '''
 
     def __init__(self):
-        self._medicines = []
+        self._medicines = {}
 
     def medicines(self):
         return self._medicines
@@ -26,15 +26,17 @@ class MedicineDatabase:
     def add_medicine(self, medicine):
         if type(medicine) is not Medicine:
             raise ValueError('Medicine object must be given')
-        self._medicines.append(medicine)
+        if medicine.id() in self.medicines().keys():
+            raise IdAlreadyInUseError
+        self._medicines.update({medicine.id(): medicine})
 
     def delete_medicine(self, id):
-        to_delete = None
-        for medicine in self.medicines():
-            if medicine.id() == id:
-                to_delete = medicine
-                break
-        self._medicines.remove(to_delete)
+        if id not in self.medicines().keys():
+            raise NoSuchIdInTheDatabaseError
+        del self._medicines[id]
+
+    def clear(self):
+        self._medicines.clear()
 
     def read_from_file(self, file_handler):
         try:
@@ -91,7 +93,7 @@ class MedicineDatabase:
         ]
         writer = csv.DictWriter(file_handler, fieldnames=header, lineterminator='\n')
         writer.writeheader()
-        for medicine in self.medicines():
+        for medicine in self.medicines().values():
             writer.writerow({
                 'id': medicine.id(),
                 'name': medicine.name(),

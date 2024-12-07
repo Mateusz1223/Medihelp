@@ -71,3 +71,13 @@ class InvalidUserIDError(Exception):
 class MalformedDataError(Exception):
     def __init__(self, line):
         super().__init__(f'Malformed data in row {line}')
+
+
+class IdAlreadyInUseError(Exception):
+    def __init__(self):
+        super().__init__('This ID is already in use in the database!')
+
+
+class NoSuchIdInTheDatabaseError(Exception):
+    def __init__(self):
+        super().__init__('There is no such id in the database!')

@@ -152,6 +152,9 @@ class Medicine:
             return False
         return True
 
+    def __hash__(self):
+        return hash((self.id, self.name))
+
     def id(self):
         return self._id
 
