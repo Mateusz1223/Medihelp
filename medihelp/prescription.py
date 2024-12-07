@@ -1,4 +1,4 @@
-from .errors import InvalidNameError, InvalidDoseError, InvalidWeekdayError
+from .errors import InvalidNameError, InvalidDosesError, InvalidWeekdayError
 
 weekday_name_to_number = {
     "Monday": 1,
@@ -29,8 +29,10 @@ class Prescription:
     ----------
     :ivar _medicine_name: Name of the prescribed medicine. Name starts with uppercase.
     :vartype _medicine_name: str
+
     :ivar _dosage: how many doses of the medicine should the user take
     :vartype _dosage: int
+
     :ivar _weekday: what day should the user take the medicine
     :vartype _weekday: int
     '''
@@ -51,7 +53,7 @@ class Prescription:
         self._medicine_name = medicine_name
         dosage = int(dosage)
         if dosage <= 0:
-            raise (InvalidDoseError)
+            raise (InvalidDosesError)
         self._dosage = dosage
         weekday = int(weekday)
         if weekday < 1 or weekday > 7:

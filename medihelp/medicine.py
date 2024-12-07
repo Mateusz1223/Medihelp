@@ -1,13 +1,15 @@
 from datetime import date
 from .errors import (InvalidNameError,
-                     InvalidDoseError,
+                     InvalidDosesError,
+                     TooManyDosesLeft,
+                     NotEnoughDosesError,
                      InvalidAgeError,
                      EmptyListError,
                      AllergyWarning,
                      AgeWarning,
-                     NotEnoughDosesError,
-                     ExpiredMedicineError)
-from typing import List, Iterable
+                     ExpiredMedicineError,
+                     InvalidUserIDError)
+from typing import Iterable
 
 
 class Medicine:
@@ -16,135 +18,204 @@ class Medicine:
 
     Attributes (all of the private attributes can be accesed with a getter)
     ----------
+    :ivar _id: Unique Id of the medicine
+    :vartype _id: int
+
     :ivar _name: Name of the medicine.
     :vartype _name: str
+
     :ivar _manufacturer: Name of the manufacturer.
     :vartype _manufacturer: str
-    :ivar _illnesses: List of illnesses that are cured by this medicine. Illness names are written in lowercase.
+
+    :ivar _illnesses: Set of illnesses that are cured by this medicine. Illness names are written in lowercase.
     :vartype _illnesses: iterable of str
-    :ivar _recipents: List of the names of the users who are taking the medicine.
-    :vartype _recipents: iterable of str
-    :ivar _substances: List of active substances in the medicine. Substance names are in lowercase.
+
+    :ivar _recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child)
+    :vartype _recipients: iterable of int
+
+    :ivar _substances: Set of active substances in the medicine. Substance names are in lowercase.
     :vartype _substances: iterable of str
+
     :ivar _recommended_age: Recipent recommended age.
     :vartype _recommended_age: int
+
     :ivar _doses: number of doses in the box.
     :vartype _doses: int
+
     :ivar _doses_left: how many doses there is left.
     :vartype _doses_left: int
+
     :ivar _expiration_date: Expiration date.
     :vartype _expiration_date: date
-    :ivar _notes: Notes that can be added by users.
-    :vartype _notes: list[Note]
+
+    :ivar _notes: List of three objects. Each of them represents note from one user
+    :vartype _notes: list[str/None]
     '''
 
-    def __init__(self, name: str,
+    def __init__(self, id: int,
+                 name: str,
                  manufacturer: str,
                  illnesses: Iterable[str],
                  substances: Iterable[str],
                  recommended_age: int,
                  doses: int,
-                 expiration_date: date):
+                 doses_left: int,
+                 expiration_date: date,
+                 recipients=None):
         '''
-        :param _name: Name of the medicine.
-        :type _name: str
-        :param _manufacturer: Name of the manufacturer.
-        :type _manufacturer: str
-        :param _illnesses: List of illnesses that are cured by this medicine.
-        :type _illnesses: iterable of str
-        :param _substances: List of active substances in the medicine.
-        :type _substances: iterable of str
-        :param _recommended_age: Recipent recommended age. Must be greater or equal to zero
-        :type _recommended_age: int
-        :param _doses: number of doses in the box. Must be greater than zero
-        :type _doses: int
-        :param _expiration_date: Expiration date.
-        :type _expiration_date: date
+        :param id: Unique Id of the medicine
+        :type id: int
+        :param name: Name of the medicine.
+        :type name: str
+        :param manufacturer: Name of the manufacturer.
+        :type manufacturer: str
+        :param illnesses: List of illnesses that are cured by this medicine.
+        :type illnesses: iterable of str
+        :param substances: List of active substances in the medicine.
+        :type substances: iterable of str
+        :param recommended_age: Recipent recommended age. Must be greater or equal to zero
+        :type recommended_age: int
+        :param doses: number of doses in the box. Must be greater than zero
+        :type doses: int
+        :param doses_left: how many doses there is left.
+        :type doses_left: int
+        :param expiration_date: Expiration date.
+        :type expiration_date: date
+        :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child)
+        :tyoe recipients: iterable of int
         '''
+
+        self._id = int(id)
 
         name = str(name).title()
         if name == '':
-            raise (InvalidNameError)
+            raise InvalidNameError
         self._name = name
 
         manufacturer = str(manufacturer).title()
         if manufacturer == '':
-            raise (InvalidNameError)
+            raise InvalidNameError
         self._manufacturer = manufacturer
 
         if not illnesses:
-            raise (EmptyListError)
+            raise EmptyListError
         self._illnesses = {str(illness).lower() for illness in illnesses}
 
+        self._recipients = set()
+        if recipients:
+            for recipient in recipients:
+                self.add_recipient(recipient)
+
         if not substances:
-            raise (EmptyListError)
+            raise EmptyListError
         self._substances = {str(substance).lower() for substance in substances}
 
         recommended_age = int(recommended_age)
         if recommended_age < 0:
-            raise (InvalidAgeError)
+            raise InvalidAgeError
         self._recommended_age = recommended_age
 
         doses = int(doses)
         if doses <= 0:
-            raise (InvalidDoseError)
+            raise InvalidDosesError
         self._doses = doses
-        self._doses_left = doses
+        doses_left = int(doses_left)
+        if doses_left <= 0:
+            raise InvalidDosesError
+        if doses_left > doses:
+            raise TooManyDosesLeft
+        self._doses_left = doses_left
 
         self._expiration_date = expiration_date
 
-        self._notes = []
+        self._notes = [None, None, None]
+
+    def __eq__(self, other):
+        '''
+        Useful when comparing instances of medicines in tests.
+        '''
+        if self.id() != other.id() or self.name() != other.name():
+            return False
+        if self.manufacturer() != other.manufacturer() or self.recommended_age() != other.recommended_age():
+            return False
+        if self.doses() != other.doses() or self.doses_left() != other.doses_left():
+            return False
+        if self.expiration_date() != other.expiration_date() or self.doses_left() != other.doses_left():
+            return False
+        if len(self.illnesses().intersection(other.illnesses())) != len(self.illnesses()):
+            return False
+        if len(self.substances().intersection(other.substances())) != len(self.substances()):
+            return False
+        if len(self.recipients().intersection(other.recipients())) != len(self.recipients()):
+            return False
+        if self._notes != other._notes:
+            return False
+        return True
+
+    def id(self):
+        return self._id
 
     def name(self):
-        '''
-        Getter for _name
-        '''
         return self._name
 
     def manufacturer(self):
-        '''
-        Getter for _manufacturer
-        '''
         return self._manufacturer
 
     def illnesses(self):
-        '''
-        Getter for _illnesses
-        '''
         return self._illnesses
 
+    def recipients(self):
+        return self._recipients
+
     def substances(self):
-        '''
-        Getter for _substances
-        '''
         return self._substances
 
     def recommended_age(self):
-        '''
-        Getter for _recommended_age
-        '''
         return self._recommended_age
 
     def doses(self):
-        '''
-        Getter for _doses
-        '''
         return self._doses
 
     def doses_left(self):
-        '''
-        Getter for _doses_left
-        '''
         return self._doses_left
 
     def expiration_date(self):
-        '''
-        Getter for _expiration_date
-        '''
         return self._expiration_date
 
-    def add_note(self, note):
-        pass
+    def note(self, user_id):
+        '''
+        Returnes the given user's note for this medicine.
+
+        :param user_id: 0 - Dad, 1 - Mom, 2 - Child
+        :type user_id: int
+        '''
+        if user_id < 0 or user_id > 2:
+            raise InvalidUserIDError
+        return self._notes[user_id]
+
+    def set_note(self, user_id, note):
+        '''
+        Changes value of the given user's note for this medicine.
+
+        :param user_id: 0 - Dad, 1 - Mom, 2 - Child
+        :type user_id: int
+        '''
+        if user_id < 0 or user_id > 2:
+            raise InvalidUserIDError
+        if note:
+            self._notes[user_id] = str(note)
+        else:
+            self._notes[user_id] = None
+
+    def add_recipient(self, user_id):
+        if user_id < 0 or user_id > 2:
+            raise InvalidUserIDError
+        self._recipients.add(user_id)
+
+    def remove_recipient(self, user_id):
+        if user_id < 0 or user_id > 2:
+            raise InvalidUserIDError
+        self._recipients.remove(user_id)
 
     def take_doses(self, doses, user):
         '''
@@ -162,7 +233,6 @@ class Medicine:
         if self.doses_left() < doses:
             raise (NotEnoughDosesError)
         self._doses_left -= doses
-        pass
 
     def is_expired(self) -> bool:
         return date.today() > self.expiration_date()

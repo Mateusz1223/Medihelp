@@ -10,26 +10,36 @@ class User:
 
     Attributes
     ----------
-    :ivar _name: Username. Should be unique as it serves as an id.
+    :ivar _id: User id
+    :vartype id: int
+
+    :ivar _name: Username.
     :vartype _name: str
+
     :ivar _birth_date: User birthdate. Used to calculate the age
     :vartype _birth_date: date
+
     :ivar _illnesses: list of illnesses that are cured by this medicine. Names should be written in lowercase.
     :vartype _illnesses: iterable of str
+
     :ivar _allergies: list of active substances to which the user is allergic to. Names should be written in lowercase.
     :vartype _allergies: iterable of str
+
     :ivar _prescriptions: list of prescriptions that the user is subject to.
     :vartype _prescriptions: list[Prescription]
     '''
 
     def __init__(self,
+                 id: int,
                  name: str,
                  birth_date: date,
                  illnesses: Optional[Iterable[str]] = None,
                  allergies: Optional[Iterable[str]] = None,
                  prescriptions: Optional[Iterable[Prescription]] = None):
         '''
-        :param name: Username. Should be unique as it serves as an id.
+        :param id: User's ID
+        :type id: int
+        :param name: Username.
         :type name: str
         :param birth_date: Age of the user.
         :type birth_date: int
@@ -41,6 +51,7 @@ class User:
         :type prescriptions: list[Prescription]
         '''
 
+        self._id = int(id)
         self.set_name(name)
         self.set_birth_date(birth_date)
         self._illnesses = set()
@@ -55,6 +66,9 @@ class User:
         if prescriptions:
             for e in prescriptions:
                 self.add_prescription(e)
+
+    def id(self):
+        return self._id
 
     def name(self):
         '''

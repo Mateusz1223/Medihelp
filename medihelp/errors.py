@@ -6,9 +6,19 @@ class InvalidNameError(Exception):
         super().__init__('Invalid name.')
 
 
-class InvalidDoseError(Exception):
+class InvalidDosesError(Exception):
     def __init__(self):
         super().__init__('Dose must be greater than zero.')
+
+
+class NotEnoughDosesError(Exception):
+    def __init__(self):
+        super().__init__('There is not enough doses of the medicine.')
+
+
+class TooManyDosesLeft(Exception):
+    def __init__(self):
+        super().__init__('There cannot be more doses left than doses!')
 
 
 class InvalidWeekdayError(Exception):
@@ -48,11 +58,16 @@ class AgeWarning(Exception):
         super().__init__('User is not old enough to take the medicine.')
 
 
-class NotEnoughDosesError(Exception):
-    def __init__(self):
-        super().__init__('There is not enough doses of the medicine.')
-
-
 class ExpiredMedicineError(Exception):
     def __init__(self):
         super().__init__('This medicine is expired!')
+
+
+class InvalidUserIDError(Exception):
+    def __init__(self):
+        super().__init__('User Id must range from 0 to 2!')
+
+
+class MalformedDataError(Exception):
+    def __init__(self, line):
+        super().__init__(f'Malformed data in row {line}')

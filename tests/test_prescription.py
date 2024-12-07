@@ -1,5 +1,5 @@
 from medihelp.prescription import Prescription
-from medihelp.errors import InvalidNameError, InvalidDoseError, InvalidWeekdayError
+from medihelp.errors import InvalidNameError, InvalidDosesError, InvalidWeekdayError
 from pytest import raises
 
 
@@ -30,12 +30,12 @@ def test_prescription_create_empty_name():
 
 
 def test_prescription_create_negative_dose():
-    with raises(InvalidDoseError):
+    with raises(InvalidDosesError):
         Prescription(medicine_name='abc', dosage=-1, weekday=3)
 
 
 def test_prescription_create_zero_dose():
-    with raises(InvalidDoseError):
+    with raises(InvalidDosesError):
         Prescription(medicine_name='abc', dosage=0, weekday=3)
 
 
