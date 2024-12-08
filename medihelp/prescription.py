@@ -60,6 +60,24 @@ class Prescription:
             raise (InvalidWeekdayError)
         self._weekday = weekday
 
+    def __eq__(self, other):
+        '''
+        Useful for testing
+        '''
+        if self.medicine_name() != other.medicine_name():
+            return False
+        if self.dosage() != other.dosage():
+            return False
+        if self.weekday() != other.weekday():
+            return False
+        return True
+
+    def __hash__(self):
+        '''
+        Useful for testing
+        '''
+        return hash((self.medicine_name(), self.dosage()))
+
     def medicine_name(self):
         '''
         Getter for _medicine_name

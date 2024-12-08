@@ -14,7 +14,7 @@ class MedicineDatabase:
     Atributes
     ---------
     :ivar _medicines: Dictionary with all medicines registered in the system. Id of the medicine being the key.
-    :vartype _medicines: dict{id: Medicine}
+    :vartype _medicines: dict[int, Medicine]
     '''
 
     def __init__(self):
@@ -39,6 +39,9 @@ class MedicineDatabase:
         self._medicines.clear()
 
     def read_from_file(self, file_handler):
+        '''
+        Reads medicine database from a .csv file
+        '''
         try:
             reader = csv.DictReader(file_handler)
         except csv.Error as e:
@@ -78,6 +81,9 @@ class MedicineDatabase:
             raise MalformedDataError(row_counter) from e
 
     def write_to_file(self, file_handler):
+        '''
+        Saves medicine database into a .csv file
+        '''
         header = [
             'id',
             'name',

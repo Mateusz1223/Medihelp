@@ -70,7 +70,7 @@ class InvalidUserIDError(Exception):
 
 class MalformedDataError(Exception):
     def __init__(self, line):
-        super().__init__(f'Malformed data in row {line}')
+        super().__init__(f'Malformed data in row(csv)/object(json) {line}')
 
 
 class IdAlreadyInUseError(Exception):
@@ -81,3 +81,8 @@ class IdAlreadyInUseError(Exception):
 class NoSuchIdInTheDatabaseError(Exception):
     def __init__(self):
         super().__init__('There is no such id in the database!')
+
+
+class DataLoadingError(Exception):
+    def __init__(self):
+        super().__init__('Error occured while loading data!')

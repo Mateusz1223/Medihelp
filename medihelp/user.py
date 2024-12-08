@@ -19,11 +19,11 @@ class User:
     :ivar _birth_date: User birthdate. Used to calculate the age
     :vartype _birth_date: date
 
-    :ivar _illnesses: list of illnesses that are cured by this medicine. Names should be written in lowercase.
-    :vartype _illnesses: iterable of str
+    :ivar _illnesses: set of illnesses that are cured by this medicine. Names should be written in lowercase.
+    :vartype _illnesses: set{str}
 
-    :ivar _allergies: list of active substances to which the user is allergic to. Names should be written in lowercase.
-    :vartype _allergies: iterable of str
+    :ivar _allergies: set of active substances to which the user is allergic to. Names should be written in lowercase.
+    :vartype _allergies: set{str}
 
     :ivar _prescriptions: list of prescriptions that the user is subject to.
     :vartype _prescriptions: list[Prescription]
@@ -66,6 +66,22 @@ class User:
         if prescriptions:
             for e in prescriptions:
                 self.add_prescription(e)
+
+    def __eq__(self, other):
+        '''
+        Useful for testing
+        '''
+        if self.id() != other.id() or self.name() != other.name():
+            return False
+        if self.birth_date() != other.birth_date() or self.name() != other.name():
+            return False
+        if len(self.illnesses().intersection(other.illnesses())) != len(self.illnesses()):
+            return False
+        if len(self.allergies().intersection(other.allergies())) != len(self.allergies()):
+            return False
+        if self.prescriptions() != other.prescriptions():
+            return False
+        return True
 
     def id(self):
         return self._id
@@ -148,28 +164,13 @@ class User:
         '''
         return self._allergies
 
-    def age(self):
-        '''
-        :return: Age of the user
-        :rtype: int
-        '''
-        today = date.today()
-        age = today.year - self.birth_date().year
-
-        # Adjust if the birthday has not occurred yet this year
-        if (today.month, today.day) < (self.birth_date().month, self.birth_date().day):
-            age -= 1
-
-        return age
-
     def add_allergy(self, substance):
         '''
-        Adds substance to the __allergies list
+        Adds substance to the __allergies list and makes sure it's in lower case.
 
         :param substance: substance name
         :type substance: str
         '''
-
         substance = str(substance).lower()
         if not substance:
             raise (InvalidNameError)
@@ -184,6 +185,22 @@ class User:
         '''
 
         self._allergies.remove(substance)
+
+    def age(self):
+        '''
+        Calculates and returns the age of the user
+
+        :return: Age of the user
+        :rtype: int
+        '''
+        today = date.today()
+        age = today.year - self.birth_date().year
+
+        # Adjust if the birthday has not occurred yet this year
+        if (today.month, today.day) < (self.birth_date().month, self.birth_date().day):
+            age -= 1
+
+        return age
 
     def prescriptions(self):
         '''

@@ -1,6 +1,6 @@
 from medihelp.medicine_database import MedicineDatabase
 from medihelp.medicine import Medicine
-from medihelp.errors import NoSuchIdInTheDatabaseError, IdAlreadyInUseError
+from medihelp.errors import NoSuchIdInTheDatabaseError, IdAlreadyInUseError, MalformedDataError
 from datetime import date
 from io import StringIO
 from pytest import raises
@@ -66,7 +66,7 @@ def test_medicinedatabase_delete_medicine_wrong_id():
         database.delete_medicine(0)
 
 
-def test_medicinedatabase_write_to_file():
+def test_medicinedatabase_write_to_file_read_from_file():
     database = MedicineDatabase()
 
     illneses1 = ['Illness1', 'illness2', 'IllNess3']
@@ -127,3 +127,20 @@ def test_medicinedatabase_read_from_file():
     assert medicine1.id() in database.medicines().keys()
     assert medicine2 in database.medicines().values()
     assert medicine2.id() in database.medicines().keys()
+
+
+def test_medicinedatabase_read_from_file_malformed_data_wrong_format():
+    database = MedicineDatabase()
+    data = '''Malformed header\nMalformed row'''
+    file_handler = StringIO(data)
+    with raises(MalformedDataError):
+        database.read_from_file(file_handler)
+
+
+def test_medicinedatabase_read_from_file_malformed_incorrect_row_empty_name():
+    database = MedicineDatabase()
+    data = '''id,name,manufacturer,illnesses,recipients,substances,recommended_age,doses,doses_left,expiration_date,notes
+0,,Polfarm,"{'illness2', 'illness3', 'illness1'}","{0, 1, 2}","{'caffeine', 'nicotine'}",0,10,6,2025-12-31,"[None, 'Hello World1', None]'''
+    file_handler = StringIO(data)
+    with raises(MalformedDataError):
+        database.read_from_file(file_handler)

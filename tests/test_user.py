@@ -22,7 +22,12 @@ def test_user_create_with_lists():
         Prescription(medicine_name='med1', dosage=1, weekday=2),
         Prescription(medicine_name='med2', dosage=2, weekday=7)
     }
-    user = User(1, name='Mom', birth_date=date(1980, 1, 2), illnesses=illnesses_set, allergies=allergies_set, prescriptions=prescriptions_set)
+    user = User(1,
+                name='Mom',
+                birth_date=date(1980, 1, 2),
+                illnesses=illnesses_set,
+                allergies=allergies_set,
+                prescriptions=prescriptions_set)
     assert user.id() == 1
     assert user.name() == 'Mom'
     assert user.birth_date() == date(1980, 1, 2)

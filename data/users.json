@@ -1,0 +1,61 @@
+[
+    {
+        "id": 0,
+        "name": "Dad",
+        "birth_date": "1982-07-12",
+        "illnesses": [
+            "cold",
+            "xyz"
+        ],
+        "allergies": [
+            "nicotine",
+            "sugar"
+        ],
+        "prescriptions": [
+            {
+                "medicine_name": "Med2",
+                "dosage": 2,
+                "weekday": 7
+            },
+            {
+                "medicine_name": "Med1",
+                "dosage": 1,
+                "weekday": 2
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Mom",
+        "birth_date": "1985-08-04",
+        "illnesses": [
+            "illness2",
+            "xyz",
+            "illnes3"
+        ],
+        "allergies": [
+            "weed",
+            "stuff"
+        ],
+        "prescriptions": []
+    },
+    {
+        "id": 2,
+        "name": "Child",
+        "birth_date": "2018-01-02",
+        "illnesses": [
+            "diabetes"
+        ],
+        "allergies": [
+            "that",
+            "this"
+        ],
+        "prescriptions": [
+            {
+                "medicine_name": "Med3",
+                "dosage": 3,
+                "weekday": 4
+            }
+        ]
+    }
+]
