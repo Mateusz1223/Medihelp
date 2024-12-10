@@ -71,6 +71,8 @@ class User:
         '''
         Useful for testing
         '''
+        if type(other) is not User:
+            return False
         if self.id() != other.id() or self.name() != other.name():
             return False
         if self.birth_date() != other.birth_date() or self.name() != other.name():

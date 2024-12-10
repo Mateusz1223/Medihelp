@@ -85,4 +85,14 @@ class NoSuchIdInTheDatabaseError(Exception):
 
 class DataLoadingError(Exception):
     def __init__(self):
-        super().__init__('Error occured while loading data!')
+        super().__init__('Wystąpił błąd podczas ładowania danych!')
+
+
+class DataSavingError(Exception):
+    def __init__(self):
+        super().__init__('Wystąpił błąd podczas otwierania pliku!')
+
+
+class NoFileOpenedError(Exception):
+    def __init__(self):
+        super().__init__('Brak otwartego pliku!')
