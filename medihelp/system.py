@@ -38,12 +38,10 @@ class System:
         return self._medicines_file_path
 
     def medicines_file_saved(self):
+        '''
+        Useful for determining wheather or not changes are saved in currently loaded medicines file
+        '''
         return self._medicines_file_saved
-
-    def medicines_file_opened(self):
-        if not self._medicines_file_path:
-            return False
-        return True
 
     def load_users_data(self):
         '''
@@ -56,16 +54,22 @@ class System:
             raise DataLoadingError from e
 
     def medicines_database_loaded(self):
+        '''
+        Checks if there is a medicines file loaded ???
+        '''
         if self._medicines_file_path:
             return True
         return False
 
-    def load_medicines_database_from(self, path):
+    def load_medicines_database_from(self, path: str):
         '''
         Clears self._medicines_database
         Loads database from the given file path
         Sets self._medicines_file_path to path
         Sets self._medicines_file_saved to True as the file was just opened
+
+        :param path: Path to the file
+        :type path: str
         '''
         self._medicines_database.clear()
         try:
@@ -77,7 +81,13 @@ class System:
         self._medicines_file_saved = True
 
     def save_medicines_database(self, path=None):
-        if not self._medicines_database and not path:
+        '''
+        Saves data from medicine database to the file given by path or to the opened medicine file if there is no path given
+
+        :param path: Path to the file (optional)
+        :type path: str
+        '''
+        if not self.medicines_database_loaded() and not path:
             raise NoFileOpenedError
         if not path:
             path = self._medicines_file_path
@@ -87,3 +97,5 @@ class System:
         except Exception as e:
             raise DataSavingError from e
         self._medicines_file_saved = True
+        if not self.medicines_database_loaded():
+            self._medicines_file_path = path

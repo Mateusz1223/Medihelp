@@ -38,7 +38,7 @@ class UsersDatabase:
         try:
             data = json.load(file_handler)
         except Exception:
-            raise MalformedDataError(0)
+            raise MalformedDataError(file_handler.name, 0)
         item_counter = 1
         for item in data:
             try:
@@ -57,7 +57,7 @@ class UsersDatabase:
                 self._add_user(User(id, name, birth_date, illnesses, allergies, prescriptions))
                 item_counter += 1
             except Exception:
-                raise MalformedDataError(item_counter)
+                raise MalformedDataError(file_handler.name, item_counter)
 
     def write_to_file(self, file_handler):
         '''

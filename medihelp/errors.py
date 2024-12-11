@@ -69,8 +69,8 @@ class InvalidUserIDError(Exception):
 
 
 class MalformedDataError(Exception):
-    def __init__(self, line):
-        super().__init__(f'Malformed data in row(csv)/object(json) {line}')
+    def __init__(self, path, line):
+        super().__init__(f'Zniekształcone dane w pliku {path}, w rzędzie (plik csv)/objekcie (plik json) {line}')
 
 
 class IdAlreadyInUseError(Exception):

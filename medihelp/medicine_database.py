@@ -45,7 +45,7 @@ class MedicineDatabase:
         try:
             reader = csv.DictReader(file_handler)
         except csv.Error as e:
-            raise MalformedDataError(1) from e
+            raise MalformedDataError(file_handler.name, 1) from e
         row_counter = 2
         try:
             for row in reader:
@@ -74,11 +74,11 @@ class MedicineDatabase:
 
                     self.add_medicine(medicine)
                 except Exception as e:
-                    raise MalformedDataError(row_counter) from e
+                    raise MalformedDataError(file_handler.name, row_counter) from e
 
                 row_counter += 1
         except csv.Error as e:
-            raise MalformedDataError(row_counter) from e
+            raise MalformedDataError(file_handler.name, row_counter) from e
 
     def write_to_file(self, file_handler):
         '''

@@ -16,14 +16,12 @@ class MenuBar(tk.Menu):
         # File menu
         self._file_menu = tk.Menu(self, tearoff=False)
         self._file_menu.add_command(label='Załaduj bazę leków', command=self.load_file_button_handler)
+        self._file_menu.add_separator()
         self._file_menu.add_command(label='Zapisz bazę leków', command=self.save_file_button_handler)
         self._file_menu.add_command(label='Zapisz bazę leków jako', command=self.save_file_as_button_handler)
         self.add_cascade(menu=self._file_menu, label="| Plik |")
 
         self.add_separator()
-
-        # Choose user menu
-        pass
 
         # Edit user info button
         self.add_command(label="| Modyfikuj dane użytkowników |", command=self.modify_users_info_button_handler)
@@ -37,6 +35,8 @@ class MenuBar(tk.Menu):
                                        message="Czy na pewno chcesz załadować nowy plik, bez zapisania zmian w pliku obecnym?"):
                 return
         path = askopenfilename()
+        if not path:
+            return
         try:
             self._system.load_medicines_database_from(path)
         except DataLoadingError as e:
@@ -52,6 +52,8 @@ class MenuBar(tk.Menu):
 
     def save_file_as_button_handler(self):
         path = askopenfilename()
+        if not path:
+            return
         try:
             self._system.save_medicines_database(path)
         except DataSavingError as e:

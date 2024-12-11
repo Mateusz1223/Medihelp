@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from .global_settings import font_name
 
 

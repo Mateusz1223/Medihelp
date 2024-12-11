@@ -64,6 +64,7 @@ def test_usersdatabase_write_to_file_and_read_from_file():
 def test_usersdatabase_read_from_file_malformed_data_wrong_format():
     data = 'Malformed file'
     file = StringIO(data)
+    file.name = 'file'
     database = UsersDatabase()
     with raises(MalformedDataError):
         database.read_from_file(file)
@@ -100,6 +101,7 @@ def test_usersdatabase_read_from_file_malformed_data_wrong_id():
 ]
 '''
     file = StringIO(data)
+    file.name = 'file'
     database = UsersDatabase()
     with raises(MalformedDataError):
         database.read_from_file(file)
@@ -132,6 +134,7 @@ def test_usersdatabase_read_from_file_malformed_data_attribute_missing():
 ]
 '''
     file = StringIO(data)
+    file.name = 'file'
     database = UsersDatabase()
     with raises(MalformedDataError):
         database.read_from_file(file)

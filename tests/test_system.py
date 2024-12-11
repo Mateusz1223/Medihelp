@@ -2,7 +2,7 @@ from medihelp.system import System
 from medihelp.medicine import Medicine
 from medihelp.prescription import Prescription
 from medihelp.user import User
-from medihelp.errors import DataLoadingError
+from medihelp.errors import DataLoadingError, NoFileOpenedError, DataSavingError
 from pytest import raises
 from io import StringIO
 import builtins
@@ -139,7 +139,7 @@ def test_system_load_users_data_error(monkeypatch):
         system.load_users_data()
 
 
-def test_system_medicines_file_opened(monkeypatch):
+def test_system_medicines_database_loaded(monkeypatch):
     # Create fake file
     data = '''id,name,manufacturer,illnesses,recipients,substances,recommended_age,doses,doses_left,expiration_date,notes
 0,Ivermectin,Polfarm,"{'illness2', 'illness3', 'illness1'}","{0, 1, 2}","{'caffeine', 'nicotine'}",0,10,6,2025-12-31,"[None, 'Hello World1', None]"'''
@@ -150,9 +150,9 @@ def test_system_medicines_file_opened(monkeypatch):
     monkeypatch.setattr(builtins, 'open', fake_open)
 
     system = System()
-    assert not system.medicines_file_opened()
+    assert not system.medicines_database_loaded()
     system.load_medicines_database_from('whatever_path')
-    assert system.medicines_file_opened()
+    assert system.medicines_database_loaded()
 
 
 def test_system_medicines_database_loaded_false(monkeypatch):
@@ -214,3 +214,40 @@ def test_system_medicines_database_loaded_false_error(monkeypatch):
     system = System()
     with raises(DataLoadingError):
         system.load_medicines_database_from('whatever_path')
+
+
+def test_system_save_medicines_database_no_file_opened(monkeypatch):
+    system = System()
+    with raises(NoFileOpenedError):
+        system.save_medicines_database()
+
+
+def test_system_save_medicines_database_1(monkeypatch):
+    data = ''
+    file = StringIO(data)
+    def fake_open(path, mode):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
+    system = System()
+    # passing a path to the file so that it doesn't rise NoFileOpenedError
+    system.save_medicines_database('what-ever-path')
+
+
+def test_system_save_medicines_database_2(monkeypatch):
+    data = ''
+    file = StringIO(data)
+    def fake_open(path, mode):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
+    system = System()
+    system.load_medicines_database_from('whatever-path') # to open a file so that it doesn't rise NoFileOpenedError
+
+    data = ''
+    file = StringIO(data)
+    def fake_open(path, mode):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
+    system.save_medicines_database()

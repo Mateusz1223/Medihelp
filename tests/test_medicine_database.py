@@ -133,6 +133,7 @@ def test_medicinedatabase_read_from_file_malformed_data_wrong_format():
     database = MedicineDatabase()
     data = '''Malformed header\nMalformed row'''
     file_handler = StringIO(data)
+    file_handler.name = 'file'
     with raises(MalformedDataError):
         database.read_from_file(file_handler)
 
@@ -142,5 +143,6 @@ def test_medicinedatabase_read_from_file_malformed_incorrect_row_empty_name():
     data = '''id,name,manufacturer,illnesses,recipients,substances,recommended_age,doses,doses_left,expiration_date,notes
 0,,Polfarm,"{'illness2', 'illness3', 'illness1'}","{0, 1, 2}","{'caffeine', 'nicotine'}",0,10,6,2025-12-31,"[None, 'Hello World1', None]'''
     file_handler = StringIO(data)
+    file_handler.name = 'file'
     with raises(MalformedDataError):
         database.read_from_file(file_handler)
