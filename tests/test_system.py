@@ -251,3 +251,24 @@ def test_system_save_medicines_database_2(monkeypatch):
     monkeypatch.setattr(builtins, 'open', fake_open)
 
     system.save_medicines_database()
+
+
+def test_system_get_medicines_list():
+    illneses = ['Illness1', 'illness2', 'IllNess3']
+    substances = ['nicoTine', 'Caffeine', 'substance1']
+    medicine1 = Medicine(0, name='name1', manufacturer='man1',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=18, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
+    illneses = ['i1', 'i2', 'i3']
+    substances = ['sth', 'sth2']
+    medicine2 = Medicine(1, name='Sth', manufacturer='man2',
+                        illnesses=illneses, substances=substances,
+                        recommended_age=18, doses=3, doses_left=2, expiration_date=date(2029, 1, 5))
+
+    system = System()
+    system.medicines_database().add_medicine(medicine1)
+    system.medicines_database().add_medicine(medicine2)
+    list_of_medicines = system.get_medicines_list()
+    assert len(list_of_medicines) == 2
+    assert medicine1 in list_of_medicines
+    assert medicine2 in list_of_medicines

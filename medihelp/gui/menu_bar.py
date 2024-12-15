@@ -9,9 +9,10 @@ class MenuBar(tk.Menu):
     Class representing menu bar at the top of the screen.
     '''
 
-    def __init__(self, parent, system_handler):
-        super().__init__(parent)
+    def __init__(self, system_handler, gui_handler):
+        super().__init__(gui_handler)
         self._system = system_handler
+        self._gui = gui_handler
 
         # File menu
         self._file_menu = tk.Menu(self, tearoff=False)
@@ -41,6 +42,8 @@ class MenuBar(tk.Menu):
             self._system.load_medicines_database_from(path)
         except DataLoadingError as e:
             messagebox.showerror(title="Błąd", message=str(e))
+        self._gui.update_views()
+
 
     def save_file_button_handler(self):
         try:

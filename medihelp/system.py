@@ -87,6 +87,7 @@ class System:
         :param path: Path to the file (optional)
         :type path: str
         '''
+
         if not self.medicines_database_loaded() and not path:
             raise NoFileOpenedError
         if not path:
@@ -99,3 +100,12 @@ class System:
         self._medicines_file_saved = True
         if not self.medicines_database_loaded():
             self._medicines_file_path = path
+
+    def get_medicines_list(self):
+        '''
+        Returns a list of medicines that are stored in self._medicines_database
+        '''
+        ret_list = []
+        for medicine in self._medicines_database.medicines().values():
+            ret_list.append(medicine)
+        return ret_list
