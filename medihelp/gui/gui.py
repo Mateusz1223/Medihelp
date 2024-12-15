@@ -14,8 +14,11 @@ class GUI(tk.Tk):
     :ivar _system: hander to system
     :vartype _system: System
 
-    :ivar medicine_list_view: Main view that displays informations about all medicines in a database
-    :vartype medicine_list_view: MedicineListView
+    :ivar _menu_bar: object representing menu bar at the top of the screen
+    :vartype _menu_bar: MenuBar
+
+    :ivar _views: List of views of the app
+    :vartype _views: list[View]
     '''
 
     def __init__(self, system_handler):
