@@ -1,10 +1,10 @@
-import tkinter as tk
+import customtkinter as ctk
 from .menu_bar import MenuBar
 from .medicine_list_view import MedicineListView
 from .global_settings import resolution
 
 
-class GUI(tk.Tk):
+class GUI(ctk.CTk):
     '''
     Responsible for providing a way of communication with the user. Comunicates with System object via _system handler.
     Inherites from tkinter.Tk so it is a window of the application.
@@ -28,6 +28,9 @@ class GUI(tk.Tk):
         self.title('Medihelp')
         self.geometry(f'{resolution['x']}x{resolution['y']}')
 
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
         self._menu_bar = MenuBar(self._system, self)
         self.config(menu=self._menu_bar)
 
@@ -35,11 +38,11 @@ class GUI(tk.Tk):
             'medicine-list-view': MedicineListView(self._system, self)
         }
         for view in self._views.values():
-            view.pack(fill='x')
+            view.grid(row=0, column=0, sticky="nsew")
 
         self.mainloop()
 
     def update_views(self):
         for view in self._views.values():
             view.update_view()
-            view.pack(fill='x')
+            view.grid(row=0, column=0, sticky="nsew")

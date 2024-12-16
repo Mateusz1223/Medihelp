@@ -1,7 +1,7 @@
-import tkinter as tk
+import customtkinter as ctk
 
 
-class View(tk.Frame):
+class View(ctk.CTkScrollableFrame):
     '''
     Base class for all the views in the GUI.
 
@@ -10,8 +10,8 @@ class View(tk.Frame):
     :ivar _system: system handler
     :vartype _system: System
     '''
-    def __init__(self, system_handler, master = None, cnf = None, *, background = None, bd = 0, bg = None, border = 0, borderwidth = 0, class_ = "Frame", colormap = "", container = False, cursor = "", height = 0, highlightbackground = None, highlightcolor = None, highlightthickness = 0, name = None, padx = 0, pady = 0, relief = "flat", takefocus = 0, visual = "", width = 0):
-        super().__init__(master, cnf, background=background, bd=bd, bg=bg, border=border, borderwidth=borderwidth, class_=class_, colormap=colormap, container=container, cursor=cursor, height=height, highlightbackground=highlightbackground, highlightcolor=highlightcolor, highlightthickness=highlightthickness, name=name, padx=padx, pady=pady, relief=relief, takefocus=takefocus, visual=visual, width=width)
+    def __init__(self, system_handler, master, width=200, height=200, corner_radius=None, border_width=None, bg_color="transparent", fg_color=None, border_color=None, scrollbar_fg_color=None, scrollbar_button_color=None, scrollbar_button_hover_color=None, label_fg_color=None, label_text_color=None, label_text="", label_font=None, label_anchor="center", orientation="vertical"):
+        super().__init__(master, width, height, corner_radius, border_width, bg_color, fg_color, border_color, scrollbar_fg_color, scrollbar_button_color, scrollbar_button_hover_color, label_fg_color, label_text_color, label_text, label_font, label_anchor, orientation)
         self._system = system_handler
 
     def update_view(self):

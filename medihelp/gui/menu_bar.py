@@ -49,7 +49,6 @@ class MenuBar(tk.Menu):
             messagebox.showerror(title="Błąd", message=str(e))
         self._gui.update_views()
 
-
     def save_file_button_handler(self):
         try:
             self._system.save_medicines_database()

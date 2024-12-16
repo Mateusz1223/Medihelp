@@ -1,9 +1,7 @@
-import tkinter as tk
+import customtkinter as ctk
 from .global_settings import font_name
 from .medicine_tile import MedicineTile
 from .view import View
-from medihelp.medicine import Medicine
-from datetime import date
 
 
 class MedicineListView(View):
@@ -15,8 +13,8 @@ class MedicineListView(View):
 
         self.columnconfigure(0, weight=1)
 
-        self._label = tk.Label(self, text="Lista leków", font=(font_name, 20))
-        self._label.grid(row=0, column=0, padx=20, pady=30, sticky=tk.W)
+        self._label = ctk.CTkLabel(self, text="Lista leków", font=(font_name, 20))
+        self._label.grid(row=0, column=0, padx=20, pady=30, sticky='w')
         self._medicine_tiles = []
 
         self.update_view()
@@ -41,5 +39,5 @@ class MedicineListView(View):
         index = 0
         for medicine in self._list_of_medicines:
             self._medicine_tiles.append(MedicineTile(self, medicine, users_id_to_name_dict))
-            self._medicine_tiles[index].grid(row=index+1, column=0, padx=20, pady=10, sticky=tk.W + tk.E)
+            self._medicine_tiles[index].grid(row=index + 1, column=0, padx=20, pady=10, sticky='we')
             index += 1
