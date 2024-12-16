@@ -20,7 +20,7 @@ class MenuBar(tk.Menu):
         self._file_menu.add_separator()
         self._file_menu.add_command(label='Zapisz bazę leków', command=self.save_file_button_handler)
         self._file_menu.add_command(label='Zapisz bazę leków jako', command=self.save_file_as_button_handler)
-        self.add_cascade(menu=self._file_menu, label="| Plik |")
+        self.add_cascade(menu=self._file_menu, label=" Plik ")
 
         # View menu
         self._view_menu = tk.Menu(self, tearoff=False)
@@ -28,12 +28,12 @@ class MenuBar(tk.Menu):
         self._view_menu.add_command(label="Wyświetl kalendarz", command=self.show_callender_button_handler)
         self._view_menu.add_separator()
         self._view_menu.add_command(label="Modyfikuj dane użytkowników", command=self.modify_users_info_button_handler)
-        self.add_cascade(menu=self._view_menu, label="| Widok |")
+        self.add_cascade(menu=self._view_menu, label=" Widok ")
 
         # Edit menu
         self._edit_menu = tk.Menu(self, tearoff=False)
         self._edit_menu.add_command(label='Dodaj lek', command=None)
-        self.add_cascade(menu=self._edit_menu, label="| Edytuj |")
+        self.add_cascade(menu=self._edit_menu, label=" Edytuj ")
 
     def load_file_button_handler(self):
         if not self._system.medicines_file_saved():

@@ -128,7 +128,11 @@ class Medicine:
 
         self._expiration_date = expiration_date
 
-        self._notes = [None, None, None]
+        self._notes = {
+            0: None,
+            1: None,
+            2: None
+        }
 
     def __eq__(self, other):
         '''
@@ -184,6 +188,9 @@ class Medicine:
 
     def expiration_date(self):
         return self._expiration_date
+
+    def notes(self):
+        return self._notes
 
     def note(self, user_id):
         '''

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from .global_settings import font_name
 from medihelp.medicine import Medicine
+from .user_note_tile import UserNoteTile
 
 
 def set_of_strings_to_string(set_of_strings):
@@ -32,49 +33,64 @@ class MedicineTile(ctk.CTkFrame):
         # Used for determining wheather users' notes are currently being shown or not
         self._show_notes = False
 
-        padx = 20
-        pady = 2
+        self.padx = 20
+        self.pady = 2
 
-        self._name_label = ctk.CTkLabel(self, justify='left', text=medicine.name(), font=(font_name, 14, "bold"))
-        self._name_label.pack(padx=padx, pady=pady+10, anchor='w')
+        self._name_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=medicine.name(), font=(font_name, 14, "bold"))
+        self._name_label.pack(padx=self.padx, pady=self.pady + 10, anchor='w')
 
-        self._doses_label = ctk.CTkLabel(self, justify='left', text=f'(Pozostałe dawki: {medicine.doses_left()} na {medicine.doses()})', font=(font_name, 10))
-        self._doses_label.pack(padx=padx, pady=pady, anchor='w')
+        self._doses_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=f'(Pozostałe dawki: {medicine.doses_left()} na {medicine.doses()})', font=(font_name, 10))
+        self._doses_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._for_ilnesses_label = ctk.CTkLabel(self, justify='left', text=f'Na następujące choroby: {set_of_strings_to_string(medicine.illnesses())}', font=(font_name, 10))
-        self._for_ilnesses_label.pack(padx=padx, pady=pady, anchor='w')
+        self._for_ilnesses_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=f'Na następujące choroby: {set_of_strings_to_string(medicine.illnesses())}', font=(font_name, 10))
+        self._for_ilnesses_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
         # TO DO: Dynamic wraplength adjustment
         self._substances_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=f'Substancje czynne: {set_of_strings_to_string(medicine.substances())}', font=(font_name, 10))
-        self._substances_label.pack(padx=padx, pady=pady, anchor='w')
+        self._substances_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._reccomended_age_label = ctk.CTkLabel(self, justify='left', text=f'Zalecany wiek: {medicine.recommended_age()}', font=(font_name, 10, "bold"))
-        self._reccomended_age_label.pack(padx=padx, pady=pady, anchor='w')
+        self._reccomended_age_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=f'Zalecany wiek: {medicine.recommended_age()}', font=(font_name, 10, "bold"))
+        self._reccomended_age_label.pack(padx=self.padx, pady=self.pady, anchor='w')
+
+        self._expiration_date_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=f'Data ważności: {medicine.expiration_date()}', font=(font_name, 10, "bold"))
+        self._expiration_date_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
         recipients = set()
         for id in medicine.recipients():
             recipients.add(users_id_to_name_dict.get(id, 'Nieznany użytkownik'))
-        self._recipients_label = ctk.CTkLabel(self, justify='left', text=f'Użytkownicy przyjmujący lek: {set_of_strings_to_string(recipients)}', font=(font_name, 10))
-        self._recipients_label.pack(padx=padx, pady=pady, anchor='w')
+        self._recipients_label = ctk.CTkLabel(self, justify='left', wraplength=600, text=f'Użytkownicy przyjmujący lek: {set_of_strings_to_string(recipients)}', font=(font_name, 10))
+        self._recipients_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._buton_frame = ctk.CTkFrame(self)
+        self._buton_frame = ctk.CTkFrame(self, fg_color=parent.cget("fg_color"))
         self._buton_frame.columnconfigure(0, weight=1)
         self._buton_frame.columnconfigure(1, weight=1)
         self._buton_frame.columnconfigure(2, weight=1)
         self._take_dose_button = ctk.CTkButton(self._buton_frame, fg_color='mediumseagreen', text='Weź dawkę', font=(font_name, 10))
         self._take_dose_button.grid(row=0, column=0, sticky='w')
-        self._show_notes_button = ctk.CTkButton(self._buton_frame, fg_color='grey', text='↓ Pokaż notatki użytkowników ↓', font=(font_name, 10))
+        self._show_notes_button = ctk.CTkButton(self._buton_frame, fg_color='grey', text='↓ Pokaż notatki użytkowników ↓', font=(font_name, 10), command=self._show_notes_button_handler)
         self._show_notes_button.grid(row=0, column=1, sticky='w' + 'e')
         self._edit_button = ctk.CTkButton(self._buton_frame, fg_color='indianred', text='Edytuj', font=(font_name, 10))
         self._edit_button.grid(row=0, column=2, sticky='e')
-        self._buton_frame.pack(padx=padx, pady=pady + 10, anchor='w', fill='x')
+        self._buton_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
 
-    def _show_notes_button_handler():
+        # Load users' notes
+        self._notes_frame = self._buton_frame = ctk.CTkFrame(self, fg_color=parent.cget("fg_color"))
+        self._notes_frame.columnconfigure(0, weight=1)
+        self._user_notes_tiles = []
+        for id, content in medicine.notes().items():
+            if content:
+                self._user_notes_tiles.append(UserNoteTile(self._notes_frame, users_id_to_name_dict.get(id, 'Nieznany użytkownik'), content))
+        row_counter = 0
+        for note_tile in self._user_notes_tiles:
+            note_tile.grid(row=row_counter, column=0, padx=0, pady=self.pady, sticky='we')
+            row_counter += 1
+
+    def _show_notes_button_handler(self):
         if not self._show_notes:
             self._show_notes = True
-            # show notes
-            # TO DO
+            self._show_notes_button.configure(text='↑ Schowaj notatki użytkowników ↑')
+            self._notes_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
         else:
             self._show_notes = False
-            # hide notes
-            # TO DO
+            self._show_notes_button.configure(text='↓ Pokaż notatki użytkowników ↓')
+            self._notes_frame.pack_forget()

@@ -24,6 +24,7 @@ class MedicineListView(View):
         Called when system informations like databases data change so that the view can update it's content.
         '''
         # temporary solution
+        # TO DO
         users_id_to_name_dict = {
             0: 'Tata',
             1: 'Mama',
