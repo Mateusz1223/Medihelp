@@ -8,8 +8,8 @@ class MedicineListView(View):
     '''
     View that shows informations about all the medicines stored in a database
     '''
-    def __init__(self, system_handler, parent):
-        super().__init__(system_handler, parent)
+    def __init__(self, system_handler, gui_handler, parent):
+        super().__init__(system_handler, gui_handler, parent)
 
         self.columnconfigure(0, weight=1)
 
@@ -39,6 +39,6 @@ class MedicineListView(View):
 
         index = 0
         for medicine in self._list_of_medicines:
-            self._medicine_tiles.append(MedicineTile(self, medicine, users_id_to_name_dict))
+            self._medicine_tiles.append(MedicineTile(self._gui, self, medicine, users_id_to_name_dict))
             self._medicine_tiles[index].grid(row=index + 1, column=0, padx=20, pady=10, sticky='we')
             index += 1

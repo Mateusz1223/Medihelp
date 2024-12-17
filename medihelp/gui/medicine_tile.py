@@ -16,8 +16,11 @@ class MedicineTile(ctk.CTkFrame):
     Class MedicineTile responsible for displaying informations contained in medicine object
     '''
 
-    def __init__(self, parent, medicine: Medicine, users_id_to_name_dict: dict[int, str]):
+    def __init__(self, gui_handler, parent, medicine: Medicine, users_id_to_name_dict: dict[int, str]):
         '''
+        :param gui_handler: gui object handler
+        :type gui_handler: GUI
+
         :param parent: parent object used for initialization of tkinter objects
         :type parent: tkinter.Misc
 
@@ -31,6 +34,8 @@ class MedicineTile(ctk.CTkFrame):
         super().__init__(parent, border_width=1)
 
         # Used for determining wheather users' notes are currently being shown or not
+        self._gui = gui_handler
+
         self._show_notes = False
 
         self.padx = 20
@@ -77,10 +82,21 @@ class MedicineTile(ctk.CTkFrame):
         self._notes_frame = self._buton_frame = ctk.CTkFrame(self, fg_color=parent.cget("fg_color"))
         self._notes_frame.columnconfigure(0, weight=1)
         self._user_notes_tiles = []
+        create_add_note_button = True
         for id, content in medicine.notes().items():
             if content:
-                self._user_notes_tiles.append(UserNoteTile(self._notes_frame, users_id_to_name_dict.get(id, 'Nieznany użytkownik'), content, editable=True))
-        row_counter = 0
+                self._user_notes_tiles.append(UserNoteTile(self._notes_frame,
+                                                           users_id_to_name_dict.get(id, 'Nieznany użytkownik'),
+                                                           content,
+                                                           editable=(True if self._gui.current_user_id == id else False)))
+                if self._gui.current_user_id == id:
+                    create_add_note_button = False
+        if create_add_note_button:
+            # Create add note button if there is no note belonging to the current user already
+            self._add_note_button = ctk.CTkButton(self._notes_frame, fg_color=action_color, text='Dodaj notatkę +', font=(font_name, 10))
+            self._add_note_button.grid(row=0, column=0, padx=0, pady=self.pady + 5, sticky='w')
+
+        row_counter = 1
         for note_tile in self._user_notes_tiles:
             note_tile.grid(row=row_counter, column=0, padx=0, pady=self.pady, sticky='we')
             row_counter += 1

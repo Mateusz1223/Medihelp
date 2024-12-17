@@ -19,14 +19,23 @@ class GUI(ctk.CTk):
 
     :ivar _views: List of views of the app
     :vartype _views: list[View]
+
+    :ivar current_user_id: ID of the user currently using the Gui
+    :vartype current_user_id: int
     '''
 
     def __init__(self, system_handler):
         super().__init__()
         self._system = system_handler
 
-        self.title('Medihelp')
         self.geometry(f'{resolution['x']}x{resolution['y']}')
+        self.title('Medihelp')
+
+        self.current_user_id = None
+
+        # Temporary TO DO
+        self.current_user_id = 0
+        self.title('Medihelp - Tata')
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -35,7 +44,7 @@ class GUI(ctk.CTk):
         self.config(menu=self._menu_bar)
 
         self._views = {
-            'medicine-list-view': MedicineListView(self._system, self)
+            'medicine-list-view': MedicineListView(self._system, self, self)
         }
         for view in self._views.values():
             view.grid(row=0, column=0, sticky="nsew")

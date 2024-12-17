@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .global_settings import font_name, action_color
+from .global_settings import font_name, action_color, edit_color
 
 
 class UserNoteTile(ctk.CTkFrame):
@@ -28,5 +28,14 @@ class UserNoteTile(ctk.CTkFrame):
         self._content_label.pack(padx=20, pady=4, anchor='w')
 
         if editable:
-            self._modify_button = ctk.CTkButton(self, fg_color=action_color, text='Edytuj notatkę', font=(font_name, 10))
-            self._modify_button.pack(padx=20, pady=10, anchor='w')
+            self._buttons_frame = ctk.CTkFrame(self, fg_color=parent.cget("fg_color"))
+            self._buttons_frame.columnconfigure(0, weight=1)
+            self._buttons_frame.columnconfigure(1, weight=1)
+
+            self._modify_button = ctk.CTkButton(self._buttons_frame, fg_color=action_color, text='Edytuj notatkę', font=(font_name, 10))
+            self._modify_button.grid(row=0, column=0, sticky='w')
+
+            self._delete_button = ctk.CTkButton(self._buttons_frame, fg_color=edit_color, text='Usuń notatkę', font=(font_name, 10))
+            self._delete_button.grid(row=0, column=1, padx=10, sticky='w')
+
+            self._buttons_frame.pack(padx=20, pady=10, anchor='w')
