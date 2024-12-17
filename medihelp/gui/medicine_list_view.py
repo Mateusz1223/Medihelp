@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .global_settings import font_name
+from .global_settings import font_name, action_color
 from .medicine_tile import MedicineTile
 from .view import View
 
@@ -13,8 +13,8 @@ class MedicineListView(View):
 
         self.columnconfigure(0, weight=1)
 
-        self._label = ctk.CTkLabel(self, text="Lista leków", font=(font_name, 20))
-        self._label.grid(row=0, column=0, padx=20, pady=30, sticky='w')
+        self._add_medicine_button = ctk.CTkButton(self, fg_color=action_color, text='Dodaj lek +', font=(font_name, 12))
+        self._add_medicine_button.grid(row=0, column=0, padx=20, pady=30, sticky='w')
         self._medicine_tiles = []
 
         self.update_view()

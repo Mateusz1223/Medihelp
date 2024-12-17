@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 from medihelp.errors import DataLoadingError, NoFileOpenedError, DataSavingError
+from .global_settings import font_name
 
 
 class MenuBar(tk.Menu):
@@ -10,12 +11,13 @@ class MenuBar(tk.Menu):
     '''
 
     def __init__(self, system_handler, gui_handler):
-        super().__init__(gui_handler)
+        self._font = (font_name, 9)
+        super().__init__(gui_handler, font=self._font)
         self._system = system_handler
         self._gui = gui_handler
 
         # File menu
-        self._file_menu = tk.Menu(self, tearoff=False)
+        self._file_menu = tk.Menu(self, font=self._font, tearoff=False)
         self._file_menu.add_command(label='Załaduj bazę leków', command=self.load_file_button_handler)
         self._file_menu.add_separator()
         self._file_menu.add_command(label='Zapisz bazę leków', command=self.save_file_button_handler)
@@ -23,7 +25,7 @@ class MenuBar(tk.Menu):
         self.add_cascade(menu=self._file_menu, label=" Plik ")
 
         # View menu
-        self._view_menu = tk.Menu(self, tearoff=False)
+        self._view_menu = tk.Menu(self, font=self._font, tearoff=False)
         self._view_menu.add_command(label='Wyświetl listę leków', command=None)
         self._view_menu.add_command(label="Wyświetl kalendarz", command=self.show_callender_button_handler)
         self._view_menu.add_separator()
@@ -31,7 +33,7 @@ class MenuBar(tk.Menu):
         self.add_cascade(menu=self._view_menu, label=" Widok ")
 
         # Edit menu
-        self._edit_menu = tk.Menu(self, tearoff=False)
+        self._edit_menu = tk.Menu(self, font=self._font, tearoff=False)
         self._edit_menu.add_command(label='Dodaj lek', command=None)
         self.add_cascade(menu=self._edit_menu, label=" Edytuj ")
 
@@ -40,7 +42,7 @@ class MenuBar(tk.Menu):
             if not messagebox.askyesno(title="Załaduj inny plik",
                                        message="Czy na pewno chcesz załadować nowy plik, bez zapisania zmian w pliku obecnym?"):
                 return
-        path = askopenfilename()
+        path = askopenfilename(title="Wybierz plik do odczytu", filetypes=[("CSV Files", "*.csv")])
         if not path:
             return
         try:
@@ -58,7 +60,7 @@ class MenuBar(tk.Menu):
             messagebox.showerror(title="Błąd", message=str(e))
 
     def save_file_as_button_handler(self):
-        path = askopenfilename()
+        path = asksaveasfilename(title="Wybierz plik do zapisu", defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
         if not path:
             return
         try:

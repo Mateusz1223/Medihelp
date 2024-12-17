@@ -13,7 +13,7 @@ def main():
         return
 
     # temporary
-    system.load_medicines_database_from('data/medicines.csv')
+    # system.load_medicines_database_from('data/medicines.csv')
 
     GUI(system)
 

@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from .global_settings import font_name
+from .global_settings import font_name, action_color, edit_color, neutral_color
 from medihelp.medicine import Medicine
 from .user_note_tile import UserNoteTile
 
@@ -65,11 +65,11 @@ class MedicineTile(ctk.CTkFrame):
         self._buton_frame.columnconfigure(0, weight=1)
         self._buton_frame.columnconfigure(1, weight=1)
         self._buton_frame.columnconfigure(2, weight=1)
-        self._take_dose_button = ctk.CTkButton(self._buton_frame, fg_color='mediumseagreen', text='Weź dawkę', font=(font_name, 10))
+        self._take_dose_button = ctk.CTkButton(self._buton_frame, fg_color=action_color, text='Weź dawkę', font=(font_name, 10))
         self._take_dose_button.grid(row=0, column=0, sticky='w')
-        self._show_notes_button = ctk.CTkButton(self._buton_frame, fg_color='grey', text='↓ Pokaż notatki użytkowników ↓', font=(font_name, 10), command=self._show_notes_button_handler)
+        self._show_notes_button = ctk.CTkButton(self._buton_frame, fg_color=neutral_color, text='↓ Pokaż notatki użytkowników ↓', font=(font_name, 10), command=self._show_notes_button_handler)
         self._show_notes_button.grid(row=0, column=1, sticky='w' + 'e')
-        self._edit_button = ctk.CTkButton(self._buton_frame, fg_color='indianred', text='Edytuj', font=(font_name, 10))
+        self._edit_button = ctk.CTkButton(self._buton_frame, fg_color=edit_color, text='Edytuj', font=(font_name, 10))
         self._edit_button.grid(row=0, column=2, sticky='e')
         self._buton_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
 
@@ -79,7 +79,7 @@ class MedicineTile(ctk.CTkFrame):
         self._user_notes_tiles = []
         for id, content in medicine.notes().items():
             if content:
-                self._user_notes_tiles.append(UserNoteTile(self._notes_frame, users_id_to_name_dict.get(id, 'Nieznany użytkownik'), content))
+                self._user_notes_tiles.append(UserNoteTile(self._notes_frame, users_id_to_name_dict.get(id, 'Nieznany użytkownik'), content, editable=True))
         row_counter = 0
         for note_tile in self._user_notes_tiles:
             note_tile.grid(row=row_counter, column=0, padx=0, pady=self.pady, sticky='we')
