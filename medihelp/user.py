@@ -43,7 +43,7 @@ class User:
         :type name: str
         :param birth_date: Age of the user.
         :type birth_date: int
-        :param illnesses: (optional) list of illnesses that are cured by this medicine. Names of illneses are written in lowercase.
+        :param illnesses: (optional) list of illnesses that the user has. Names of illneses are written in lowercase.
         :type illnesses: iterable of str
         :param allergies: (optional) list of active substances to which the user is allergic to. Names of substances are written in lowercase.
         :type allergies: iterable of str

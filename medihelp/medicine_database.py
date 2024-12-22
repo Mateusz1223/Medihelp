@@ -62,16 +62,9 @@ class MedicineDatabase:
                         doses=int(row['doses']),
                         doses_left=int(row['doses_left']),
                         expiration_date=date(year, month, day),
-                        recipients=ast.literal_eval(row['recipients'])
+                        recipients=ast.literal_eval(row['recipients']),
+                        notes=ast.literal_eval(row['notes'])
                     )
-                    notes = ast.literal_eval(row['notes'])
-                    for i in range(0, len(notes)):
-                        if notes[i] == 'None':
-                            notes[i] = None
-                    medicine.set_note(0, notes[0])
-                    medicine.set_note(1, notes[1])
-                    medicine.set_note(2, notes[2])
-
                     self.add_medicine(medicine)
                 except Exception as e:
                     raise MalformedDataError(file_handler.name, row_counter) from e
@@ -111,5 +104,5 @@ class MedicineDatabase:
                 'doses': medicine.doses(),
                 'doses_left': medicine.doses_left(),
                 'expiration_date': medicine.expiration_date(),
-                'notes': [medicine.note(0), medicine.note(1), medicine.note(2)]
+                'notes': medicine.notes()
             })

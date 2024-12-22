@@ -48,8 +48,8 @@ class Medicine:
     :ivar _expiration_date: Expiration date.
     :vartype _expiration_date: date
 
-    :ivar _notes: List of three objects. Each of them represents note from one user
-    :vartype _notes: list[str/None]
+    ::param _notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves
+    :type _notes: dict[int, str]
     '''
 
     def __init__(self, id: int,
@@ -61,7 +61,8 @@ class Medicine:
                  doses: int,
                  doses_left: int,
                  expiration_date: date,
-                 recipients=None):
+                 recipients=None,
+                 notes: dict[int: str] = None):
         '''
         :param id: Unique Id of the medicine
         :type id: int
@@ -82,7 +83,9 @@ class Medicine:
         :param expiration_date: Expiration date.
         :type expiration_date: date
         :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child)
-        :tyoe recipients: iterable of int
+        :type recipients: iterable of int
+        :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves
+        :type notes: dict[int, str]
         '''
 
         self._id = int(id)
@@ -127,12 +130,10 @@ class Medicine:
         self._doses_left = doses_left
 
         self._expiration_date = expiration_date
-
-        self._notes = {
-            0: None,
-            1: None,
-            2: None
-        }
+        if notes:
+            self._notes = notes
+        else:
+            self._notes = dict()
 
     def __eq__(self, other):
         '''
@@ -195,27 +196,38 @@ class Medicine:
     def note(self, user_id):
         '''
         Returnes the given user's note for this medicine.
+        Returns None if there is no note from the given user.
 
-        :param user_id: 0 - Dad, 1 - Mom, 2 - Child
+        :param user_id: Id of the user
         :type user_id: int
         '''
-        if user_id < 0 or user_id > 2:
-            raise InvalidUserIDError
-        return self._notes[user_id]
+        return self._notes.get(user_id, None)
 
-    def set_note(self, user_id, note):
+    def set_note(self, user_id, content):
         '''
-        Changes value of the given user's note for this medicine.
+        Sets content of a Note assigned to a given user.
 
-        :param user_id: 0 - Dad, 1 - Mom, 2 - Child
+        :param user_id: ID of the user whose note is to be modified.
+        :type user_id: int
+
+        :param content: Note message.
+        :type content: str
+        '''
+        content = str(content)
+        if user_id not in self._notes.keys():
+            self._notes.update({user_id: content})
+        self._notes[user_id] = content
+
+    def del_note(self, user_id):
+        '''
+        Deletes a Note assigned to a given user.
+
+        :param user_id: ID of the user whose note is to be deleted.
         :type user_id: int
         '''
-        if user_id < 0 or user_id > 2:
-            raise InvalidUserIDError
-        if note:
-            self._notes[user_id] = str(note)
-        else:
-            self._notes[user_id] = None
+        if user_id not in self._notes.keys():
+            return
+        del self._notes[user_id]
 
     def add_recipient(self, user_id):
         if user_id < 0 or user_id > 2:
