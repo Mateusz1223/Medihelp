@@ -12,7 +12,9 @@ from medihelp.errors import (InvalidNameError,
                              NotEnoughDosesError,
                              ExpiredMedicineError,
                              InvalidUserIDError,
-                             NoteIsToLongError)
+                             NoteIsToLongError,
+                             EmptyNoteError,
+                             TooManyLinesInTheNoteError)
 
 
 def test_medicine_create():
@@ -103,6 +105,28 @@ def test_medicine_set_note_too_long():
 
     with raises(NoteIsToLongError):
         medicine.set_note(0, 500 * 'A' + 'B')
+
+
+def test_medicine_set_note_empty():
+    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine', 'substance1'],
+                        recommended_age=100, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2))
+
+    with raises(EmptyNoteError):
+        medicine.set_note(0, '')
+
+
+def test_medicine_set_note_too_many_lines():
+    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine', 'substance1'],
+                        recommended_age=100, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2))
+
+    with raises(TooManyLinesInTheNoteError):
+        medicine.set_note(0, '1\n2\n3\n4\n5\n')
 
 
 def test_medicine_del_note():

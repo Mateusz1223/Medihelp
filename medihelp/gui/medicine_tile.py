@@ -2,6 +2,7 @@ import customtkinter as ctk
 from .global_settings import font_name, action_color, edit_color, neutral_color, min_width
 from medihelp.medicine import Medicine
 from .user_note_tile import UserNoteTile
+from .add_note_tile import AddNoteTile
 
 
 def set_of_strings_to_string(set_of_strings):
@@ -93,22 +94,23 @@ class MedicineTile(ctk.CTkFrame):
         self._notes_frame = self._buton_frame = ctk.CTkFrame(self, fg_color=parent.cget("fg_color"))
         self._notes_frame.columnconfigure(0, weight=1)
         self._user_notes_tiles = []
-        create_add_note_button = True
+        create_add_note_tile = True
         for author_id, content in self._medicine.notes().items():
             if content:
-                self._user_notes_tiles.append(UserNoteTile(self._system,
-                                                           self._gui,
-                                                           self._notes_frame,
-                                                           self._medicine.id(),
-                                                           author_id,
-                                                           content,
-                                                           editable=(True if self._gui.current_user_id == author_id else False)))
-                if self._gui.current_user_id == author_id:
-                    create_add_note_button = False
-        if create_add_note_button:
+                self._user_notes_tiles.append(UserNoteTile(system_handler=self._system,
+                                                           gui_handler=self._gui,
+                                                           parent=self._notes_frame,
+                                                           medicine_id=self._medicine.id(),
+                                                           author_id=author_id,
+                                                           content=content,
+                                                           editable=(True if self._gui.current_user_id() == author_id else False)))
+                if self._gui.current_user_id() == author_id:
+                    create_add_note_tile = False
+        if create_add_note_tile:
             # Create add_note_button if there is no note belonging to the current user already
-            self._add_note_button = ctk.CTkButton(self._notes_frame, fg_color=action_color, text='Dodaj notatkę +', font=(font_name, 10))
-            self._add_note_button.grid(row=0, column=0, padx=0, pady=self.pady + 5, sticky='w')
+            self._add_note_tile = AddNoteTile(system_handler=self._system, gui_handler=self._gui,
+                                              parent=self._notes_frame, medicine_id=self._medicine.id())
+            self._add_note_tile.grid(row=0, column=0, padx=0, pady=self.pady, sticky='we')
 
         row_counter = 1
         for note_tile in self._user_notes_tiles:

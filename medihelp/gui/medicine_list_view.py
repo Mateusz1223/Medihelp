@@ -52,6 +52,6 @@ class MedicineListView(View):
             row = tile.grid_info()['row']
             tile.destroy()
             self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
-            self._medicine_tiles[medicine.id()].grid(row=row + 1, column=0, padx=20, pady=10, sticky='we')
+            self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')
         except Exception:
             raise MedicineDoesNotExist(medicine_id)

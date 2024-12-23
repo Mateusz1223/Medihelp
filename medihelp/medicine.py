@@ -9,7 +9,9 @@ from .errors import (InvalidNameError,
                      AgeWarning,
                      ExpiredMedicineError,
                      InvalidUserIDError,
-                     NoteIsToLongError)
+                     NoteIsToLongError,
+                     TooManyLinesInTheNoteError,
+                     EmptyNoteError)
 from typing import Iterable
 
 
@@ -215,6 +217,10 @@ class Medicine:
         :type content: str
         '''
         content = str(content)
+        if not content:
+            raise EmptyNoteError
+        if content.count('\n') >= 5:
+            raise TooManyLinesInTheNoteError
         if len(content) > 500:
             raise NoteIsToLongError
         if user_id not in self._notes.keys():

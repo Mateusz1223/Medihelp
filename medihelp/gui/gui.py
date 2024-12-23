@@ -21,8 +21,8 @@ class GUI(ctk.CTk):
     :ivar _views: List of views of the app
     :vartype _views: list[View]
 
-    :ivar current_user_id: ID of the user currently using the Gui
-    :vartype current_user_id: int
+    :ivar _current_user_id: ID of the user currently using the Gui
+    :vartype _current_user_id: int
     '''
 
     def __init__(self, system_handler):
@@ -35,10 +35,10 @@ class GUI(ctk.CTk):
         self.geometry(f'{gs.resolution['x']}x{gs.resolution['y']}')
         self.title('Medihelp')
 
-        self.current_user_id = None
+        self._current_user_id = None
 
         # Temporary TO DO
-        self.current_user_id = 0
+        self._current_user_id = 0
         self.title('Medihelp - Tata')
 
         self.grid_rowconfigure(0, weight=1)
@@ -54,6 +54,9 @@ class GUI(ctk.CTk):
             view.grid(row=0, column=0, sticky="nsew")
 
         self.mainloop()
+
+    def current_user_id(self):
+        return self._current_user_id
 
     def update_view(self, view: str, medicine_id: int = None):
         '''
