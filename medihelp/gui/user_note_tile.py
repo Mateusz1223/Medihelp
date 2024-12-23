@@ -5,7 +5,8 @@ from . import global_settings as gs
 
 class UserNoteTile(ctk.CTkFrame):
     '''
-    Class UserNoteTile responsible for displaying user note attached to a medicine.
+    Class UserNoteTile responsible for displaying user note attached to a medicine
+        and providing an interface to edit the note.
 
     :ivar _author_id: Id of the author
     :vartype _author_id: int

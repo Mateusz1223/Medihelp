@@ -24,6 +24,6 @@ class View(ctk.CTkScrollableFrame):
 
     def update_view(self):
         '''
-        Called when system informations like databases data change so that the view can update it's content.
+        Called when system information like databases data change so that the view can update its content.
         '''
         pass

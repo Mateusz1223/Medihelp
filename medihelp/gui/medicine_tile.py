@@ -1,15 +1,9 @@
 import customtkinter as ctk
-from .global_settings import font_name, action_color, edit_color, neutral_color, min_width
+from . import global_settings as gs
 from medihelp.medicine import Medicine
 from .user_note_tile import UserNoteTile
 from .add_note_tile import AddNoteTile
-
-
-def set_of_strings_to_string(set_of_strings):
-    result = ''
-    for s in set_of_strings:
-        result += s + ', '
-    return result[:-2]
+from .common import set_of_strings_to_string
 
 
 class MedicineTile(ctk.CTkFrame):
@@ -30,15 +24,11 @@ class MedicineTile(ctk.CTkFrame):
 
         :param medicine: Medicine object that is to be visualized
         :type medicine: Medicine
-
-        :param users_id_to_name_dict: A dictionary that maps user IDs (integers) to user names (strings).
-        :type users_id_to_name_dict: dict[int, str]
         '''
 
         super().__init__(parent, border_width=1)
 
         self._system = system_handler
-        # Used for determining wheather users' notes are currently being shown or not
         self._gui = gui_handler
 
         self._medicine = medicine
@@ -48,23 +38,35 @@ class MedicineTile(ctk.CTkFrame):
         self.padx = 20
         self.pady = 2
 
-        self._name_and_manufacturer_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'{self._medicine.name()} (productent: {self._medicine.manufacturer()})', font=(font_name, 14, "bold"))
+        self._name_and_manufacturer_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                                         text=f'{self._medicine.name()} (productent: {self._medicine.manufacturer()})',
+                                                         font=(gs.font_name, 14, "bold"))
         self._name_and_manufacturer_label.pack(padx=self.padx, pady=self.pady + 10, anchor='w')
 
-        self._doses_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'(Pozostałe dawki: {self._medicine.doses_left()} na {self._medicine.doses()})', font=(font_name, 10))
+        self._doses_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                         text=f'(Pozostałe dawki: {self._medicine.doses_left()} na {self._medicine.doses()})',
+                                         font=(gs.font_name, 10))
         self._doses_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._for_ilnesses_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'Na następujące choroby: {set_of_strings_to_string(self._medicine.illnesses())}', font=(font_name, 10))
+        self._for_ilnesses_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                                text=f'Na następujące choroby: {set_of_strings_to_string(self._medicine.illnesses())}',
+                                                font=(gs.font_name, 10))
         self._for_ilnesses_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
         # TO DO: Dynamic wraplength adjustment
-        self._substances_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'Substancje czynne: {set_of_strings_to_string(self._medicine.substances())}', font=(font_name, 10))
+        self._substances_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                              text=f'Substancje czynne: {set_of_strings_to_string(self._medicine.substances())}',
+                                              font=(gs.font_name, 10))
         self._substances_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._reccomended_age_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'Zalecany wiek: {self._medicine.recommended_age()}', font=(font_name, 10, "bold"))
+        self._reccomended_age_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                                   text=f'Zalecany wiek: {self._medicine.recommended_age()}',
+                                                   font=(gs.font_name, 10, "bold"))
         self._reccomended_age_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._expiration_date_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'Data ważności: {self._medicine.expiration_date()}', font=(font_name, 10, "bold"))
+        self._expiration_date_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                                   text=f'Data ważności: {self._medicine.expiration_date()}',
+                                                   font=(gs.font_name, 10, "bold"))
         self._expiration_date_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
         recipients = set()
@@ -75,18 +77,24 @@ class MedicineTile(ctk.CTkFrame):
             else:
                 name = "Nieznany użytkownik"
             recipients.add(name)
-        self._recipients_label = ctk.CTkLabel(self, justify='left', wraplength=min_width - 100, text=f'Użytkownicy przyjmujący lek: {set_of_strings_to_string(recipients)}', font=(font_name, 10))
+        self._recipients_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
+                                              text=f'Użytkownicy przyjmujący lek: {set_of_strings_to_string(recipients)}',
+                                              font=(gs.font_name, 10))
         self._recipients_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
         self._buton_frame = ctk.CTkFrame(self, fg_color=parent.cget("fg_color"))
         self._buton_frame.columnconfigure(0, weight=1)
         self._buton_frame.columnconfigure(1, weight=1)
         self._buton_frame.columnconfigure(2, weight=1)
-        self._take_dose_button = ctk.CTkButton(self._buton_frame, fg_color=action_color, text='Weź dawkę', font=(font_name, 10))
+        self._take_dose_button = ctk.CTkButton(self._buton_frame, fg_color=gs.action_color,
+                                               text='Weź dawkę', font=(gs.font_name, 10))
         self._take_dose_button.grid(row=0, column=0, sticky='w')
-        self._show_notes_button = ctk.CTkButton(self._buton_frame, fg_color=neutral_color, text='↓ Pokaż notatki użytkowników ↓', font=(font_name, 10), command=self._show_notes_button_handler)
+        self._show_notes_button = ctk.CTkButton(self._buton_frame, fg_color=gs.neutral_color,
+                                                text='↓ Pokaż notatki użytkowników ↓', font=(gs.font_name, 10),
+                                                command=self._show_notes_button_handler)
         self._show_notes_button.grid(row=0, column=1, sticky='w' + 'e')
-        self._edit_button = ctk.CTkButton(self._buton_frame, fg_color=edit_color, text='Edytuj', font=(font_name, 10))
+        self._edit_button = ctk.CTkButton(self._buton_frame, fg_color=gs.edit_color,
+                                          text='Edytuj', font=(gs.font_name, 10))
         self._edit_button.grid(row=0, column=2, sticky='e')
         self._buton_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
 

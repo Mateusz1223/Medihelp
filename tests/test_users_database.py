@@ -9,7 +9,7 @@ from pytest import raises
 
 def test_usersdatabase_create():
     database = UsersDatabase()
-    assert database.users() == {0: None, 1: None, 2: None}
+    assert database.users() == {}
 
 
 def test_usersdatabase_write_to_file_and_read_from_file():
@@ -63,43 +63,6 @@ def test_usersdatabase_write_to_file_and_read_from_file():
 
 def test_usersdatabase_read_from_file_malformed_data_wrong_format():
     data = 'Malformed file'
-    file = StringIO(data)
-    file.name = 'file'
-    database = UsersDatabase()
-    with raises(MalformedDataError):
-        database.read_from_file(file)
-
-
-def test_usersdatabase_read_from_file_malformed_data_wrong_id():
-    data = '''
-[
-{
-        "id": 4,
-        "name": "Dad",
-        "birth_date": "1982-07-12",
-        "illnesses": [
-            "cold",
-            "xyz"
-        ],
-        "allergies": [
-            "nicotine",
-            "sugar"
-        ],
-        "prescriptions": [
-            {
-                "medicine_name": "Med2",
-                "dosage": 2,
-                "weekday": 7
-            },
-            {
-                "medicine_name": "Med1",
-                "dosage": 1,
-                "weekday": 2
-            }
-        ]
-    }
-]
-'''
     file = StringIO(data)
     file.name = 'file'
     database = UsersDatabase()

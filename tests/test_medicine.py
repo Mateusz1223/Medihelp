@@ -11,7 +11,6 @@ from medihelp.errors import (InvalidNameError,
                              AgeWarning,
                              NotEnoughDosesError,
                              ExpiredMedicineError,
-                             InvalidUserIDError,
                              NoteIsToLongError,
                              EmptyNoteError,
                              TooManyLinesInTheNoteError)
@@ -270,26 +269,6 @@ def test_medicine_add_recipient_typical():
     assert 2 in medicine.recipients()
 
 
-def test_medicine_add_recipient_typical_invalid_id_1():
-    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                        illnesses=['Illness1', 'illness2', 'IllNess3'],
-                        substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
-    assert medicine.recipients() == set()
-    with raises(InvalidUserIDError):
-        medicine.add_recipient(-1)
-
-
-def test_medicine_add_recipient_typical_invalid_id_2():
-    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                        illnesses=['Illness1', 'illness2', 'IllNess3'],
-                        substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
-    assert medicine.recipients() == set()
-    with raises(InvalidUserIDError):
-        medicine.add_recipient(3)
-
-
 def test_medicine_remove_recipient_typical():
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
@@ -302,26 +281,6 @@ def test_medicine_remove_recipient_typical():
     medicine.remove_recipient(1)
     medicine.remove_recipient(2)
     assert medicine.recipients() == set()
-
-
-def test_medicine_remove_recipient_typical_invalid_id_1():
-    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                        illnesses=['Illness1', 'illness2', 'IllNess3'],
-                        substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
-    assert medicine.recipients() == set()
-    with raises(InvalidUserIDError):
-        medicine.remove_recipient(-1)
-
-
-def test_medicine_remove_recipient_typical_invalid_id_2():
-    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                        illnesses=['Illness1', 'illness2', 'IllNess3'],
-                        substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
-    assert medicine.recipients() == set()
-    with raises(InvalidUserIDError):
-        medicine.remove_recipient(3)
 
 
 def test_medicine_take_doses_typical(monkeypatch):

@@ -32,11 +32,6 @@ class MenuBar(tk.Menu):
         self._view_menu.add_command(label="Modyfikuj dane użytkowników", command=self.modify_users_info_button_handler)
         self.add_cascade(menu=self._view_menu, label="Widok")
 
-        # Edit menu
-        self._edit_menu = tk.Menu(self, font=self._font, tearoff=False)
-        self._edit_menu.add_command(label='Dodaj lek', command=None)
-        self.add_cascade(menu=self._edit_menu, label="Edytuj")
-
     def load_file_button_handler(self):
         if not self._system.medicines_file_saved():
             if not messagebox.askyesno(title="Załaduj inny plik",

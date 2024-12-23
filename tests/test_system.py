@@ -6,6 +6,7 @@ from medihelp.errors import (DataLoadingError,
                              NoFileOpenedError,
                              MedicineDoesNotExist,
                              UserDoesNotExist)
+from datetime import date
 from pytest import raises
 from io import StringIO
 import builtins
@@ -392,3 +393,21 @@ def test_system_del_note_wrong_medicine_id():
 
     with raises(MedicineDoesNotExist):
         system.del_note(-100, 0)
+
+
+def test_system_add_medicine():
+    system = System()
+
+    id1 = system.add_medicine(name='Ivermectin', manufacturer='polfarm',
+                              illnesses=['Illness1', 'illness2', 'IllNess3'],
+                              substances=['nicoTine', 'Caffeine'],
+                              recommended_age=0, doses=10, doses_left=6,
+                              expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
+                              notes={1: 'Hello'})
+    id2 = system.add_medicine(name='Paracetamol', manufacturer='usdrugs',
+                              illnesses=['cold'], substances=['weed', 'stuff'],
+                              recommended_age=12, doses=5, doses_left=5,
+                              expiration_date=date(2026, 1, 3), recipients=[0])
+
+    assert id1 == 0
+    assert id2 == 1

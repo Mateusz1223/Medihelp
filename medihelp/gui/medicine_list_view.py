@@ -1,6 +1,5 @@
-import customtkinter as ctk
-from . import global_settings as gs
 from .medicine_tile import MedicineTile
+from .add_medicine_tile import AddMedicineTile
 from .view import View
 from medihelp.errors import MedicineDoesNotExist
 
@@ -17,8 +16,9 @@ class MedicineListView(View):
 
         self.columnconfigure(0, weight=1)
 
-        self._add_medicine_button = ctk.CTkButton(self, fg_color=gs.action_color, text='Dodaj lek +', font=(gs.font_name, 12))
-        self._add_medicine_button.grid(row=0, column=0, padx=20, pady=30, sticky='w')
+        self._add_medicine_tile = AddMedicineTile(self._system, self._gui, self)
+        self._add_medicine_tile.grid(row=0, column=0, padx=20, pady=10, sticky='we')
+
         self._medicine_tiles = {}
 
         self.update_view()
@@ -31,7 +31,7 @@ class MedicineListView(View):
             tile.destroy()
         self._medicine_tiles.clear()
 
-        row = 0
+        row = 1
         for medicine in self._system.medicines().values():
             self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
             self._medicine_tiles[medicine.id()].grid(row=row + 1, column=0, padx=20, pady=10, sticky='we')
@@ -44,6 +44,9 @@ class MedicineListView(View):
         :param medicine_id: ID of the medicine whose tile is to be updated
         :type medicine_id: int
         '''
+        if not self._medicine_tiles.get(medicine_id):
+            self._add_tile(medicine_id)
+            return
         medicine = self._system.medicines().get(medicine_id)
         if not medicine:
             raise MedicineDoesNotExist(medicine_id)
@@ -55,3 +58,18 @@ class MedicineListView(View):
             self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')
         except Exception:
             raise MedicineDoesNotExist(medicine_id)
+
+    def _add_tile(self, medicine_id):
+        '''
+        Adds tile responsible for displaying info about the medicine with specific id
+
+        :param medicine_id: ID of the medicine whose tile is to be added to the list
+        :type medicine_id: int
+        '''
+        medicine = self._system.medicines().get(medicine_id)
+        if not medicine:
+            raise MedicineDoesNotExist(medicine_id)
+        # This part may be buggy !!! Watch out
+        row = len(self._medicine_tiles.keys()) + 1
+        self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
+        self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')

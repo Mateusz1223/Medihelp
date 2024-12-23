@@ -1,10 +1,13 @@
 from .medicine_database import MedicineDatabase
 from .users_database import UsersDatabase
+from .medicine import Medicine
 from .errors import (DataLoadingError,
                      NoFileOpenedError,
                      DataSavingError,
                      MedicineDoesNotExist,
                      UserDoesNotExist)
+from typing import Iterable
+from datetime import date
 
 
 class System:
@@ -159,3 +162,58 @@ class System:
             medicine.del_note(author_id)
         else:
             raise MedicineDoesNotExist(medicine_id)
+
+    def add_medicine(self,
+                     name: str,
+                     manufacturer: str,
+                     illnesses: Iterable[str],
+                     substances: Iterable[str],
+                     recommended_age: int,
+                     doses: int,
+                     doses_left: int,
+                     expiration_date: date,
+                     recipients=None,
+                     notes: dict[int: str] = None):
+        '''
+        Adds medicine object to the medicine database and return ID assigned to the medicine
+
+        :param name: Name of the medicine.
+        :type name: str
+        :param manufacturer: Name of the manufacturer.
+        :type manufacturer: str
+        :param illnesses: List of illnesses that are cured by this medicine.
+        :type illnesses: iterable of str
+        :param substances: List of active substances in the medicine.
+        :type substances: iterable of str
+        :param recommended_age: Recipent recommended age. Must be greater or equal to zero
+        :type recommended_age: int
+        :param doses: number of doses in the box. Must be greater than zero
+        :type doses: int
+        :param doses_left: how many doses there is left.
+        :type doses_left: int
+        :param expiration_date: Expiration date.
+        :type expiration_date: date
+        :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child) (optional)
+        :type recipients: iterable of int
+        :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves (optional)
+        :type notes: dict[int, str]
+
+        :return: ID assigned to the created medicine object
+        :rtype: int
+        '''
+        id = 0
+        while id in self.medicines_database().medicines().keys():
+            id += 1
+        medicine = Medicine(id,
+                            name=name,
+                            manufacturer=manufacturer,
+                            illnesses=illnesses,
+                            substances=substances,
+                            recommended_age=recommended_age,
+                            doses=doses,
+                            doses_left=doses_left,
+                            expiration_date=expiration_date,
+                            recipients=recipients,
+                            notes=notes)
+        self.medicines_database().add_medicine(medicine)
+        return id

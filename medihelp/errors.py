@@ -1,44 +1,48 @@
 from typing import Iterable
 
+'''
+Errors with the English descriptions are never meant to be seen by the user.
+'''
+
 
 class InvalidNameError(Exception):
     def __init__(self):
-        super().__init__('Invalid name.')
+        super().__init__('Nieprawidłowa nazwa!')
 
 
 class InvalidDosesError(Exception):
     def __init__(self):
-        super().__init__('Dose must be greater than zero.')
+        super().__init__('Ilość dawek nie może być mniejsza niż zero!')
 
 
 class NotEnoughDosesError(Exception):
     def __init__(self):
-        super().__init__('There is not enough doses of the medicine.')
+        super().__init__('Nie ma wystarczającej ilości dawek!')
 
 
 class TooManyDosesLeft(Exception):
     def __init__(self):
-        super().__init__('There cannot be more doses left than doses!')
+        super().__init__('Ilość pozostałych dawek nie może być większa od ilości dawek w pudełku!')
 
 
 class InvalidWeekdayError(Exception):
     def __init__(self):
-        super().__init__('Weekday can range from 1 to 7.')
+        super().__init__('Dzień tygodnia musi mieścić się w zakresie od 1 do 7!')
 
 
 class InvalidAgeError(Exception):
     def __init__(self):
-        super().__init__('Age must be greater or equal to zero.')
+        super().__init__('Wiek musi być większy lub równy zeru!')
 
 
 class InvalidBirthdateError(Exception):
     def __init__(self):
-        super().__init__('Birthdate cannot be a date in the future')
+        super().__init__('Data urodzenia nie może być datą przyszłą!')
 
 
 class EmptyListError(Exception):
     def __init__(self):
-        super().__init__('This list cannot be empty.')
+        super().__init__('Ta lista nie może być pusta.')
 
 
 class AllergyWarning(Exception):
@@ -49,23 +53,18 @@ class AllergyWarning(Exception):
         '''
         substances = list(substances)
         substances.sort()
-        info = f'Medicine cannot be given to the user because he is allergic to {', '.join([word for word in substances])}.'
+        info = f'Użytkownik nie może przyjąć leku, ponieważ jest uczulony na następujące substancje {', '.join([word for word in substances])}.'
         super().__init__(info)
 
 
 class AgeWarning(Exception):
     def __init__(self):
-        super().__init__('User is not old enough to take the medicine.')
+        super().__init__('Użytkownik jest za młody aby przyjąć ten lek!')
 
 
 class ExpiredMedicineError(Exception):
     def __init__(self):
-        super().__init__('This medicine is expired!')
-
-
-class InvalidUserIDError(Exception):
-    def __init__(self):
-        super().__init__('User Id must range from 0 to 2!')
+        super().__init__('Ten lek jest przeterminowany!')
 
 
 class MalformedDataError(Exception):
@@ -75,12 +74,12 @@ class MalformedDataError(Exception):
 
 class IdAlreadyInUseError(Exception):
     def __init__(self):
-        super().__init__('This ID is already in use in the database!')
+        super().__init__('To ID jest już w użytku!')
 
 
 class NoSuchIdInTheDatabaseError(Exception):
     def __init__(self):
-        super().__init__('There is no such id in the database!')
+        super().__init__('Nie ma obiektu o takim ID w bazie danych!')
 
 
 class DataLoadingError(Exception):
@@ -131,3 +130,8 @@ class WrongArgumentsError(Exception):
 class ViewDoesNotExist(Exception):
     def __init__(self, name):
         super().__init__(f'View {name} does not exist!')
+
+
+class IllegalCharactersInANameError(Exception):
+    def __init__(self):
+        super().__init__('Nazwa nie może zawierać następujących znaków: "\'", """, ",", "\\n"!')

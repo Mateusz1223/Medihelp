@@ -1,33 +1,31 @@
 from medihelp.user import User
 import json
-from medihelp.errors import MalformedDataError, IdAlreadyInUseError, InvalidUserIDError
+from medihelp.errors import MalformedDataError, IdAlreadyInUseError
 from datetime import date
 from medihelp.prescription import Prescription
 
 
 class UsersDatabase:
     '''
-    Loads from a file and stores exactly 3 instances of User in a dictionary. Id of the user being the key and must range from 0 to 2.
+    Loads from a file and stores instances of User in a dictionary.
 
     Attributes
     ----------
-    :ivar _users: Dictionary contianing three instances of User. Id of the user being the key and must range from 0 to 2.
+    :ivar _users: Dictionary contianing instances of User.
     :vartype _users: dict[int User]
     '''
 
     def __init__(self):
-        self._users = {0: None, 1: None, 2: None}
+        self._users = {}
 
     def users(self):
         return self._users
 
     def _add_user(self, user):
         '''
-        This method adds user to self._users and makes sure the id stays in the range from 0 to 2
+        This method adds user to self._users
         '''
-        if user.id() < 0 or user.id() > 2:
-            raise InvalidUserIDError
-        if self._users[user.id()] is not None:
+        if self.users().get(user.id()):
             raise IdAlreadyInUseError
         self._users[user.id()] = user
 

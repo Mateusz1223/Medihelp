@@ -8,7 +8,6 @@ from .errors import (InvalidNameError,
                      AllergyWarning,
                      AgeWarning,
                      ExpiredMedicineError,
-                     InvalidUserIDError,
                      NoteIsToLongError,
                      TooManyLinesInTheNoteError,
                      EmptyNoteError)
@@ -19,7 +18,7 @@ class Medicine:
     '''
     A class to represent a single medicine.
 
-    Attributes (all of the private attributes can be accesed with a getter)
+    Attributes
     ----------
     :ivar _id: Unique Id of the medicine
     :vartype _id: int
@@ -238,13 +237,9 @@ class Medicine:
             del self._notes[user_id]
 
     def add_recipient(self, user_id):
-        if user_id < 0 or user_id > 2:
-            raise InvalidUserIDError
         self._recipients.add(user_id)
 
     def remove_recipient(self, user_id):
-        if user_id < 0 or user_id > 2:
-            raise InvalidUserIDError
         self._recipients.remove(user_id)
 
     def take_doses(self, doses, user):
