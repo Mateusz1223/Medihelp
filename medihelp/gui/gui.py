@@ -1,7 +1,8 @@
 import customtkinter as ctk
 from .menu_bar import MenuBar
 from .medicine_list_view import MedicineListView
-from .global_settings import resolution
+from . import global_settings as gs
+from medihelp.errors import WrongArgumentsError, ViewDoesNotExist
 
 
 class GUI(ctk.CTk):
@@ -28,7 +29,10 @@ class GUI(ctk.CTk):
         super().__init__()
         self._system = system_handler
 
-        self.geometry(f'{resolution['x']}x{resolution['y']}')
+        # It doesn't work on all systems unfortunatelly
+        self.minsize(width=gs.min_width, height=300)
+
+        self.geometry(f'{gs.resolution['x']}x{gs.resolution['y']}')
         self.title('Medihelp')
 
         self.current_user_id = None
@@ -51,7 +55,34 @@ class GUI(ctk.CTk):
 
         self.mainloop()
 
+    def update_view(self, view: str, medicine_id: int = None):
+        '''
+        1) If medicine_id is not given then update the given view
+        2) If both view and medicine_id are given then view must be set to medicine-list-view
+           this will update only the medicine tile that is responsible for displaying info about the medicine with specific id
+
+        :param view: name of the view
+        :type view: str
+
+        :param medicine_id: ID of the medicine whose tile is to be updated
+        :type medicine_id: int
+        '''
+
+        if medicine_id and view != 'medicine-list-view':
+            raise WrongArgumentsError
+
+        view = self._views.get(view)
+        if not view:
+            raise ViewDoesNotExist
+        if medicine_id is None:
+            view.update_view()
+        else:
+            view.update_tile(medicine_id)
+
     def update_views(self):
+        '''
+        Updates all views
+        '''
         for view in self._views.values():
             view.update_view()
             view.grid(row=0, column=0, sticky="nsew")

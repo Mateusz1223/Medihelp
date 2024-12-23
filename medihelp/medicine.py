@@ -8,7 +8,8 @@ from .errors import (InvalidNameError,
                      AllergyWarning,
                      AgeWarning,
                      ExpiredMedicineError,
-                     InvalidUserIDError)
+                     InvalidUserIDError,
+                     NoteIsToLongError)
 from typing import Iterable
 
 
@@ -82,9 +83,9 @@ class Medicine:
         :type doses_left: int
         :param expiration_date: Expiration date.
         :type expiration_date: date
-        :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child)
+        :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child) (optional)
         :type recipients: iterable of int
-        :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves
+        :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves (optional)
         :type notes: dict[int, str]
         '''
 
@@ -214,6 +215,8 @@ class Medicine:
         :type content: str
         '''
         content = str(content)
+        if len(content) > 500:
+            raise NoteIsToLongError
         if user_id not in self._notes.keys():
             self._notes.update({user_id: content})
         self._notes[user_id] = content
@@ -225,9 +228,8 @@ class Medicine:
         :param user_id: ID of the user whose note is to be deleted.
         :type user_id: int
         '''
-        if user_id not in self._notes.keys():
-            return
-        del self._notes[user_id]
+        if user_id in self._notes.keys():
+            del self._notes[user_id]
 
     def add_recipient(self, user_id):
         if user_id < 0 or user_id > 2:

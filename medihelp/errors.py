@@ -96,3 +96,28 @@ class DataSavingError(Exception):
 class NoFileOpenedError(Exception):
     def __init__(self):
         super().__init__('Brak otwartego pliku!')
+
+
+class NoteIsToLongError(Exception):
+    def __init__(self):
+        super().__init__('Notatka może mieć maksymalnie 500 znaków')
+
+
+class MedicineDoesNotExist(Exception):
+    def __init__(self, id):
+        super().__init__(f'Lek o id {id} nie istnieje')
+
+
+class UserDoesNotExist(Exception):
+    def __init__(self, id):
+        super().__init__(f'Użytkownik o id {id} nie istnieje')
+
+
+class WrongArgumentsError(Exception):
+    def __init__(self):
+        super().__init__('Given parameters are invalid. Please check the docstring of the method/funtion you are trying to call!')
+
+
+class ViewDoesNotExist(Exception):
+    def __init__(self, name):
+        super().__init__(f'View {name} does not exist!')

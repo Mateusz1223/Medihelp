@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "name": "Dad",
+        "name": "Tata",
         "birth_date": "1982-07-12",
         "illnesses": [
             "cold",
@@ -26,7 +26,7 @@
     },
     {
         "id": 1,
-        "name": "Mom",
+        "name": "Mama",
         "birth_date": "1985-08-04",
         "illnesses": [
             "illness2",
@@ -41,7 +41,7 @@
     },
     {
         "id": 2,
-        "name": "Child",
+        "name": "Dziecko",
         "birth_date": "2018-01-02",
         "illnesses": [
             "diabetes"

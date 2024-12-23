@@ -2,7 +2,10 @@ from medihelp.system import System
 from medihelp.medicine import Medicine
 from medihelp.prescription import Prescription
 from medihelp.user import User
-from medihelp.errors import DataLoadingError, NoFileOpenedError, DataSavingError
+from medihelp.errors import (DataLoadingError,
+                             NoFileOpenedError,
+                             MedicineDoesNotExist,
+                             UserDoesNotExist)
 from pytest import raises
 from io import StringIO
 import builtins
@@ -172,19 +175,14 @@ def test_system_medicines_database_loaded_false(monkeypatch):
 
 
 def test_system_load_medicines_database_from(monkeypatch):
-    illneses1 = ['Illness1', 'illness2', 'IllNess3']
-    substances1 = ['nicoTine', 'Caffeine']
-    date_instance1 = date(2025, 12, 31)
     medicine1 = Medicine(0, name='Ivermectin', manufacturer='polfarm',
-                         illnesses=illneses1, substances=substances1,
-                         recommended_age=0, doses=10, doses_left=6, expiration_date=date_instance1, recipients=[0, 1, 2])
+                         illnesses=['Illness1', 'illness2', 'IllNess3'],
+                         substances=['nicoTine', 'Caffeine'],
+                         recommended_age=0, doses=10, doses_left=6, expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
     medicine1.set_note(1, "Hello World1")
-    illneses2 = ['cold']
-    substances2 = ['weed', 'stuff']
-    date_instance2 = date(2026, 1, 3)
     medicine2 = Medicine(1, name='Paracetamol', manufacturer='usdrugs',
-                         illnesses=illneses2, substances=substances2,
-                         recommended_age=12, doses=5, doses_left=5, expiration_date=date_instance2, recipients=[0])
+                         illnesses=['cold'], substances=['weed', 'stuff'],
+                         recommended_age=12, doses=5, doses_left=5, expiration_date=date(2026, 1, 3), recipients=[0])
 
     data = '''id,name,manufacturer,illnesses,recipients,substances,recommended_age,doses,doses_left,expiration_date,notes
 0,Ivermectin,Polfarm,"{'illness2', 'illness3', 'illness1'}","{0, 1, 2}","{'caffeine', 'nicotine'}",0,10,6,2025-12-31,"{1: 'Hello World1'}"
@@ -192,7 +190,7 @@ def test_system_load_medicines_database_from(monkeypatch):
 '''
     file = StringIO(data)
 
-    def fake_open(path, mode):
+    def fake_open(path, mode, *args, **kwargs):
         return file
     monkeypatch.setattr(builtins, 'open', fake_open)
 
@@ -207,7 +205,7 @@ def test_system_medicines_database_loaded_false_error(monkeypatch):
     data = '''Malformed data\nMalformed data'''
     file = StringIO(data)
 
-    def fake_open(path, mode):
+    def fake_open(path, mode, *args, **kwargs):
         return file
     monkeypatch.setattr(builtins, 'open', fake_open)
 
@@ -225,6 +223,7 @@ def test_system_save_medicines_database_no_file_opened(monkeypatch):
 def test_system_save_medicines_database_1(monkeypatch):
     data = ''
     file = StringIO(data)
+
     def fake_open(path, mode):
         return file
     monkeypatch.setattr(builtins, 'open', fake_open)
@@ -237,15 +236,17 @@ def test_system_save_medicines_database_1(monkeypatch):
 def test_system_save_medicines_database_2(monkeypatch):
     data = ''
     file = StringIO(data)
+
     def fake_open(path, mode):
         return file
     monkeypatch.setattr(builtins, 'open', fake_open)
 
     system = System()
-    system.load_medicines_database_from('whatever-path') # to open a file so that it doesn't rise NoFileOpenedError
+    system.load_medicines_database_from('whatever-path')  # to open a file so that it doesn't rise NoFileOpenedError
 
     data = ''
     file = StringIO(data)
+
     def fake_open(path, mode):
         return file
     monkeypatch.setattr(builtins, 'open', fake_open)
@@ -253,22 +254,141 @@ def test_system_save_medicines_database_2(monkeypatch):
     system.save_medicines_database()
 
 
-def test_system_get_medicines_list():
-    illneses = ['Illness1', 'illness2', 'IllNess3']
-    substances = ['nicoTine', 'Caffeine', 'substance1']
-    medicine1 = Medicine(0, name='name1', manufacturer='man1',
-                        illnesses=illneses, substances=substances,
-                        recommended_age=18, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
-    illneses = ['i1', 'i2', 'i3']
-    substances = ['sth', 'sth2']
-    medicine2 = Medicine(1, name='Sth', manufacturer='man2',
-                        illnesses=illneses, substances=substances,
-                        recommended_age=18, doses=3, doses_left=2, expiration_date=date(2029, 1, 5))
+def test_system_set_note_typical():
+    user = User(0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'nicotine', 'sugar'},
+                prescriptions={})
+    medicine = Medicine(1, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31),
+                        recipients=[0, 1, 2],
+                        notes={})
 
     system = System()
-    system.medicines_database().add_medicine(medicine1)
-    system.medicines_database().add_medicine(medicine2)
-    list_of_medicines = system.get_medicines_list()
-    assert len(list_of_medicines) == 2
-    assert medicine1 in list_of_medicines
-    assert medicine2 in list_of_medicines
+    system.users_database()._add_user(user)
+    system.medicines_database().add_medicine(medicine)
+
+    assert medicine.notes() == {}
+    system.set_note(1, 0, "Hello!")
+    assert medicine.note(0) == "Hello!"
+
+
+def test_system_set_note_wrong_medicine_id():
+    user = User(0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'nicotine', 'sugar'},
+                prescriptions={})
+    medicine = Medicine(1, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31),
+                        recipients=[0, 1, 2],
+                        notes={})
+
+    system = System()
+    system.users_database()._add_user(user)
+    system.medicines_database().add_medicine(medicine)
+
+    with raises(MedicineDoesNotExist):
+        system.set_note(-100, 0, "hello")
+
+
+def test_system_set_note_wrong_user_id():
+    user = User(0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'nicotine', 'sugar'},
+                prescriptions={})
+    medicine = Medicine(1, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31),
+                        recipients=[0, 1, 2],
+                        notes={})
+
+    system = System()
+    system.users_database()._add_user(user)
+    system.medicines_database().add_medicine(medicine)
+
+    with raises(UserDoesNotExist):
+        system.set_note(1, -100, "hello")
+
+
+def test_system_del_note_typical():
+    user = User(0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'nicotine', 'sugar'},
+                prescriptions={})
+    medicine = Medicine(1, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31),
+                        recipients=[0, 1, 2],
+                        notes={0: 'Hello!'})
+
+    system = System()
+    system.users_database()._add_user(user)
+    system.medicines_database().add_medicine(medicine)
+
+    assert medicine.note(0) == "Hello!"
+    system.del_note(1, 0)
+    assert medicine.notes() == {}
+
+
+def test_system_del_note_wrong_user_id():
+    user = User(0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'nicotine', 'sugar'},
+                prescriptions={})
+    medicine = Medicine(1, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31),
+                        recipients=[0, 1, 2],
+                        notes={0: 'Hello!'})
+
+    system = System()
+    system.users_database()._add_user(user)
+    system.medicines_database().add_medicine(medicine)
+
+    with raises(UserDoesNotExist):
+        system.del_note(1, -100)
+
+
+def test_system_del_note_wrong_medicine_id():
+    user = User(0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'nicotine', 'sugar'},
+                prescriptions={})
+    medicine = Medicine(1, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31),
+                        recipients=[0, 1, 2],
+                        notes={0: 'Hello!'})
+
+    system = System()
+    system.users_database()._add_user(user)
+    system.medicines_database().add_medicine(medicine)
+
+    with raises(MedicineDoesNotExist):
+        system.del_note(-100, 0)

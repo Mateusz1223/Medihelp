@@ -1,6 +1,10 @@
 from .medicine_database import MedicineDatabase
 from .users_database import UsersDatabase
-from .errors import DataLoadingError, NoFileOpenedError, DataSavingError
+from .errors import (DataLoadingError,
+                     NoFileOpenedError,
+                     DataSavingError,
+                     MedicineDoesNotExist,
+                     UserDoesNotExist)
 
 
 class System:
@@ -36,6 +40,22 @@ class System:
 
     def medicines_file_path(self):
         return self._medicines_file_path
+
+    def medicines(self):
+        '''
+        Returns a dictionary of medicines that are stored in self._medicines_database.medicines().
+        IDs of the medicine are the keys and Medicine objects are the values.
+        This dictionary should not be modify in any way!
+        '''
+        return self._medicines_database.medicines()
+
+    def users(self):
+        '''
+        Returns a dictionary of users that are stored in self._medicines_database.medicines().
+        IDs of users are the keys and User objects are the values.
+        This dictionary should not be modify in any way!
+        '''
+        return self._users_database.users()
 
     def medicines_file_saved(self):
         '''
@@ -101,11 +121,41 @@ class System:
         if not self.medicines_database_loaded():
             self._medicines_file_path = path
 
-    def get_medicines_list(self):
+    def set_note(self, medicine_id: int, author_id: int, content: str):
         '''
-        Returns a list of medicines that are stored in self._medicines_database
+        Sets the content of the note assigned to medicine with ID medicine_id where user with ID author_id is the author.
+
+        :param medicine_id: ID of the medicine
+        :type medicine_id: int
+
+        :param author_id: ID of the user who is an author
+        :type author_id: int
+
+        :param content: New content of the note
+        :type content: str
         '''
-        ret_list = []
-        for medicine in self._medicines_database.medicines().values():
-            ret_list.append(medicine)
-        return ret_list
+        if author_id not in self.users_database().users().keys():
+            raise UserDoesNotExist(author_id)
+        medicine = self.medicines_database().medicines().get(medicine_id)
+        if medicine:
+            medicine.set_note(author_id, content)
+        else:
+            raise MedicineDoesNotExist(medicine_id)
+
+    def del_note(self, medicine_id: int, author_id: int):
+        '''
+       deletes the note assigned to medicine with ID medicine_id where user with ID author_id is the author.
+
+        :param medicine_id: ID of the medicine
+        :type medicine_id: int
+
+        :param author_id: ID of the user who is an author
+        :type author_id: int
+        '''
+        if author_id not in self.users_database().users().keys():
+            raise UserDoesNotExist(author_id)
+        medicine = self.medicines_database().medicines().get(medicine_id)
+        if medicine:
+            medicine.del_note(author_id)
+        else:
+            raise MedicineDoesNotExist(medicine_id)

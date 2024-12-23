@@ -11,7 +11,8 @@ from medihelp.errors import (InvalidNameError,
                              AgeWarning,
                              NotEnoughDosesError,
                              ExpiredMedicineError,
-                             InvalidUserIDError)
+                             InvalidUserIDError,
+                             NoteIsToLongError)
 
 
 def test_medicine_create():
@@ -82,15 +83,49 @@ def test_medicine_set_note_typical():
     assert medicine.note(2) == 'Hello World! 3'
 
 
-def test_medicine_del_note_none():
+def test_medicine_set_note_edge_case():
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
                         expiration_date=date(2024, 12, 2))
 
-    medicine.set_note(0, 'Hello World! 1')
+    medicine.set_note(0, 500 * 'A')
+    assert medicine.note(0) == 500 * 'A'
+
+
+def test_medicine_set_note_too_long():
+    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine', 'substance1'],
+                        recommended_age=100, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2))
+
+    with raises(NoteIsToLongError):
+        medicine.set_note(0, 500 * 'A' + 'B')
+
+
+def test_medicine_del_note():
+    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine', 'substance1'],
+                        recommended_age=100, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        notes={0: 'Hello World! 1'})
+
     assert medicine.note(0) == 'Hello World! 1'
+    medicine.del_note(0)
+    assert medicine.note(0) is None
+
+
+def test_medicine_del_note_nonexistent():
+    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine', 'substance1'],
+                        recommended_age=100, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2))
+
+    assert medicine.note(0) is None
     medicine.del_note(0)
     assert medicine.note(0) is None
 
