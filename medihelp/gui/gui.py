@@ -1,8 +1,9 @@
 import customtkinter as ctk
 from .menu_bar import MenuBar
 from .medicine_list_view import MedicineListView
+from .choose_user_view import ChooseUserView
 from . import global_settings as gs
-from medihelp.errors import WrongArgumentsError, ViewDoesNotExist
+from medihelp.errors import WrongArgumentsError, ViewDoesNotExist, UserDoesNotExist
 
 
 class GUI(ctk.CTk):
@@ -40,10 +41,6 @@ class GUI(ctk.CTk):
 
         self._current_user_id = None
 
-        # Temporary TO DO
-        self._current_user_id = 0
-        self.title('Medihelp - Tata')
-
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
@@ -51,10 +48,10 @@ class GUI(ctk.CTk):
         self.config(menu=self._menu_bar)
 
         self._views = {
+            'choose-user-view': ChooseUserView(self._system, self, self),
             'medicine-list-view': MedicineListView(self._system, self, self)
         }
-        self._current_view = 'medicine-list-view'
-        self._views[self._current_view].grid(row=0, column=0, sticky="nsew")
+        self.set_current_view('choose-user-view')
 
         # fiixing a library key binding issue on linux
         # For Linux scroll up
@@ -66,6 +63,37 @@ class GUI(ctk.CTk):
 
     def current_user_id(self):
         return self._current_user_id
+
+    def set_current_user(self, user_id: int):
+        '''
+        Changes current user id, updates views and changes window title
+        '''
+        user = self._system.users().get(user_id)
+        if not user:
+            raise UserDoesNotExist(user_id)
+        self._current_user_id = user.id()
+        self.update_views()
+        self.title(f'Medihelp - {user.name()}')
+
+    def set_current_view(self, view_name: str):
+        '''
+        Changes currently displayed view
+        Possible choices for view_name:
+        1) 'choose-user-view'
+        2) 'medicine-list-view'
+
+        :param view_name: name of the view that is to be displayed
+        :type view_name: str
+        '''
+        view = self._views.get(view_name)
+        if not view:
+            raise ViewDoesNotExist
+        try:
+            self._views[self._current_view].grid_forget()
+        except Exception:
+            pass
+        self._current_view = view_name
+        self._views[self._current_view].grid(row=0, column=0, sticky="nsew")
 
     def update_view(self, view: str, medicine_id: int = None):
         '''

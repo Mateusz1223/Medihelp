@@ -18,10 +18,10 @@ class MenuBar(tk.Menu):
 
         # File menu
         self._file_menu = tk.Menu(self, font=self._font, tearoff=False)
-        self._file_menu.add_command(label='Załaduj bazę leków', command=self.load_file_button_handler)
-        self._file_menu.add_separator()
         self._file_menu.add_command(label='Zapisz bazę leków', command=self.save_file_button_handler)
         self._file_menu.add_command(label='Zapisz bazę leków jako', command=self.save_file_as_button_handler)
+        self._file_menu.add_separator()
+        self._file_menu.add_command(label='Załaduj bazę leków', command=self.load_file_button_handler)
         self.add_cascade(menu=self._file_menu, label="Plik")
 
         # View menu
@@ -29,6 +29,7 @@ class MenuBar(tk.Menu):
         self._view_menu.add_command(label='Wyświetl listę leków', command=None)
         self._view_menu.add_command(label="Wyświetl kalendarz", command=self.show_callender_button_handler)
         self._view_menu.add_separator()
+        self._view_menu.add_command(label="Przełącz użytkownika", command=self.switch_users_button_handler)
         self._view_menu.add_command(label="Modyfikuj dane użytkowników", command=self.modify_users_info_button_handler)
         self.add_cascade(menu=self._view_menu, label="Widok")
 
@@ -68,3 +69,6 @@ class MenuBar(tk.Menu):
 
     def show_callender_button_handler(self):
         pass
+
+    def switch_users_button_handler(self):
+        self._gui.set_current_view('choose-user-view')
