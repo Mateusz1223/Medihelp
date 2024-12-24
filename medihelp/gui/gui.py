@@ -21,6 +21,9 @@ class GUI(ctk.CTk):
     :ivar _views: List of views of the app
     :vartype _views: list[View]
 
+    :ivar _current_view: Name of the currently active view
+    :vartype _current_view: str
+
     :ivar _current_user_id: ID of the user currently using the Gui
     :vartype _current_user_id: int
     '''
@@ -50,8 +53,14 @@ class GUI(ctk.CTk):
         self._views = {
             'medicine-list-view': MedicineListView(self._system, self, self)
         }
-        for view in self._views.values():
-            view.grid(row=0, column=0, sticky="nsew")
+        self._current_view = 'medicine-list-view'
+        self._views[self._current_view].grid(row=0, column=0, sticky="nsew")
+
+        # fiixing a library key binding issue on linux
+        # For Linux scroll up
+        self.bind_all("<Button-4>", lambda e: self._views[self._current_view]._parent_canvas.yview("scroll", -1, "units"))
+        # For Linux scroll down
+        self.bind_all("<Button-5>", lambda e: self._views[self._current_view]._parent_canvas.yview("scroll", 1, "units"))
 
         self.mainloop()
 
