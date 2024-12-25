@@ -1,5 +1,6 @@
 from datetime import date
-from .errors import (InvalidNameError,
+from .errors import (InvalidMedicineNameError,
+                     InvalidManufacturerNameError,
                      InvalidDosesError,
                      TooManyDosesLeft,
                      NotEnoughDosesError,
@@ -7,6 +8,7 @@ from .errors import (InvalidNameError,
                      EmptyListError,
                      AllergyWarning,
                      AgeWarning,
+                     UserIsNotARecipientWarning,
                      ExpiredMedicineError,
                      NoteIsToLongError,
                      TooManyLinesInTheNoteError,
@@ -63,7 +65,7 @@ class Medicine:
                  doses: int,
                  doses_left: int,
                  expiration_date: date,
-                 recipients=None,
+                 recipients: Iterable[int],
                  notes: dict[int: str] = None):
         '''
         :param id: Unique Id of the medicine
@@ -94,16 +96,16 @@ class Medicine:
 
         name = str(name).title()
         if name == '':
-            raise InvalidNameError
+            raise InvalidMedicineNameError
         self._name = name
 
         manufacturer = str(manufacturer).title()
         if manufacturer == '':
-            raise InvalidNameError
+            raise InvalidManufacturerNameError
         self._manufacturer = manufacturer
 
         if not illnesses:
-            raise EmptyListError
+            raise EmptyListError("chorób")
         self._illnesses = {str(illness).lower() for illness in illnesses}
 
         self._recipients = set()
@@ -112,7 +114,7 @@ class Medicine:
                 self.add_recipient(recipient)
 
         if not substances:
-            raise EmptyListError
+            raise EmptyListError("substancji")
         self._substances = {str(substance).lower() for substance in substances}
 
         recommended_age = int(recommended_age)
@@ -244,19 +246,21 @@ class Medicine:
 
     def take_doses(self, doses, user):
         '''
-        Checks if the user can take the medicine based on substances it contains and user allergies. If not raises AllergyWarning
-        Checks if the user can take the medicine based on his age the medicine reccomended age. If not raises AgeWarning
-        Substracts doses from _doses_left if there is enough of them.
+        Substracts doses from _doses_left if there is enough of them but first
+        1) checks if the user can take the medicine based on substances it contains and user allergies. If not raises AllergyWarning
+        2) checks if the user can take the medicine based on his age the medicine reccomended age. If not raises AgeWarning
         '''
         if self.is_expired():
-            raise (ExpiredMedicineError)
+            raise ExpiredMedicineError
         allergies = self.substances().intersection(user.allergies())
         if allergies:
-            raise (AllergyWarning(allergies))
+            raise AllergyWarning(allergies)
         if self.recommended_age() > user.age():
-            raise (AgeWarning)
+            raise AgeWarning
         if self.doses_left() < doses:
-            raise (NotEnoughDosesError)
+            raise NotEnoughDosesError
+        if user.id() not in self.recipients():
+            raise UserIsNotARecipientWarning
         self._doses_left -= doses
 
     def is_expired(self) -> bool:

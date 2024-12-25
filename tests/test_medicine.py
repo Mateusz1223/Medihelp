@@ -2,13 +2,15 @@ from medihelp.medicine import Medicine
 from medihelp.user import User
 from datetime import date
 from pytest import raises
-from medihelp.errors import (InvalidNameError,
+from medihelp.errors import (InvalidMedicineNameError,
+                             InvalidManufacturerNameError,
                              InvalidDosesError,
                              TooManyDosesLeft,
                              InvalidAgeError,
                              EmptyListError,
                              AllergyWarning,
                              AgeWarning,
+                             UserIsNotARecipientWarning,
                              NotEnoughDosesError,
                              ExpiredMedicineError,
                              NoteIsToLongError,
@@ -69,7 +71,7 @@ def test_medicine_set_note_typical():
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
-                        expiration_date=date(2024, 12, 2))
+                        expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
 
     assert medicine.note(0) is None
     assert medicine.note(1) is None
@@ -89,7 +91,7 @@ def test_medicine_set_note_edge_case():
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
-                        expiration_date=date(2024, 12, 2))
+                        expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
 
     medicine.set_note(0, 500 * 'A')
     assert medicine.note(0) == 500 * 'A'
@@ -100,7 +102,7 @@ def test_medicine_set_note_too_long():
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
-                        expiration_date=date(2024, 12, 2))
+                        expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
 
     with raises(NoteIsToLongError):
         medicine.set_note(0, 500 * 'A' + 'B')
@@ -111,7 +113,7 @@ def test_medicine_set_note_empty():
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
-                        expiration_date=date(2024, 12, 2))
+                        expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
 
     with raises(EmptyNoteError):
         medicine.set_note(0, '')
@@ -122,7 +124,7 @@ def test_medicine_set_note_too_many_lines():
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
-                        expiration_date=date(2024, 12, 2))
+                        expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
 
     with raises(TooManyLinesInTheNoteError):
         medicine.set_note(0, '1\n2\n3\n4\n5\n')
@@ -134,7 +136,7 @@ def test_medicine_del_note():
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
                         expiration_date=date(2024, 12, 2),
-                        notes={0: 'Hello World! 1'})
+                        notes={0: 'Hello World! 1'}, recipients=[0, 1, 2])
 
     assert medicine.note(0) == 'Hello World! 1'
     medicine.del_note(0)
@@ -146,7 +148,7 @@ def test_medicine_del_note_nonexistent():
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
                         recommended_age=100, doses=10, doses_left=10,
-                        expiration_date=date(2024, 12, 2))
+                        expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
 
     assert medicine.note(0) is None
     medicine.del_note(0)
@@ -159,7 +161,7 @@ def test_medicine_create_empty_illneses_list():
                  illnesses=[],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=0, doses=10, doses_left=10,
-                 expiration_date=date(2025, 12, 31))
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
 
 def test_medicine_create_empty_substances_list():
@@ -168,25 +170,25 @@ def test_medicine_create_empty_substances_list():
                  illnesses=['Illnes1, illness2, IllNes3'],
                  substances=[],
                  recommended_age=0, doses=10, doses_left=10,
-                 expiration_date=date(2025, 12, 31))
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
 
 def test_medicine_create_empty_name():
-    with raises(InvalidNameError):
+    with raises(InvalidMedicineNameError):
         Medicine(0, name='', manufacturer='polfARma',
                  illnesses=['Illnes1, illness2, IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
-                 expiration_date=date(2025, 12, 31))
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
 
 def test_medicine_create_empty_manufacturer():
-    with raises(InvalidNameError):
+    with raises(InvalidManufacturerNameError):
         Medicine(0, name='daadadsdas', manufacturer='',
                  illnesses=['Illnes1, illness2, IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
-                 expiration_date=date(2025, 12, 31))
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
 
 def test_medicine_create_invalid_recommended_age():
@@ -195,7 +197,7 @@ def test_medicine_create_invalid_recommended_age():
                  illnesses=['Illnes1, illness2, IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
-                 expiration_date=date(2025, 12, 31))
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
 
 def test_medicine_create_invalid_doses():
@@ -204,7 +206,7 @@ def test_medicine_create_invalid_doses():
                  illnesses=['Illnes1, illness2, IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=0, doses=0, doses_left=0,
-                 expiration_date=date(2025, 12, 31))
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
 
 def test_medicine_is_expired_false(monkeypatch):
@@ -221,7 +223,8 @@ def test_medicine_is_expired_false(monkeypatch):
                         illnesses=illneses, substances=substances,
                         recommended_age=0,
                         doses=10, doses_left=10,
-                        expiration_date=date_instance)
+                        expiration_date=date_instance,
+                        recipients=[0, 1, 2])
 
     assert not medicine.is_expired()
 
@@ -236,7 +239,9 @@ def test_medicine_is_expired_true(monkeypatch):
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 1))
+                        recommended_age=0, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 1),
+                        recipients=[0, 1, 2])
 
     assert medicine.is_expired()
 
@@ -251,7 +256,9 @@ def test_medicine_is_expired_edge_case(monkeypatch):
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
+                        recommended_age=0, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[0, 1, 2])
     assert not medicine.is_expired()
 
 
@@ -259,7 +266,9 @@ def test_medicine_add_recipient_typical():
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
+                        recommended_age=0, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[])
     assert medicine.recipients() == set()
     medicine.add_recipient(0)
     medicine.add_recipient(1)
@@ -273,7 +282,9 @@ def test_medicine_remove_recipient_typical():
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2), recipients=[0, 1, 2])
+                        recommended_age=0, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[0, 1, 2])
     assert 0 in medicine.recipients()
     assert 1 in medicine.recipients()
     assert 2 in medicine.recipients()
@@ -293,7 +304,9 @@ def test_medicine_take_doses_typical(monkeypatch):
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine'],
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
+                        recommended_age=0, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[0, 1, 2])
     assert medicine.doses_left() == 10
     dad = User(0, name='Dad', birth_date=date(1980, 1, 2))
     medicine.take_doses(2, dad)
@@ -311,10 +324,12 @@ def test_medicine_take_doses_allergy_warning(monkeypatch):
     substances = ['nicoTine', 'Caffeine', 'substance1']
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=illneses, substances=substances,
-                        recommended_age=0, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
+                        recommended_age=0, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[0, 1, 2])
     assert medicine.doses_left() == 10
     dad = User(0, name='Dad', birth_date=date(1980, 1, 2), allergies=['nicotine', 'substance1'])
-    with raises(AllergyWarning, match=r'Medicine cannot be given to the user because he is allergic to nicotine, substance1.'):
+    with raises(AllergyWarning):
         medicine.take_doses(1, dad)
 
 
@@ -329,7 +344,9 @@ def test_medicine_take_doses_age_warning(monkeypatch):
     substances = ['nicoTine', 'Caffeine', 'substance1']
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=illneses, substances=substances,
-                        recommended_age=100, doses=10, doses_left=10, expiration_date=date(2024, 12, 2))
+                        recommended_age=100, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[0, 1, 2])
     assert medicine.doses_left() == 10
     dad = User(0, name='Dad', birth_date=date(1980, 1, 2))
     with raises(AgeWarning):
@@ -346,7 +363,9 @@ def test_medicine_take_doses_not_enough_doses(monkeypatch):
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
-                        recommended_age=10, doses=10, doses_left=2, expiration_date=date(2024, 12, 2))
+                        recommended_age=10, doses=10, doses_left=2,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[0, 1, 2])
     assert medicine.doses_left() == 2
     dad = User(0, name='Dad', birth_date=date(1980, 1, 2))
     with raises(NotEnoughDosesError):
@@ -357,8 +376,29 @@ def test_medicine_take_doses_expired():
     medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
                         illnesses=['Illness1', 'illness2', 'IllNess3'],
                         substances=['nicoTine', 'Caffeine', 'substance1'],
-                        recommended_age=10, doses=10, doses_left=10, expiration_date=date(1900, 12, 2))
+                        recommended_age=10, doses=10, doses_left=10,
+                        expiration_date=date(1900, 12, 2),
+                        recipients=[0, 1, 2])
     assert medicine.doses_left() == 10
     dad = User(0, name='Dad', birth_date=date(1980, 1, 2))
     with raises(ExpiredMedicineError):
+        medicine.take_doses(3, dad)
+
+
+def test_medicine_take_doses_expired(monkeypatch):
+    class MockDate(date):
+        @classmethod
+        def today(cls):
+            return cls(1900, 12, 2)
+    monkeypatch.setattr('medihelp.medicine.date', MockDate)
+
+    medicine = Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine', 'substance1'],
+                        recommended_age=10, doses=10, doses_left=10,
+                        expiration_date=date(2024, 12, 2),
+                        recipients=[1, 2])
+    assert medicine.doses_left() == 10
+    dad = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    with raises(UserIsNotARecipientWarning):
         medicine.take_doses(3, dad)

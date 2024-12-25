@@ -10,7 +10,6 @@ from datetime import date
 from pytest import raises
 from io import StringIO
 import builtins
-from datetime import date
 
 
 def test_system_create():
@@ -404,10 +403,89 @@ def test_system_add_medicine():
                               recommended_age=0, doses=10, doses_left=6,
                               expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
                               notes={1: 'Hello'})
+    medicine1 = Medicine(id=id1, name='Ivermectin', manufacturer='polfarm',
+                         illnesses=['Illness1', 'illness2', 'IllNess3'],
+                         substances=['nicoTine', 'Caffeine'],
+                         recommended_age=0, doses=10, doses_left=6,
+                         expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
+                         notes={1: 'Hello'})
     id2 = system.add_medicine(name='Paracetamol', manufacturer='usdrugs',
                               illnesses=['cold'], substances=['weed', 'stuff'],
                               recommended_age=12, doses=5, doses_left=5,
                               expiration_date=date(2026, 1, 3), recipients=[0])
+    medicine2 = Medicine(id=id2, name='Paracetamol', manufacturer='usdrugs',
+                         illnesses=['cold'], substances=['weed', 'stuff'],
+                         recommended_age=12, doses=5, doses_left=5,
+                         expiration_date=date(2026, 1, 3), recipients=[0])
 
-    assert id1 == 0
-    assert id2 == 1
+    assert system.medicines()[id1] == medicine1
+    assert system.medicines()[id2] == medicine2
+
+
+def test_system_change_medicine():
+    system = System()
+
+    id = system.add_medicine(name='Ivermectin', manufacturer='polfarm',
+                             illnesses=['Illness1', 'illness2', 'IllNess3'],
+                             substances=['nicoTine', 'Caffeine'],
+                             recommended_age=0, doses=10, doses_left=6,
+                             expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
+                             notes={1: 'Hello'})
+    medicine = Medicine(id=id, name='Ivermectin', manufacturer='polfarm',
+                        illnesses=['Illness1', 'illness2', 'IllNess3'],
+                        substances=['nicoTine', 'Caffeine'],
+                        recommended_age=0, doses=10, doses_left=6,
+                        expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
+                        notes={1: 'Hello'})
+    assert system.medicines()[id] == medicine
+
+    system.change_medicine(id=id, name='Paracetamol', manufacturer='usdrugs',
+                           illnesses=['cold'], substances=['weed', 'stuff'],
+                           recommended_age=12, doses=5, doses_left=5,
+                           expiration_date=date(2026, 1, 3), recipients=[0])
+    medicine = Medicine(id=id, name='Paracetamol', manufacturer='usdrugs',
+                        illnesses=['cold'], substances=['weed', 'stuff'],
+                        recommended_age=12, doses=5, doses_left=5,
+                        expiration_date=date(2026, 1, 3), recipients=[0])
+    assert system.medicines()[id] == medicine
+
+
+def test_system_take_dose_typical():
+    system = System()
+
+    user = User(id=0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'sugar'},
+                prescriptions=[])
+
+    id = system.add_medicine(name='Ivermectin', manufacturer='polfarm',
+                             illnesses=['Illness1', 'illness2', 'IllNess3'],
+                             substances=['nicoTine', 'Caffeine'],
+                             recommended_age=0, doses=10, doses_left=6,
+                             expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
+                             notes={1: 'Hello'})
+    assert system.medicines()[id].doses_left() == 6
+    system.take_dose(id, user)
+    assert system.medicines()[id].doses_left() == 5
+
+
+def test_system_take_dose():
+    system = System()
+
+    user = User(id=0,
+                name='Dad',
+                birth_date=date(1982, 7, 12),
+                illnesses={'xyz', 'cold'},
+                allergies={'sugar'},
+                prescriptions=[])
+
+    id = system.add_medicine(name='Ivermectin', manufacturer='polfarm',
+                             illnesses=['Illness1', 'illness2', 'IllNess3'],
+                             substances=['nicoTine', 'Caffeine'],
+                             recommended_age=0, doses=10, doses_left=6,
+                             expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
+                             notes={1: 'Hello'})
+    with raises(MedicineDoesNotExist):
+        system.take_dose(id + 1, user)

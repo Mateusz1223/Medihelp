@@ -1,6 +1,7 @@
 from .medicine_database import MedicineDatabase
 from .users_database import UsersDatabase
 from .medicine import Medicine
+from .user import User
 from .errors import (DataLoadingError,
                      NoFileOpenedError,
                      DataSavingError,
@@ -193,7 +194,7 @@ class System:
         :type doses_left: int
         :param expiration_date: Expiration date.
         :type expiration_date: date
-        :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child) (optional)
+        :param recipients: Set of the IDs of the users who are taking the medicine. (optional)
         :type recipients: iterable of int
         :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves (optional)
         :type notes: dict[int, str]
@@ -217,3 +218,80 @@ class System:
                             notes=notes)
         self.medicines_database().add_medicine(medicine)
         return id
+
+    def del_medicine(self, medicine_id: int):
+        '''
+        Deletes medicine with given ID from the database
+
+        :param medicine_id: ID of the medicine that is to be deleted
+        :type medicine_id: int
+        '''
+        self.medicines_database().delete_medicine(medicine_id)
+
+    def take_dose(self, medicine_id: int, user: User):
+        '''
+        1) Decrements medicine's _doses_left.
+        2) Throws exceptions with a reason if the user can't take the medicine.
+
+        :param medicine_id: ID of the medicine
+        :type medicine_id: int
+
+        :param user: User object used to determine if the user can take the medicine.
+        :type user: User
+        '''
+        medicine = self.medicines().get(medicine_id)
+        if not medicine:
+            raise MedicineDoesNotExist(medicine_id)
+        medicine.take_doses(doses=1, user=user)
+
+    def change_medicine(self,
+                        id: int,
+                        name: str,
+                        manufacturer: str,
+                        illnesses: Iterable[str],
+                        substances: Iterable[str],
+                        recommended_age: int,
+                        doses: int,
+                        doses_left: int,
+                        expiration_date: date,
+                        recipients=None,
+                        notes: dict[int: str] = None):
+        '''
+        Replaces old medicine object under the given id in the database with a new one.
+
+        :param id: ID of the medicine to be modified
+        :type id: int
+        :param name: Name of the medicine.
+        :type name: str
+        :param manufacturer: Name of the manufacturer.
+        :type manufacturer: str
+        :param illnesses: List of illnesses that are cured by this medicine.
+        :type illnesses: iterable of str
+        :param substances: List of active substances in the medicine.
+        :type substances: iterable of str
+        :param recommended_age: Recipent recommended age. Must be greater or equal to zero
+        :type recommended_age: int
+        :param doses: number of doses in the box. Must be greater than zero
+        :type doses: int
+        :param doses_left: how many doses there is left.
+        :type doses_left: int
+        :param expiration_date: Expiration date.
+        :type expiration_date: date
+        :param recipients: Set of the IDs of the users who are taking the medicine. (optional)
+        :type recipients: iterable of int
+        :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves (optional)
+        :type notes: dict[int, str]
+        '''
+        medicine = Medicine(id,
+                            name=name,
+                            manufacturer=manufacturer,
+                            illnesses=illnesses,
+                            substances=substances,
+                            recommended_age=recommended_age,
+                            doses=doses,
+                            doses_left=doses_left,
+                            expiration_date=expiration_date,
+                            recipients=recipients,
+                            notes=notes)
+        self.medicines_database().delete_medicine(id)
+        self.medicines_database().add_medicine(medicine)

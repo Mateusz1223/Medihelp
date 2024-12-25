@@ -19,6 +19,10 @@ class MedicineListView(View):
         self._add_medicine_tile = AddMedicineTile(self._system, self._gui, self)
         self._add_medicine_tile.grid(row=0, column=0, padx=20, pady=10, sticky='we')
 
+        # _free_row attribute is important when adding new medicine tiles.
+        #   It's not decremented when a tile is deleted.
+        self._free_row = 1
+
         self._medicine_tiles = {}
 
         self.update_view()
@@ -31,37 +35,53 @@ class MedicineListView(View):
             tile.destroy()
         self._medicine_tiles.clear()
 
-        row = 1
+        # Expired medicines first
         for medicine in self._system.medicines().values():
+            if not medicine.is_expired():
+                continue
             self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
-            self._medicine_tiles[medicine.id()].grid(row=row + 1, column=0, padx=20, pady=10, sticky='we')
-            row += 1
+            self._medicine_tiles[medicine.id()].grid(row=self._free_row, column=0, padx=20, pady=10, sticky='we')
+            self._free_row += 1
+        # Not expired medicines
+        for medicine in self._system.medicines().values():
+            if medicine.is_expired():
+                continue
+            self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
+            self._medicine_tiles[medicine.id()].grid(row=self._free_row, column=0, padx=20, pady=10, sticky='we')
+            self._free_row += 1
 
     def update_tile(self, medicine_id):
         '''
-        Updates tile responsible for displaying info about the medicine with specific id
+        1) Updates tile responsible for the medicine with given ID if the tile already exists
+        2) Adds new tile if there is no tile responsible for the medicine with given ID
+        3) Deletes a tile if it exists and there is no medicine with the given ID in the database
 
         :param medicine_id: ID of the medicine whose tile is to be updated
         :type medicine_id: int
         '''
-        if not self._medicine_tiles.get(medicine_id):
-            self._add_tile(medicine_id)
-            return
         medicine = self._system.medicines().get(medicine_id)
-        if not medicine:
-            raise MedicineDoesNotExist(medicine_id)
         try:
             tile = self._medicine_tiles.pop(medicine_id)
-            row = tile.grid_info()['row']
-            tile.destroy()
-            self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
-            self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')
         except Exception:
+            tile = None
+        if not medicine and not tile:
             raise MedicineDoesNotExist(medicine_id)
+        elif not tile:
+            self._add_tile(medicine_id)
+        elif not medicine:
+            tile.destroy()
+        else:
+            try:
+                row = tile.grid_info()['row']
+                tile.destroy()
+                self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
+                self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')
+            except Exception:
+                raise MedicineDoesNotExist(medicine_id)
 
     def _add_tile(self, medicine_id):
         '''
-        Adds tile responsible for displaying info about the medicine with specific id
+        Adds tile responsible for displaying info about the medicine with given id
 
         :param medicine_id: ID of the medicine whose tile is to be added to the list
         :type medicine_id: int
@@ -69,7 +89,6 @@ class MedicineListView(View):
         medicine = self._system.medicines().get(medicine_id)
         if not medicine:
             raise MedicineDoesNotExist(medicine_id)
-        # This part may be buggy !!! Watch out
-        row = len(self._medicine_tiles.keys()) + 1
         self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
-        self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')
+        self._medicine_tiles[medicine.id()].grid(row=self._free_row, column=0, padx=20, pady=10, sticky='we')
+        self._free_row += 1

@@ -92,7 +92,7 @@ class MedicineDatabase:
         ]
         writer = csv.DictWriter(file_handler, fieldnames=header, lineterminator='\n')
         writer.writeheader()
-        for medicine in self.medicines().values():
+        for medicine in sorted(self.medicines().values(), key=lambda x: x.id()):
             writer.writerow({
                 'id': medicine.id(),
                 'name': medicine.name(),

@@ -5,9 +5,29 @@ Errors with the English descriptions are never meant to be seen by the user.
 '''
 
 
-class InvalidNameError(Exception):
+class InvalidUserNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa!')
+        super().__init__('Nieprawidłowa nazwa użytkownika!')
+
+
+class InvalidIllnessNameError(Exception):
+    def __init__(self):
+        super().__init__('Nieprawidłowa nazwa choroby!')
+
+
+class InvalidSubstanceNameError(Exception):
+    def __init__(self):
+        super().__init__('Nieprawidłowa nazwa substancji!')
+
+
+class InvalidMedicineNameError(Exception):
+    def __init__(self):
+        super().__init__('Nieprawidłowa nazwa leku!')
+
+
+class InvalidManufacturerNameError(Exception):
+    def __init__(self):
+        super().__init__('Nieprawidłowa nazwa producenta!')
 
 
 class InvalidDosesError(Exception):
@@ -41,8 +61,8 @@ class InvalidBirthdateError(Exception):
 
 
 class EmptyListError(Exception):
-    def __init__(self):
-        super().__init__('Ta lista nie może być pusta.')
+    def __init__(self, list_name):
+        super().__init__(f'Lista {list_name} nie może być pusta.')
 
 
 class AllergyWarning(Exception):
@@ -57,6 +77,11 @@ class AllergyWarning(Exception):
         super().__init__(info)
 
 
+class UserIsNotARecipientWarning(Exception):
+    def __init__(self):
+        super().__init__("Użytkownik nie może przyjąć tego leku, ponieważ nie jest wpisany na jego listę odbiorców!")
+
+
 class AgeWarning(Exception):
     def __init__(self):
         super().__init__('Użytkownik jest za młody aby przyjąć ten lek!')
@@ -64,7 +89,7 @@ class AgeWarning(Exception):
 
 class ExpiredMedicineError(Exception):
     def __init__(self):
-        super().__init__('Ten lek jest przeterminowany!')
+        super().__init__('Nie można przyjąć dawki tego leku, ponieważ jest przeterminowany!')
 
 
 class MalformedDataError(Exception):

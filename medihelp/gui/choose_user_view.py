@@ -40,8 +40,12 @@ class ChooseUserView(View):
         self._select_button.pack(pady=40)
 
     def _select_button_handler(self):
+        '''
+        Sets gui's current user, shows gui's menubar and changes view to medicine-view-list.
+        '''
         if self._selected_name.get() == 'Wybierz użytkownika':
             return
         user_id = self._name_to_id_map[self._selected_name.get()]
-        self._gui.set_current_user(user_id)
+        self._gui.set_current_user_id(user_id)
+        self._gui.show_menubar()
         self._gui.set_current_view('medicine-list-view')

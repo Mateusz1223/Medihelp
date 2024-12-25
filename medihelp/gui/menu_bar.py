@@ -26,14 +26,17 @@ class MenuBar(tk.Menu):
 
         # View menu
         self._view_menu = tk.Menu(self, font=self._font, tearoff=False)
-        self._view_menu.add_command(label='Wyświetl listę leków', command=None)
+        self._view_menu.add_command(label='Wyświetl listę leków', command=self.show_medicine_list_button_handler)
         self._view_menu.add_command(label="Wyświetl kalendarz", command=self.show_callender_button_handler)
         self._view_menu.add_separator()
         self._view_menu.add_command(label="Przełącz użytkownika", command=self.switch_users_button_handler)
-        self._view_menu.add_command(label="Modyfikuj dane użytkowników", command=self.modify_users_info_button_handler)
+        self._view_menu.add_command(label="Modyfikuj dane użytkownika", command=self.modify_users_info_button_handler)
         self.add_cascade(menu=self._view_menu, label="Widok")
 
     def load_file_button_handler(self):
+        '''
+        Asks user for path and loads medicine database from it.
+        '''
         if not self._system.medicines_file_saved():
             if not messagebox.askyesno(title="Załaduj inny plik",
                                        message="Czy na pewno chcesz załadować nowy plik, bez zapisania zmian w pliku obecnym?"):
@@ -48,6 +51,9 @@ class MenuBar(tk.Menu):
         self._gui.update_views()
 
     def save_file_button_handler(self):
+        '''
+        Saves medicine database to currently "opened" file
+        '''
         try:
             self._system.save_medicines_database()
         except DataSavingError as e:
@@ -56,6 +62,9 @@ class MenuBar(tk.Menu):
             messagebox.showerror(title="Błąd", message=str(e))
 
     def save_file_as_button_handler(self):
+        '''
+        Asks user to choose path and saves medicine database under it.
+        '''
         path = asksaveasfilename(title="Wybierz plik do zapisu", defaultextension=".csv", filetypes=[("CSV Files", "*.csv")])
         if not path:
             return
@@ -65,10 +74,26 @@ class MenuBar(tk.Menu):
             messagebox.showerror(title="Błąd", message=str(e))
 
     def modify_users_info_button_handler(self):
-        pass
+        '''
+        Changes view to modify-user-view
+        '''
+        self._gui.set_current_view('modify-user-view')
 
     def show_callender_button_handler(self):
-        pass
+        '''
+        Changes view to callender-view
+        '''
+        self._gui.set_current_view('callender-view')
 
     def switch_users_button_handler(self):
+        '''
+        Hides gui's menubar and changes view to choose-user-view
+        '''
+        self._gui.hide_menubar()
         self._gui.set_current_view('choose-user-view')
+
+    def show_medicine_list_button_handler(self):
+        '''
+        Changes view to medicine-list-view
+        '''
+        self._gui.set_current_view('medicine-list-view')

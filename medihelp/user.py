@@ -1,4 +1,7 @@
-from .errors import InvalidNameError, InvalidBirthdateError
+from .errors import (InvalidUserNameError,
+                     InvalidIllnessNameError,
+                     InvalidSubstanceNameError,
+                     InvalidBirthdateError)
 from .prescription import Prescription
 from typing import Iterable, Optional
 from datetime import date
@@ -107,7 +110,7 @@ class User:
 
         name = str(name)
         if not name:
-            raise (InvalidNameError)
+            raise (InvalidUserNameError)
         self._name = name.title()
 
     def birth_date(self):
@@ -144,7 +147,7 @@ class User:
 
         illness = str(illness).lower()
         if not illness:
-            raise (InvalidNameError)
+            raise (InvalidIllnessNameError)
         self._illnesses.add(illness)
 
     def remove_illness(self, illness):
@@ -175,7 +178,7 @@ class User:
         '''
         substance = str(substance).lower()
         if not substance:
-            raise (InvalidNameError)
+            raise (InvalidSubstanceNameError)
         self._allergies.add(substance)
 
     def remove_allergy(self, substance):

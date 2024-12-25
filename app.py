@@ -9,7 +9,8 @@ def main():
     try:
         system.load_users_data()
     except DataLoadingError as e:
-        messagebox.showerror(title="Błąd", message=f"Błąd krytyczny podczas ładowania danych niezbędnych do działania programu:\n{e} -> {e.__context__}")
+        messagebox.showerror(title="Bład!",
+                             message=f"Błąd krytyczny podczas ładowania danych niezbędnych do działania programu:\n{e} -> {e.__context__}")
         return
 
     # temporary

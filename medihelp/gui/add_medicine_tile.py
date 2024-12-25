@@ -135,7 +135,7 @@ class AddMedicineTile(ctk.CTkFrame):
         self._illnesses_textbox.delete(1.0, 'end')
         self._illnesses_textbox.insert('0.0', 'Podaj nazwy chorób i dolegliwości oddzielone przecinkiem.')
 
-        for id, int_var in self._recipients_checkboxes_variables.items():
+        for int_var in self._recipients_checkboxes_variables.values():
             int_var.set(0)
 
     def _add_medicine_button_handler(self):

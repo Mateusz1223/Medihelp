@@ -1,4 +1,4 @@
-from .errors import InvalidNameError, InvalidDosesError, InvalidWeekdayError
+from .errors import InvalidMedicineNameError, InvalidDosesError, InvalidWeekdayError
 
 weekday_name_to_number = {
     "Monday": 1,
@@ -49,7 +49,7 @@ class Prescription:
 
         medicine_name = str(medicine_name).title()
         if not medicine_name:
-            raise (InvalidNameError)
+            raise (InvalidMedicineNameError())
         self._medicine_name = medicine_name
         dosage = int(dosage)
         if dosage <= 0:

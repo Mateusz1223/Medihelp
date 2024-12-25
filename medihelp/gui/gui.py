@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import tkinter as tk
 from .menu_bar import MenuBar
 from .medicine_list_view import MedicineListView
 from .choose_user_view import ChooseUserView
@@ -13,15 +14,6 @@ class GUI(ctk.CTk):
 
     Attributes
     ----------
-    :ivar _system: hander to system
-    :vartype _system: System
-
-    :ivar _menu_bar: object representing menu bar at the top of the screen
-    :vartype _menu_bar: MenuBar
-
-    :ivar _views: List of views of the app
-    :vartype _views: list[View]
-
     :ivar _current_view: Name of the currently active view
     :vartype _current_view: str
 
@@ -45,11 +37,11 @@ class GUI(ctk.CTk):
         self.grid_columnconfigure(0, weight=1)
 
         self._menu_bar = MenuBar(self._system, self)
-        self.config(menu=self._menu_bar)
 
         self._views = {
             'choose-user-view': ChooseUserView(self._system, self, self),
             'medicine-list-view': MedicineListView(self._system, self, self)
+            'modify-user-view': None
         }
         self.set_current_view('choose-user-view')
 
@@ -63,17 +55,6 @@ class GUI(ctk.CTk):
 
     def current_user_id(self):
         return self._current_user_id
-
-    def set_current_user(self, user_id: int):
-        '''
-        Changes current user id, updates views and changes window title
-        '''
-        user = self._system.users().get(user_id)
-        if not user:
-            raise UserDoesNotExist(user_id)
-        self._current_user_id = user.id()
-        self.update_views()
-        self.title(f'Medihelp - {user.name()}')
 
     def set_current_view(self, view_name: str):
         '''
@@ -95,23 +76,36 @@ class GUI(ctk.CTk):
         self._current_view = view_name
         self._views[self._current_view].grid(row=0, column=0, sticky="nsew")
 
-    def update_view(self, view: str, medicine_id: int = None):
+    def set_current_user_id(self, user_id: int):
+        '''
+        Changes current user id, updates views and changes window title
+        '''
+        user = self._system.users().get(user_id)
+        if not user:
+            raise UserDoesNotExist(user_id)
+        self._current_user_id = user.id()
+        self.update_views()
+        self.title(f'Medihelp - {user.name()}')
+
+    def update_view(self, view_name: str, medicine_id: int = None):
         '''
         1) If medicine_id is not given then update the given view
         2) If both view and medicine_id are given then view must be set to medicine-list-view
            this will update only the medicine tile that is responsible for displaying info about the medicine with specific id
 
-        :param view: name of the view
-        :type view: str
+        Possible choices for view_name:
+        1) 'choose-user-view'
+        2) 'medicine-list-view'
+
+        :param view_name: name of the view
+        :type view_name: str
 
         :param medicine_id: ID of the medicine whose tile is to be updated
         :type medicine_id: int
         '''
-
-        if medicine_id and view != 'medicine-list-view':
+        if medicine_id and view_name != 'medicine-list-view':
             raise WrongArgumentsError
-
-        view = self._views.get(view)
+        view = self._views.get(view_name)
         if not view:
             raise ViewDoesNotExist
         if medicine_id is None:
@@ -126,3 +120,15 @@ class GUI(ctk.CTk):
         for view in self._views.values():
             view.update_view()
             view.grid(row=0, column=0, sticky="nsew")
+
+    def show_menubar(self):
+        '''
+        Shows menubar
+        '''
+        self.config(menu=self._menu_bar)
+
+    def hide_menubar(self):
+        '''
+        Hides menubar
+        '''
+        self.config(menu=tk.Menu())

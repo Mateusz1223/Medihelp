@@ -1,5 +1,5 @@
 from medihelp.prescription import Prescription
-from medihelp.errors import InvalidNameError, InvalidDosesError, InvalidWeekdayError
+from medihelp.errors import InvalidMedicineNameError, InvalidDosesError, InvalidWeekdayError
 from pytest import raises
 
 
@@ -25,7 +25,7 @@ def test_prescription_create_lowercase():
 
 
 def test_prescription_create_empty_name():
-    with raises(InvalidNameError):
+    with raises(InvalidMedicineNameError):
         Prescription(medicine_name='', dosage=2, weekday=3)
 
 

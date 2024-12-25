@@ -1,7 +1,10 @@
 from medihelp.user import User
 from medihelp.prescription import Prescription
 from pytest import raises
-from medihelp.errors import InvalidNameError, InvalidBirthdateError
+from medihelp.errors import (InvalidUserNameError,
+                             InvalidIllnessNameError,
+                             InvalidSubstanceNameError,
+                             InvalidBirthdateError)
 from datetime import date
 
 
@@ -53,7 +56,7 @@ def test_user_set_name_lowercase():
 def test_user_set_name_empty_name():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.name() == 'Dad'
-    with raises(InvalidNameError):
+    with raises(InvalidUserNameError):
         user.set_name('')
 
 
@@ -92,7 +95,7 @@ def test_user_add_illness_uppercase():
 def test_user_add_illness_empty_name():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.illnesses() == set()
-    with raises(InvalidNameError):
+    with raises(InvalidIllnessNameError):
         user.add_illness('')
 
 
@@ -126,7 +129,7 @@ def test_user_add_allergy_uppercase():
 def test_user_add_allergy_empty_name():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.allergies() == set()
-    with raises(InvalidNameError):
+    with raises(InvalidSubstanceNameError):
         user.add_allergy('')
 
 
