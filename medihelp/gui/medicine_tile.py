@@ -3,10 +3,12 @@ from tkinter import messagebox
 from datetime import datetime
 from . import global_settings as gs
 from medihelp.medicine import Medicine
+from .gui import GUI
 from .user_note_tile import UserNoteTile
 from .add_note_tile import AddNoteTile
 from .common import set_of_strings_to_string, normalize_list_of_names, normalize_name
-from medihelp.errors import IllegalCharactersInANameError, UserDoesNotExist
+from medihelp.errors import IllegalCharactersInANameError, UserDoesNotExistError
+from medihelp.system import System
 
 
 class MedicineTile(ctk.CTkFrame):
@@ -15,7 +17,7 @@ class MedicineTile(ctk.CTkFrame):
         and provides an interface to modify the medicine instance in the database it is responsible for.
     '''
 
-    def __init__(self, system_handler, gui_handler, parent, medicine: Medicine):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent, medicine: Medicine):
         '''
         :param system_handler: System object handler
         :type system_handler: System
@@ -83,7 +85,7 @@ class MedicineInfoTile(ctk.CTkFrame):
     MedicineInfoTile is a component of a MedicineTile
         and is responsible for displaying medicine informations and take dose and delete button.
     '''
-    def __init__(self, system_handler, gui_handler, parent, medicine: Medicine):
+    def __init__(self, system_handler: System, gui_handler, parent, medicine: Medicine):
         '''
         :param system_handler: System object handler
         :type system_handler: System
@@ -216,7 +218,7 @@ class MedicineInfoTile(ctk.CTkFrame):
         '''
         user = self._system.users().get(self._gui.current_user_id())
         if not user:
-            raise UserDoesNotExist(self._gui.current_user_id())
+            raise UserDoesNotExistError(self._gui.current_user_id())
         try:
             self._system.take_dose(self._medicine.id(), user)
         except Exception as e:
@@ -229,9 +231,17 @@ class MedicineInfoTile(ctk.CTkFrame):
         '''
         Deletes the medicine from the database
         '''
-        medicine_id = self._medicine.id()
-        self._system.del_medicine(medicine_id)
-        self._gui.update_view('medicine-list-view', medicine_id)
+        # Ask user for confirmation.
+        answer = messagebox.askyesno(title="Zatwierdź",
+                                     message=f"Czy na pewno chcesz usunąć lek o nazwie {self._medicine.name()}")
+        if answer:
+            # Delete medicine
+            medicine_id = self._medicine.id()
+            medicine_name = self._medicine.name()
+            self._system.del_medicine(medicine_id)
+            messagebox.showinfo(title='Informacja',
+                                message=f'Lek o nazwie {medicine_name} został usunięty!')
+            self._gui.update_view('medicine-list-view', medicine_id)
 
 
 class MedicineEditTile(ctk.CTkFrame):
@@ -239,7 +249,7 @@ class MedicineEditTile(ctk.CTkFrame):
     MedicineEditTile is a component of a MedicineTile
         and is responsible for providing an interface for editing medicine informations.
     '''
-    def __init__(self, system_handler, gui_handler, parent, medicine: Medicine):
+    def __init__(self, system_handler: System, gui_handler, parent, medicine: Medicine):
         '''
         :param system_handler: System object handler
         :type system_handler: System
@@ -340,14 +350,17 @@ class MedicineEditTile(ctk.CTkFrame):
         self._buton_frame = ctk.CTkFrame(self, fg_color=self.cget("fg_color"))
         self._buton_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
 
-        self._save_button = ctk.CTkButton(self._buton_frame, fg_color=gs.action_color,
-                                          text='Zapisz', font=(gs.font_name, 10),
-                                          command=self._save_button_handler)
-        self._save_button.grid(row=0, column=0, sticky='w')
+        self._approve_button = ctk.CTkButton(self._buton_frame, fg_color=gs.action_color,
+                                             text='Zatwierdź', font=(gs.font_name, 10),
+                                             command=self._approve_button_handler)
+        self._approve_button.grid(row=0, column=0, sticky='w')
 
         self.clear_form()
 
     def clear_form(self):
+        '''
+        Clears form entries, textboxes and check buttons
+        '''
         self._name_entry.delete('0', ctk.END)
         self._name_entry.insert('0', self._medicine.name())
 
@@ -377,7 +390,7 @@ class MedicineEditTile(ctk.CTkFrame):
         for user_id in self._medicine.recipients():
             self._recipients_checkboxes_variables[user_id].set(1)
 
-    def _save_button_handler(self):
+    def _approve_button_handler(self):
         '''
         Modifies medicine with the data from the form
         '''
@@ -431,7 +444,7 @@ class MedicineEditTile(ctk.CTkFrame):
                 recipients.append(user_id)
 
         try:
-            self._system.change_medicine(id=self._medicine.id(),
+            self._system.change_medicine(medicine_id=self._medicine.id(),
                                          name=name,
                                          manufacturer=manufacturer,
                                          illnesses=illnesses,
@@ -441,8 +454,8 @@ class MedicineEditTile(ctk.CTkFrame):
                                          doses_left=doses_left,
                                          expiration_date=expiration_date,
                                          recipients=recipients)
-            pass
         except Exception as e:
             messagebox.showerror(title="Błąd", message=f"{e}")
             return
+        messagebox.showinfo(title='Informacja', message='Zmiany zostały zapisane!')
         self._gui.update_view('medicine-list-view', self._medicine.id())

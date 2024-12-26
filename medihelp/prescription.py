@@ -1,24 +1,6 @@
-from .errors import InvalidMedicineNameError, InvalidDosesError, InvalidWeekdayError
-
-weekday_name_to_number = {
-    "Monday": 1,
-    "Tuesday": 2,
-    "Wednesday": 3,
-    "Thursday": 4,
-    "Friday": 5,
-    "Saturday": 6,
-    "Sunday": 7
-}
-
-weekday_number_to_name = {
-    1: "Monday",
-    2: "Tuesday",
-    3: "Wednesday",
-    4: "Thursday",
-    5: "Friday",
-    6: "Saturday",
-    7: "Sunday"
-}
+from .errors import (InvalidMedicineNameError,
+                     InvalidDosesError,
+                     InvalidWeekdayError)
 
 
 class Prescription:
@@ -27,6 +9,9 @@ class Prescription:
 
     Attributes
     ----------
+    :ivar _id: ID of the prescription
+    :vartype _id: int
+
     :ivar _medicine_name: Name of the prescribed medicine. Name starts with uppercase.
     :vartype _medicine_name: str
 
@@ -37,8 +22,10 @@ class Prescription:
     :vartype _weekday: int
     '''
 
-    def __init__(self, medicine_name: str, dosage: int, weekday: int):
+    def __init__(self, id: int, medicine_name: str, dosage: int, weekday: int):
         '''
+        :param id: ID of the prescription
+        :type id: int
         :param medicine_name: Name of the prescribed medicine
         :type medicine_name: str
         :param dosage: how many doses of the medicine should the user take
@@ -46,7 +33,7 @@ class Prescription:
         :param weekday: what day should the user take the medicine. Number from 1 to 7
         :type weekday: int
         '''
-
+        self._id = int(id)
         medicine_name = str(medicine_name).title()
         if not medicine_name:
             raise (InvalidMedicineNameError())
@@ -64,6 +51,8 @@ class Prescription:
         '''
         Useful for testing
         '''
+        if self.id() != other.id():
+            return False
         if self.medicine_name() != other.medicine_name():
             return False
         if self.dosage() != other.dosage():
@@ -78,32 +67,14 @@ class Prescription:
         '''
         return hash((self.medicine_name(), self.dosage()))
 
-    def medicine_name(self):
-        '''
-        Getter for _medicine_name
+    def id(self):
+        return self._id
 
-        :return: _medicine_name
-        :rtype: str
-        '''
+    def medicine_name(self):
         return self._medicine_name
 
     def dosage(self):
-        '''
-        Getter for _dosage
-
-        :return: _dosage
-        :rtype: int
-        '''
         return self._dosage
 
     def weekday(self):
-        '''
-        Getter for _weekday
-
-        :return: _weekday
-        :rtype: int
-        '''
         return self._weekday
-
-    def __str__(self):
-        return f'{self.dosage()} doses of {self.medicine_name()} every {weekday_number_to_name[self.weekday()]}.'

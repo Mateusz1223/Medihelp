@@ -4,7 +4,9 @@ from pytest import raises
 from medihelp.errors import (InvalidUserNameError,
                              InvalidIllnessNameError,
                              InvalidSubstanceNameError,
-                             InvalidBirthdateError)
+                             InvalidBirthdateError,
+                             IdAlreadyInUseError,
+                             NoSuchIdInUserPrescriptionsError)
 from datetime import date
 
 
@@ -15,28 +17,27 @@ def test_user_create_no_lists():
     assert user.birth_date() == date(1980, 1, 2)
     assert user.illnesses() == set()
     assert user.allergies() == set()
-    assert user.prescriptions() == set()
+    assert user.prescriptions() == {}
 
 
 def test_user_create_with_lists():
     illnesses_set = {'xyz', 'illness2', 'illnes3'}
     allergies_set = {'nicotine', 'sugar'}
-    prescriptions_set = {
-        Prescription(medicine_name='med1', dosage=1, weekday=2),
-        Prescription(medicine_name='med2', dosage=2, weekday=7)
-    }
+    presc0 = Prescription(id=0, medicine_name='med1', dosage=1, weekday=2)
+    presc1 = Prescription(id=1, medicine_name='med2', dosage=2, weekday=7)
     user = User(1,
                 name='Mom',
                 birth_date=date(1980, 1, 2),
-                illnesses=illnesses_set,
+                illnesses={'xyz', 'illness2', 'illnes3'},
                 allergies=allergies_set,
-                prescriptions=prescriptions_set)
+                prescriptions=[presc0, presc1])
     assert user.id() == 1
     assert user.name() == 'Mom'
     assert user.birth_date() == date(1980, 1, 2)
     assert user.illnesses() == illnesses_set
     assert user.allergies() == allergies_set
-    assert user.prescriptions() == prescriptions_set
+    assert user.prescriptions()[0] == presc0
+    assert user.prescriptions()[1] == presc1
 
 
 def test_user_set_name_typical():
@@ -144,18 +145,52 @@ def test_user_remove_allergy_typical():
 
 def test_user_add_prescription_typical():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
-    prescription1 = Prescription(medicine_name='Rutinorut', dosage=2, weekday=1)
-    prescription2 = Prescription(medicine_name='Ivermectin', dosage=1, weekday=7)
+    prescription1 = Prescription(id=0, medicine_name='Rutinorut', dosage=2, weekday=1)
+    prescription2 = Prescription(id=1, medicine_name='Ivermectin', dosage=1, weekday=7)
     user.add_prescription(prescription1)
-    assert user.prescriptions() == {prescription1}
+    assert user.prescriptions()[0] == prescription1
     user.add_prescription(prescription2)
-    assert user.prescriptions() == {prescription1, prescription2}
+    assert user.prescriptions()[1] == prescription2
 
 
 def test_user_add_prescription_different_type():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     with raises(ValueError):
         user.add_prescription("Two doses of ivermectin every sunday")
+
+
+def test_user_add_prescription_id_in_use():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    prescription1 = Prescription(id=0, medicine_name='Rutinorut', dosage=2, weekday=1)
+    prescription2 = Prescription(id=0, medicine_name='Ivermectin', dosage=1, weekday=7)
+    user.add_prescription(prescription1)
+    with raises(IdAlreadyInUseError):
+        user.add_prescription(prescription2)
+
+
+def test_user_remove_prescription_typical():
+    presc0 = Prescription(id=0, medicine_name='med1', dosage=1, weekday=2)
+    presc1 = Prescription(id=1, medicine_name='med2', dosage=2, weekday=7)
+    user = User(1,
+                name='Mom',
+                birth_date=date(1980, 1, 2),
+                prescriptions=[presc0, presc1])
+    assert user.prescriptions()[0] == presc0
+    assert user.prescriptions()[1] == presc1
+    user.remove_prescription(0)
+    assert user.prescriptions().get(0) == None
+    assert user.prescriptions()[1] == presc1
+    user.remove_prescription(1)
+    assert user.prescriptions().get(0) == None
+    assert user.prescriptions().get(1) == None
+
+
+def test_user_remove_prescription_no_such_id():
+    user = User(1,
+                name='Mom',
+                birth_date=date(1980, 1, 2))
+    with raises(NoSuchIdInUserPrescriptionsError):
+        user.remove_prescription(0)
 
 
 def test_user_age_typical(monkeypatch):

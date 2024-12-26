@@ -2,6 +2,8 @@ import customtkinter as ctk
 from tkinter import messagebox
 from datetime import datetime
 from medihelp.errors import IllegalCharactersInANameError
+from medihelp.system import System
+from .gui import GUI
 from . import global_settings as gs
 from .common import normalize_list_of_names, normalize_name
 
@@ -11,7 +13,7 @@ class AddMedicineTile(ctk.CTkFrame):
     Class AddMedicineTile responsible for providing an interface to add new medicine.
     '''
 
-    def __init__(self, system_handler, gui_handler, parent):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''
         :param system_handler: System object handler
         :type system_handler: System
@@ -114,10 +116,10 @@ class AddMedicineTile(ctk.CTkFrame):
         self._buton_frame = ctk.CTkFrame(self._form_frame, fg_color=self.cget("fg_color"))
         self._buton_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
 
-        self._save_button = ctk.CTkButton(self._buton_frame, fg_color=gs.action_color,
-                                          text='Zapisz', font=(gs.font_name, 10),
-                                          command=self._save_button_handler)
-        self._save_button.grid(row=0, column=0, sticky='w')
+        self._approve_button = ctk.CTkButton(self._buton_frame, fg_color=gs.action_color,
+                                             text='Zatwierdź', font=(gs.font_name, 10),
+                                             command=self._approve_button_handler)
+        self._approve_button.grid(row=0, column=0, sticky='w')
         self._cancel_button = ctk.CTkButton(self._buton_frame, fg_color=gs.edit_color,
                                             text='Anuluj', font=(gs.font_name, 10),
                                             command=self._cancel_button_handler)
@@ -143,7 +145,11 @@ class AddMedicineTile(ctk.CTkFrame):
         self._clear_form()
         self._form_frame.pack(padx=1.5, pady=1.5, anchor='w', fill='x')
 
-    def _save_button_handler(self):
+    def _approve_button_handler(self):
+        '''
+        Creates new medicine object in the database based on the data from the form
+        '''
+        # Extract data from the form
         name = self._name_entry.get()
         try:
             name = normalize_name(name)
@@ -193,6 +199,7 @@ class AddMedicineTile(ctk.CTkFrame):
             if int_var.get():
                 recipients.append(user_id)
 
+        # Add medicine to the database
         try:
             medicine_id = self._system.add_medicine(name=name,
                                                     manufacturer=manufacturer,
@@ -207,9 +214,9 @@ class AddMedicineTile(ctk.CTkFrame):
             messagebox.showerror(title="Błąd", message=f"{e}")
             return
 
+        messagebox.showinfo(title='Informacja', message='Lek został dodany do bazy danych!')
         self._form_frame.pack_forget()
         self._add_medicine_button.pack(padx=self.padx, pady=30, anchor='w')
-
         self._gui.update_view('medicine-list-view', medicine_id)
 
     def _cancel_button_handler(self):

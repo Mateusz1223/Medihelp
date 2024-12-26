@@ -1,11 +1,13 @@
 import customtkinter as ctk
+from .gui import GUI
+from medihelp.system import System
 
 
 class View(ctk.CTkScrollableFrame):
     '''
     Base class for all the views in the GUI.
     '''
-    def __init__(self, system_handler, gui_handler, parent, width=200, height=200, corner_radius=None, border_width=None, bg_color="transparent", fg_color=None, border_color=None, scrollbar_fg_color=None, scrollbar_button_color=None, scrollbar_button_hover_color=None, label_fg_color=None, label_text_color=None, label_text="", label_font=None, label_anchor="center", orientation="vertical"):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent, width=200, height=200, corner_radius=None, border_width=None, bg_color="transparent", fg_color=None, border_color=None, scrollbar_fg_color=None, scrollbar_button_color=None, scrollbar_button_hover_color=None, label_fg_color=None, label_text_color=None, label_text="", label_font=None, label_anchor="center", orientation="vertical"):
         '''
         :param system_handler: System object handler
         :type system_handler: System

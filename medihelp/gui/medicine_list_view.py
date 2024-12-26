@@ -1,14 +1,26 @@
 from .medicine_tile import MedicineTile
 from .add_medicine_tile import AddMedicineTile
+from .gui import GUI
 from .view import View
-from medihelp.errors import MedicineDoesNotExist
+from medihelp.errors import MedicineDoesNotExistError
+from medihelp.system import System
 
 
 class MedicineListView(View):
     '''
     View that shows informations about all the medicines stored in a database
     '''
-    def __init__(self, system_handler, gui_handler, parent):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent):
+        '''
+        :param system_handler: System object handler
+        :type system_handler: System
+
+        :param gui_handler: gui object handler
+        :type gui_handler: GUI
+
+        :param parent: parent object used for initialization of tkinter objects.
+        :type parent: tkinter.Misc
+        '''
         super().__init__(system_handler, gui_handler, parent)
 
         self._system = system_handler
@@ -31,6 +43,8 @@ class MedicineListView(View):
         '''
         Called when system informations like databases data change so that the view can update it's content.
         '''
+        super().update_view()
+
         for tile in self._medicine_tiles.values():
             tile.destroy()
         self._medicine_tiles.clear()
@@ -65,7 +79,7 @@ class MedicineListView(View):
         except Exception:
             tile = None
         if not medicine and not tile:
-            raise MedicineDoesNotExist(medicine_id)
+            raise MedicineDoesNotExistError(medicine_id)
         elif not tile:
             self._add_tile(medicine_id)
         elif not medicine:
@@ -77,7 +91,7 @@ class MedicineListView(View):
                 self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
                 self._medicine_tiles[medicine.id()].grid(row=row, column=0, padx=20, pady=10, sticky='we')
             except Exception:
-                raise MedicineDoesNotExist(medicine_id)
+                raise MedicineDoesNotExistError(medicine_id)
 
     def _add_tile(self, medicine_id):
         '''
@@ -88,7 +102,7 @@ class MedicineListView(View):
         '''
         medicine = self._system.medicines().get(medicine_id)
         if not medicine:
-            raise MedicineDoesNotExist(medicine_id)
+            raise MedicineDoesNotExistError(medicine_id)
         self._medicine_tiles[medicine.id()] = MedicineTile(self._system, self._gui, self, medicine)
         self._medicine_tiles[medicine.id()].grid(row=self._free_row, column=0, padx=20, pady=10, sticky='we')
         self._free_row += 1

@@ -1,10 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk
-from .menu_bar import MenuBar
-from .medicine_list_view import MedicineListView
-from .choose_user_view import ChooseUserView
+from medihelp.system import System
 from . import global_settings as gs
-from medihelp.errors import WrongArgumentsError, ViewDoesNotExist, UserDoesNotExist
+from medihelp.errors import WrongArgumentsError, ViewDoesNotExist, UserDoesNotExistError
 
 
 class GUI(ctk.CTk):
@@ -21,7 +19,14 @@ class GUI(ctk.CTk):
     :vartype _current_user_id: int
     '''
 
-    def __init__(self, system_handler):
+    def __init__(self, system_handler: System):
+        # Imports here in order to avoid circular import
+        from .menu_bar import MenuBar
+        from .medicine_list_view import MedicineListView
+        from .choose_user_view import ChooseUserView
+        from .modify_user_view import ModifyUserView
+        from .calendar_view import CalendarView
+
         super().__init__()
         self._system = system_handler
 
@@ -40,8 +45,9 @@ class GUI(ctk.CTk):
 
         self._views = {
             'choose-user-view': ChooseUserView(self._system, self, self),
-            'medicine-list-view': MedicineListView(self._system, self, self)
-            'modify-user-view': None
+            'medicine-list-view': MedicineListView(self._system, self, self),
+            'modify-user-view': ModifyUserView(self._system, self, self),
+            'calendar-view': CalendarView(self._system, self, self)
         }
         self.set_current_view('choose-user-view')
 
@@ -62,6 +68,8 @@ class GUI(ctk.CTk):
         Possible choices for view_name:
         1) 'choose-user-view'
         2) 'medicine-list-view'
+        3) 'modify-user-view'
+        4) 'calendar-view'
 
         :param view_name: name of the view that is to be displayed
         :type view_name: str
@@ -74,7 +82,7 @@ class GUI(ctk.CTk):
         except Exception:
             pass
         self._current_view = view_name
-        self._views[self._current_view].grid(row=0, column=0, sticky="nsew")
+        view.grid(row=0, column=0, sticky="nsew")
 
     def set_current_user_id(self, user_id: int):
         '''
@@ -82,7 +90,7 @@ class GUI(ctk.CTk):
         '''
         user = self._system.users().get(user_id)
         if not user:
-            raise UserDoesNotExist(user_id)
+            raise UserDoesNotExistError(user_id)
         self._current_user_id = user.id()
         self.update_views()
         self.title(f'Medihelp - {user.name()}')
@@ -96,6 +104,8 @@ class GUI(ctk.CTk):
         Possible choices for view_name:
         1) 'choose-user-view'
         2) 'medicine-list-view'
+        3) 'modify-user-view'
+        4) 'calendar-view'
 
         :param view_name: name of the view
         :type view_name: str
@@ -119,7 +129,7 @@ class GUI(ctk.CTk):
         '''
         for view in self._views.values():
             view.update_view()
-            view.grid(row=0, column=0, sticky="nsew")
+        self._views[self._current_view].grid(row=0, column=0, sticky="nsew")
 
     def show_menubar(self):
         '''

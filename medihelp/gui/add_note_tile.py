@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from tkinter import messagebox
+from .gui import GUI
+from medihelp.system import System
 from . import global_settings as gs
 
 
@@ -10,7 +12,7 @@ class AddNoteTile(ctk.CTkFrame):
     :ivar _medicine_id: ID of the medicine the note is assigned to.
     :vartype _medicine_id: int
     '''
-    def __init__(self, system_handler, gui_handler, parent, medicine_id: int):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent, medicine_id: int):
         '''
         :param system_handler: System object handler
         :type system_handler: System

@@ -8,19 +8,21 @@
             "xyz"
         ],
         "allergies": [
-            "nikotyna",
-            "cukier"
+            "cukier",
+            "nikotyna"
         ],
         "prescriptions": [
             {
-                "medicine_name": "Med2",
-                "dosage": 2,
-                "weekday": 7
-            },
-            {
+                "id": 1,
                 "medicine_name": "Med1",
                 "dosage": 1,
                 "weekday": 2
+            },
+            {
+                "id": 0,
+                "medicine_name": "Med2",
+                "dosage": 2,
+                "weekday": 7
             }
         ]
     },
@@ -29,31 +31,46 @@
         "name": "Mama",
         "birth_date": "1985-08-04",
         "illnesses": [
-            "illness2",
+            "illnes3",
             "xyz",
-            "illnes3"
+            "illness2"
         ],
         "allergies": [
-            "weed",
-            "stuff"
+            "stuff",
+            "weed"
         ],
-        "prescriptions": []
+        "prescriptions": [
+            {
+                "id": 0,
+                "medicine_name": "Lek 1",
+                "dosage": 2,
+                "weekday": 7
+            },
+            {
+                "id": 1,
+                "medicine_name": "Stoperanos",
+                "dosage": 1,
+                "weekday": 1
+            }
+        ]
     },
     {
         "id": 2,
         "name": "Dziecko",
         "birth_date": "2018-01-02",
-        "illnesses": [
-            "diabetes"
-        ],
-        "allergies": [
-            "that",
-            "this"
-        ],
+        "illnesses": [],
+        "allergies": [],
         "prescriptions": [
             {
+                "id": 0,
                 "medicine_name": "Med3",
                 "dosage": 3,
+                "weekday": 4
+            },
+            {
+                "id": 1,
+                "medicine_name": "Ivermectinol",
+                "dosage": 5,
                 "weekday": 4
             }
         ]

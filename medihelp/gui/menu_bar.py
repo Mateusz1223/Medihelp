@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from .gui import GUI
 from medihelp.errors import DataLoadingError, NoFileOpenedError, DataSavingError
+from medihelp.system import System
 from .global_settings import font_name
 
 
@@ -10,7 +12,14 @@ class MenuBar(tk.Menu):
     Class representing menu bar at the top of the screen.
     '''
 
-    def __init__(self, system_handler, gui_handler):
+    def __init__(self, system_handler: System, gui_handler: GUI):
+        '''
+        :param system_handler: System object handler
+        :type system_handler: System
+
+        :param gui_handler: gui object handler
+        :type gui_handler: GUI
+        '''
         self._font = (font_name, 9)
         super().__init__(gui_handler, font=self._font)
         self._system = system_handler
@@ -81,9 +90,9 @@ class MenuBar(tk.Menu):
 
     def show_callender_button_handler(self):
         '''
-        Changes view to callender-view
+        Changes view to calendar-view
         '''
-        self._gui.set_current_view('callender-view')
+        self._gui.set_current_view('calendar-view')
 
     def switch_users_button_handler(self):
         '''

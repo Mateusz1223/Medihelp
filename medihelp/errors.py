@@ -107,6 +107,11 @@ class NoSuchIdInTheDatabaseError(Exception):
         super().__init__('Nie ma obiektu o takim ID w bazie danych!')
 
 
+class NoSuchIdInUserPrescriptionsError(Exception):
+    def __init__(self):
+        super().__init__('Użytkownik nie posiada recepty o danym ID!')
+
+
 class DataLoadingError(Exception):
     def __init__(self):
         super().__init__('Wystąpił błąd podczas ładowania danych!')
@@ -114,7 +119,7 @@ class DataLoadingError(Exception):
 
 class DataSavingError(Exception):
     def __init__(self):
-        super().__init__('Wystąpił błąd podczas otwierania pliku!')
+        super().__init__('Wystąpił błąd podczas zapisywania danych do pliku!')
 
 
 class NoFileOpenedError(Exception):
@@ -137,13 +142,13 @@ class TooManyLinesInTheNoteError(Exception):
         super().__init__('Notatka może mieć maksymalnie 6 linii!')
 
 
-class MedicineDoesNotExist(Exception):
-    def __init__(self, id):
+class MedicineDoesNotExistError(Exception):
+    def __init__(self, id: int):
         super().__init__(f'Lek o id {id} nie istnieje!')
 
 
-class UserDoesNotExist(Exception):
-    def __init__(self, id):
+class UserDoesNotExistError(Exception):
+    def __init__(self, id: int):
         super().__init__(f'Użytkownik o id {id} nie istnieje!')
 
 
@@ -153,7 +158,7 @@ class WrongArgumentsError(Exception):
 
 
 class ViewDoesNotExist(Exception):
-    def __init__(self, name):
+    def __init__(self, name: str):
         super().__init__(f'View {name} does not exist!')
 
 

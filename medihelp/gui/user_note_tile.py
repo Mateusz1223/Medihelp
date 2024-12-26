@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from tkinter import messagebox
 from . import global_settings as gs
+from .gui import GUI
+from medihelp.system import System
 
 
 class UserNoteTile(ctk.CTkFrame):
@@ -20,7 +22,7 @@ class UserNoteTile(ctk.CTkFrame):
     :param _editable: Whether this tile should be editable or not.
     :type _editable: bool
     '''
-    def __init__(self, system_handler, gui_handler, parent, medicine_id: int, author_id: int, content: str, editable: bool = False):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent, medicine_id: int, author_id: int, content: str, editable: bool = False):
         '''
         :param system_handler: System object handler
         :type system_handler: System

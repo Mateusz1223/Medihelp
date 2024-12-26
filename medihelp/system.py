@@ -5,8 +5,9 @@ from .user import User
 from .errors import (DataLoadingError,
                      NoFileOpenedError,
                      DataSavingError,
-                     MedicineDoesNotExist,
-                     UserDoesNotExist)
+                     MedicineDoesNotExistError,
+                     UserDoesNotExistError)
+from medihelp.prescription import Prescription
 from typing import Iterable
 from datetime import date
 
@@ -77,6 +78,16 @@ class System:
         except Exception as e:
             raise DataLoadingError from e
 
+    def save_users_data(self):
+        '''
+        Saves users data to data/users.json file
+        '''
+        try:
+            with open('data/users.json', 'w') as file:
+                self._users_database.write_to_file(file)
+        except Exception as e:
+            raise DataSavingError from e
+
     def medicines_database_loaded(self):
         '''
         Checks if there is a medicines file loaded ???
@@ -139,12 +150,12 @@ class System:
         :type content: str
         '''
         if author_id not in self.users_database().users().keys():
-            raise UserDoesNotExist(author_id)
+            raise UserDoesNotExistError(author_id)
         medicine = self.medicines_database().medicines().get(medicine_id)
         if medicine:
             medicine.set_note(author_id, content)
         else:
-            raise MedicineDoesNotExist(medicine_id)
+            raise MedicineDoesNotExistError(medicine_id)
 
     def del_note(self, medicine_id: int, author_id: int):
         '''
@@ -157,12 +168,12 @@ class System:
         :type author_id: int
         '''
         if author_id not in self.users_database().users().keys():
-            raise UserDoesNotExist(author_id)
+            raise UserDoesNotExistError(author_id)
         medicine = self.medicines_database().medicines().get(medicine_id)
         if medicine:
             medicine.del_note(author_id)
         else:
-            raise MedicineDoesNotExist(medicine_id)
+            raise MedicineDoesNotExistError(medicine_id)
 
     def add_medicine(self,
                      name: str,
@@ -228,24 +239,8 @@ class System:
         '''
         self.medicines_database().delete_medicine(medicine_id)
 
-    def take_dose(self, medicine_id: int, user: User):
-        '''
-        1) Decrements medicine's _doses_left.
-        2) Throws exceptions with a reason if the user can't take the medicine.
-
-        :param medicine_id: ID of the medicine
-        :type medicine_id: int
-
-        :param user: User object used to determine if the user can take the medicine.
-        :type user: User
-        '''
-        medicine = self.medicines().get(medicine_id)
-        if not medicine:
-            raise MedicineDoesNotExist(medicine_id)
-        medicine.take_doses(doses=1, user=user)
-
     def change_medicine(self,
-                        id: int,
+                        medicine_id: int,
                         name: str,
                         manufacturer: str,
                         illnesses: Iterable[str],
@@ -254,13 +249,12 @@ class System:
                         doses: int,
                         doses_left: int,
                         expiration_date: date,
-                        recipients=None,
-                        notes: dict[int: str] = None):
+                        recipients):
         '''
         Replaces old medicine object under the given id in the database with a new one.
 
-        :param id: ID of the medicine to be modified
-        :type id: int
+        :param medicine_id: ID of the medicine to be modified
+        :type medicine_id: int
         :param name: Name of the medicine.
         :type name: str
         :param manufacturer: Name of the manufacturer.
@@ -277,21 +271,143 @@ class System:
         :type doses_left: int
         :param expiration_date: Expiration date.
         :type expiration_date: date
-        :param recipients: Set of the IDs of the users who are taking the medicine. (optional)
+        :param recipients: Set of the IDs of the users who are taking the medicine.
         :type recipients: iterable of int
-        :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves (optional)
-        :type notes: dict[int, str]
         '''
-        medicine = Medicine(id,
-                            name=name,
-                            manufacturer=manufacturer,
-                            illnesses=illnesses,
-                            substances=substances,
-                            recommended_age=recommended_age,
-                            doses=doses,
-                            doses_left=doses_left,
-                            expiration_date=expiration_date,
-                            recipients=recipients,
-                            notes=notes)
-        self.medicines_database().delete_medicine(id)
-        self.medicines_database().add_medicine(medicine)
+        old_medicine = self.medicines().get(medicine_id)
+        if not old_medicine:
+            raise MedicineDoesNotExistError(medicine_id)
+        new_medicine = Medicine(id=medicine_id,
+                                name=name,
+                                manufacturer=manufacturer,
+                                illnesses=illnesses,
+                                substances=substances,
+                                recommended_age=recommended_age,
+                                doses=doses,
+                                doses_left=doses_left,
+                                expiration_date=expiration_date,
+                                recipients=recipients,
+                                notes=old_medicine.notes())
+        self.medicines_database().delete_medicine(medicine_id)
+        self.medicines_database().add_medicine(new_medicine)
+
+    def take_dose(self, medicine_id: int, user: User):
+        '''
+        1) Decrements medicine's _doses_left.
+        2) Throws exceptions with a reason if the user can't take the medicine.
+
+        :param medicine_id: ID of the medicine
+        :type medicine_id: int
+
+        :param user: User object used to determine if the user can take the medicine.
+        :type user: User
+        '''
+        medicine = self.medicines().get(medicine_id)
+        if not medicine:
+            raise MedicineDoesNotExistError(medicine_id)
+        medicine.take_doses(doses=1, user=user)
+
+    def change_user(self,
+                    user_id: int,
+                    name: str,
+                    birth_date: date,
+                    illnesses: Iterable[str],
+                    allergies: Iterable[str]):
+        '''
+        Replaces old user object under the given id in the database with a new one.
+
+        :param user_id: User's ID
+        :type user_id: int
+        :param name: Username.
+        :type name: str
+        :param birth_date: Age of the user.
+        :type birth_date: int
+        :param illnesses: list of illnesses that the user has. Names of illneses are written in lowercase.
+        :type illnesses: iterable of str
+        :param allergies: list of active substances to which the user is allergic to. Names of substances are written in lowercase.
+        :type allergies: iterable of str
+        :param prescriptions: list of prescriptions that the user is subject to.
+        :type prescriptions: list[Prescription]
+        '''
+        old_user = self.users().get(user_id)
+        if not old_user:
+            raise UserDoesNotExistError(user_id)
+        new_user = User(id=user_id,
+                        name=name,
+                        birth_date=birth_date,
+                        illnesses=illnesses,
+                        allergies=allergies,
+                        prescriptions=old_user.prescriptions().values())
+
+        self.users_database().delete_user(user_id)
+        self.users_database().add_user(new_user)
+
+    def del_prescription(self, user_id: int, prescription_id: int):
+        '''
+        Deletes prescription with given ID from the user with given ID
+
+        :param user_id: ID of the user
+        :type user_id: int
+
+        :param prescription_id: ID of the prescription
+        :type prescription_id: int
+        '''
+        user = self.users().get(user_id)
+        if not user:
+            raise UserDoesNotExistError(user_id)
+        user.remove_prescription(prescription_id)
+
+    def add_prescription(self, user_id: int, medicine_name: str,
+                         dosage: int, weekday: int):
+        '''
+        Adds prescription to the user with given ID
+
+        :param user_id: ID of the user
+        :type user_id: int
+
+        :param prescription: Prescription that is to be added
+        :type prescription: int
+        '''
+        user = self.users().get(user_id)
+        if not user:
+            raise UserDoesNotExistError(user_id)
+        # Choose ID
+        prescription_id = 0
+        while prescription_id in user.prescriptions().keys():
+            prescription_id += 1
+        prescription = Prescription(id=prescription_id,
+                                    medicine_name=medicine_name,
+                                    dosage=dosage,
+                                    weekday=weekday)
+        user.add_prescription(prescription)
+
+    def change_prescription(self, user_id: int, prescription_id: int,
+                            medicine_name: str, dosage: int, weekday: int):
+        '''
+        Replaces prescription with given ID in the user with given ID
+            with a new prescription, created with passed data
+
+        :param user_id: ID of the user
+        :type user_id: int
+
+        :param prescription_id: ID of the prescription
+        :type prescription_id: int
+
+        :param medicine_name: Name of the prescribed medicine
+        :type medicine_name: str
+
+        :param dosage: how many doses of the medicine should the user take
+        :type dosage: int
+
+        :param weekday: what day should the user take the medicine. Number from 1 to 7
+        :type weekday: int
+        '''
+        user = self.users().get(user_id)
+        if not user:
+            return UserDoesNotExistError(user_id)
+        new_prescription = Prescription(id=prescription_id,
+                                        medicine_name=medicine_name,
+                                        dosage=dosage,
+                                        weekday=weekday)
+        user.remove_prescription(prescription_id)
+        user.add_prescription(new_prescription)

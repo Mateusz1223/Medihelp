@@ -1,7 +1,9 @@
 from .errors import (InvalidUserNameError,
                      InvalidIllnessNameError,
                      InvalidSubstanceNameError,
-                     InvalidBirthdateError)
+                     InvalidBirthdateError,
+                     IdAlreadyInUseError,
+                     NoSuchIdInUserPrescriptionsError)
 from .prescription import Prescription
 from typing import Iterable, Optional
 from datetime import date
@@ -28,8 +30,9 @@ class User:
     :ivar _allergies: set of active substances to which the user is allergic to. Names should be written in lowercase.
     :vartype _allergies: set{str}
 
-    :ivar _prescriptions: list of prescriptions that the user is subject to.
-    :vartype _prescriptions: list[Prescription]
+    :param _prescriptions: dictionary of prescriptions that the user is subject to,
+            where keys are prescriptions's IDs and values are prescriptions
+    :type _prescriptions: iterable of Prescription
     '''
 
     def __init__(self,
@@ -50,8 +53,8 @@ class User:
         :type illnesses: iterable of str
         :param allergies: (optional) list of active substances to which the user is allergic to. Names of substances are written in lowercase.
         :type allergies: iterable of str
-        :param prescriptions: (optional) list of prescriptions that the user is subject to.
-        :type prescriptions: list[Prescription]
+        :param prescriptions: (optional) list of prescriptions that the user is subject to,
+        :type prescriptions: iterable of Prescription
         '''
 
         self._id = int(id)
@@ -65,7 +68,7 @@ class User:
         if allergies:
             for e in allergies:
                 self.add_allergy(e)
-        self._prescriptions = set()
+        self._prescriptions = {}
         if prescriptions:
             for e in prescriptions:
                 self.add_prescription(e)
@@ -84,8 +87,12 @@ class User:
             return False
         if len(self.allergies().intersection(other.allergies())) != len(self.allergies()):
             return False
-        if self.prescriptions() != other.prescriptions():
+        if len(self.prescriptions().keys()) != len(other.prescriptions().keys()):
             return False
+        for key, value in self.prescriptions().items():
+            other_value = other.prescriptions().get(key)
+            if other_value != value:
+                return False
         return True
 
     def id(self):
@@ -225,13 +232,18 @@ class User:
         '''
         if type(prescription) is not Prescription:
             raise (ValueError)
-        self._prescriptions.add(prescription)
+        if prescription.id() in self.prescriptions().keys():
+            raise IdAlreadyInUseError
+        self._prescriptions[prescription.id()] = prescription
 
-    def remove_prescription(self, prescription):
+    def remove_prescription(self, prescription_id):
         '''
-        Removes prescription from the _prescriptions list
+        Removes prescription with ID prescription_id from _prescriptions
 
-        :param prescription: prescription
-        :type prescription: Prescription
+        :param prescription_id: ID of the prescription
+        :type prescription_id: int
         '''
-        self._prescriptions.remove(prescription)
+        try:
+            del self._prescriptions[prescription_id]
+        except Exception:
+            raise NoSuchIdInUserPrescriptionsError

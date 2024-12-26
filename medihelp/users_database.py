@@ -1,6 +1,8 @@
 from medihelp.user import User
 import json
-from medihelp.errors import MalformedDataError, IdAlreadyInUseError
+from medihelp.errors import (MalformedDataError,
+                             IdAlreadyInUseError,
+                             NoSuchIdInTheDatabaseError)
 from datetime import date
 from medihelp.prescription import Prescription
 
@@ -21,7 +23,7 @@ class UsersDatabase:
     def users(self):
         return self._users
 
-    def _add_user(self, user):
+    def add_user(self, user):
         '''
         This method adds user to self._users
         '''
@@ -29,9 +31,20 @@ class UsersDatabase:
             raise IdAlreadyInUseError
         self._users[user.id()] = user
 
+    def delete_user(self, id):
+        if id not in self.users().keys():
+            raise NoSuchIdInTheDatabaseError
+        del self._users[id]
+
+    def clear(self):
+        '''
+        Clears database
+        '''
+        self._users.clear()
+
     def read_from_file(self, file_handler):
         '''
-        Reads informations about users from a .json file
+        Reads informations about users from a .json file and adds them to _users
         '''
         try:
             data = json.load(file_handler)
@@ -48,11 +61,12 @@ class UsersDatabase:
                 allergies = item['allergies']
                 prescriptions = []
                 for pres_set in item['prescriptions']:
-                    prescription = Prescription(medicine_name=pres_set['medicine_name'],
+                    prescription = Prescription(id=pres_set['id'],
+                                                medicine_name=pres_set['medicine_name'],
                                                 dosage=pres_set['dosage'],
                                                 weekday=pres_set['weekday'])
                     prescriptions.append(prescription)
-                self._add_user(User(id, name, birth_date, illnesses, allergies, prescriptions))
+                self.add_user(User(id, name, birth_date, illnesses, allergies, prescriptions))
                 item_counter += 1
             except Exception:
                 raise MalformedDataError(file_handler.name, item_counter)
@@ -64,8 +78,9 @@ class UsersDatabase:
         data = []
         for user in self._users.values():
             prescriptions = []
-            for prescription in user.prescriptions():
+            for prescription in user.prescriptions().values():
                 prescriptions.append({
+                    'id': prescription.id(),
                     'medicine_name': prescription.medicine_name(),
                     'dosage': prescription.dosage(),
                     'weekday': prescription.weekday(),
