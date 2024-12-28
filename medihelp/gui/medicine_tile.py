@@ -4,6 +4,7 @@ from datetime import datetime
 from . import global_settings as gs
 from medihelp.medicine import Medicine
 from .gui import GUI
+from .medicine_form import MedicineForm
 from .user_note_tile import UserNoteTile
 from .add_note_tile import AddNoteTile
 from .common import set_of_strings_to_string, normalize_list_of_names, normalize_name
@@ -66,7 +67,7 @@ class MedicineTile(ctk.CTkFrame):
 
     def _edit_button_handler(self):
         self._info_tile.grid_forget()
-        self._edit_tile.clear_form()
+        self._edit_tile.clear_form(self._medicine)
         self._edit_tile.grid(row=1, column=0, padx=1.5, pady=1.5, sticky='we')
 
         self._edit_button.grid_forget()
@@ -85,7 +86,7 @@ class MedicineInfoTile(ctk.CTkFrame):
     MedicineInfoTile is a component of a MedicineTile
         and is responsible for displaying medicine informations and take dose and delete button.
     '''
-    def __init__(self, system_handler: System, gui_handler, parent, medicine: Medicine):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent, medicine: Medicine):
         '''
         :param system_handler: System object handler
         :type system_handler: System
@@ -249,7 +250,7 @@ class MedicineEditTile(ctk.CTkFrame):
     MedicineEditTile is a component of a MedicineTile
         and is responsible for providing an interface for editing medicine informations.
     '''
-    def __init__(self, system_handler: System, gui_handler, parent, medicine: Medicine):
+    def __init__(self, system_handler: System, gui_handler: GUI, parent, medicine: Medicine):
         '''
         :param system_handler: System object handler
         :type system_handler: System
@@ -273,175 +274,72 @@ class MedicineEditTile(ctk.CTkFrame):
         self.padx = 20
         self.pady = 2
 
-        self.setup_form()
+        self.columnconfigure(0, weight=1)
 
-    def setup_form(self):
-        self._name_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                        text='Nazwa leku: ', font=(gs.font_name, 10, 'bold'))
-        self._name_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._name_entry = ctk.CTkEntry(self, width=gs.min_width / 2,
-                                        font=(gs.font_name, 10), border_width=0.5)
-        self._name_entry.pack(padx=self.padx, pady=self.pady, anchor='w')
+        # Form
+        self._form = MedicineForm(self._system, self._gui, self)
+        self._form.clear_form(self._medicine)
+        self._form.grid(row=0, column=0, sticky='we')
 
-        self._manufacturer_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                                text='Producent', font=(gs.font_name, 10, 'bold'))
-        self._manufacturer_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._manufacturer_entry = ctk.CTkEntry(self, width=gs.min_width / 2,
-                                                font=(gs.font_name, 10), border_width=0.5)
-        self._manufacturer_entry.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._doses_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                         text='Ilość dawek w opakowaniu', font=(gs.font_name, 10, 'bold'))
-        self._doses_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._doses_entry = ctk.CTkEntry(self, width=gs.min_width / 4, font=(gs.font_name, 10),
-                                         border_width=0.5)
-        self._doses_entry.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._doses_left_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                              text='Ilość pozostałych dawek', font=(gs.font_name, 10, 'bold'))
-        self._doses_left_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._doses_left_entry = ctk.CTkEntry(self, width=gs.min_width / 4,
-                                              font=(gs.font_name, 10), border_width=0.5)
-        self._doses_left_entry.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._recommended_age_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                                   text='Zalecany wiek', font=(gs.font_name, 10, 'bold'))
-        self._recommended_age_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._recommended_age_entry = ctk.CTkEntry(self, width=gs.min_width / 4,
-                                                   font=(gs.font_name, 10), border_width=0.5)
-        self._recommended_age_entry.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._expiration_date_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                                   text='Data ważności', font=(gs.font_name, 10, 'bold'))
-        self._expiration_date_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._expiration_date_entry = ctk.CTkEntry(self, width=gs.min_width / 4, font=(gs.font_name, 10),
-                                                   border_width=0.5, placeholder_text='RRRR-MM-DD')
-        self._expiration_date_entry.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._substances_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                              text='Substancje', font=(gs.font_name, 10, 'bold'))
-        self._substances_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._substances_textbox = ctk.CTkTextbox(self, width=gs.min_width - 100, height=50,
-                                                  font=(gs.font_name, 10), border_width=0.5)
-        self._substances_textbox.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._illnesses_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                             text='Na choroby', font=(gs.font_name, 10, 'bold'))
-        self._illnesses_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        self._illnesses_textbox = ctk.CTkTextbox(self, width=gs.min_width - 100, height=50,
-                                                 font=(gs.font_name, 10), border_width=0.5)
-        self._illnesses_textbox.pack(padx=self.padx, pady=self.pady, anchor='w')
-
-        self._recipients_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
-                                              text='Zaznacz odbiorów leku:', font=(gs.font_name, 10, 'bold'))
-        self._recipients_label.pack(padx=self.padx, pady=self.pady, anchor='w')
-        # Create a dictionary of checkboxes where user id is the key and chackbox is the value
-        self._recipients_checkboxes_variables = {}
-        self._recipients_checkboxes = {}
-        for user_id, user in self._system.users().items():
-            variable = ctk.IntVar(value=0)
-            checkbox = ctk.CTkCheckBox(self, text=user.name(), variable=variable,
-                                       onvalue=1, offvalue=0, font=(gs.font_name, 10),
-                                       hover_color=gs.action_color, fg_color=gs.action_color)
-            checkbox.pack(padx=self.padx, pady=self.pady, anchor='w')
-            self._recipients_checkboxes[user_id] = checkbox
-            self._recipients_checkboxes_variables[user_id] = variable
-
-        self._buton_frame = ctk.CTkFrame(self, fg_color=self.cget("fg_color"))
-        self._buton_frame.pack(padx=self.padx, pady=self.pady + 10, anchor='w', fill='x')
-
-        self._approve_button = ctk.CTkButton(self._buton_frame, fg_color=gs.action_color,
+        # Button
+        self._approve_button = ctk.CTkButton(self, fg_color=gs.action_color,
                                              text='Zatwierdź', font=(gs.font_name, 10),
                                              command=self._approve_button_handler)
-        self._approve_button.grid(row=0, column=0, sticky='w')
+        self._approve_button.grid(row=1, column=0, padx=self.padx, pady=self.pady + 10, sticky='w')
 
-        self.clear_form()
-
-    def clear_form(self):
-        '''
-        Clears form entries, textboxes and check buttons
-        '''
-        self._name_entry.delete('0', ctk.END)
-        self._name_entry.insert('0', self._medicine.name())
-
-        self._manufacturer_entry.delete('0', ctk.END)
-        self._manufacturer_entry.insert('0', self._medicine.manufacturer())
-
-        self._doses_entry.delete('0', ctk.END)
-        self._doses_entry.insert('0', str(self._medicine.doses()))
-
-        self._doses_left_entry.delete('0', ctk.END)
-        self._doses_left_entry.insert('0', str(self._medicine.doses_left()))
-
-        self._recommended_age_entry.delete('0', ctk.END)
-        self._recommended_age_entry.insert('0', str(self._medicine.recommended_age()))
-
-        self._expiration_date_entry.delete('0', ctk.END)
-        self._expiration_date_entry.insert('0', str(self._medicine.expiration_date()))
-
-        self._substances_textbox.delete('0.0', ctk.END)
-        substances_str = ', '.join(self._medicine.substances())
-        self._substances_textbox.insert('0.0', substances_str)
-
-        self._illnesses_textbox.delete('0.0', ctk.END)
-        illnesses_str = ', '.join(self._medicine.illnesses())
-        self._illnesses_textbox.insert('0.0', illnesses_str)
-
-        for user_id in self._medicine.recipients():
-            self._recipients_checkboxes_variables[user_id].set(1)
+    def clear_form(self, medicine=None):
+        self._form.clear_form(medicine)
 
     def _approve_button_handler(self):
         '''
         Modifies medicine with the data from the form
         '''
-        name = self._name_entry.get()
+        # Extract data from the form
+        name = self._form.name()
         try:
             name = normalize_name(name)
         except IllegalCharactersInANameError as e:
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa lekarstwa: {e}")
             return
-        manufacturer = self._manufacturer_entry.get()
+        manufacturer = self._form.manufacturer()
         try:
             manufacturer = normalize_name(manufacturer)
         except IllegalCharactersInANameError as e:
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa producenta: {e}")
             return
-        illnesses = self._illnesses_textbox.get("1.0", "end").split(',')
+        illnesses = self._form.illnesses().split(',')
         try:
             illnesses = normalize_list_of_names(illnesses)
         except IllegalCharactersInANameError as e:
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy chorób: {e}")
             return
-        substances = self._substances_textbox.get("1.0", "end").split(',')
+        substances = self._form.substances().split(',')
         try:
             substances = normalize_list_of_names(substances)
         except IllegalCharactersInANameError as e:
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy substancji: {e}")
             return
         try:
-            recommended_age = int(self._recommended_age_entry.get())
+            recommended_age = int(self._form.recommended_age())
         except Exception:
             messagebox.showerror(title="Błąd", message="Nieprawidłowy wiek!")
             return
         try:
-            doses = int(self._doses_entry.get())
+            doses = int(self._form.doses())
         except Exception:
             messagebox.showerror(title="Błąd", message="Nieprawidłowa ilość dawek w opakowaniu!")
             return
         try:
-            doses_left = int(self._doses_left_entry.get())
+            doses_left = int(self._form.doses_left())
         except Exception:
             messagebox.showerror(title="Błąd", message="Nieprawidłowa ilość pozostałych dawek!")
             return
         try:
-            expiration_date = datetime.strptime(self._expiration_date_entry.get(), '%Y-%m-%d').date()
+            expiration_date = datetime.strptime(self._form.expiration_date(), '%Y-%m-%d').date()
         except Exception:
             messagebox.showerror(title="Błąd", message="Nieprawidłowy format daty!")
             return
-        recipients = []
-        for user_id, int_var in self._recipients_checkboxes_variables.items():
-            if int_var.get():
-                recipients.append(user_id)
+        recipients = self._form.recipients()
 
         try:
             self._system.change_medicine(medicine_id=self._medicine.id(),

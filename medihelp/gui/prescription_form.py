@@ -87,21 +87,21 @@ class PrescriptionForm(ctk.CTkFrame):
 
     def medicine_name(self):
         '''
-        :return: medicine name string from the form
+        :return: Raw medicine name string from the form
         :rtype: str
         '''
         return self._medicine_name_entry.get()
 
     def dosage(self):
         '''
-        :return: dosage string from the form
+        :return: Raw dosage string from the form
         :rtype: str
         '''
         return self._dosage_entry.get()
 
     def weekday(self):
         '''
-        :return: weekday number from the form (number from 1 to 7)
+        :return: Raw weekday number from the form (number from 1 to 7)
         :rtype: int
         '''
         return self._weekday_to_number[self._selected_weekday.get()]
