@@ -95,12 +95,12 @@ class Medicine:
         self._id = int(id)
 
         name = str(name).title()
-        if name == '':
+        if len(name) < 1 or len(name) > 16:
             raise InvalidMedicineNameError
         self._name = name
 
         manufacturer = str(manufacturer).title()
-        if manufacturer == '':
+        if len(manufacturer) < 1 or len(manufacturer) > 16:
             raise InvalidManufacturerNameError
         self._manufacturer = manufacturer
 

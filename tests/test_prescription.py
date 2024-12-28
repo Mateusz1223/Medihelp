@@ -27,9 +27,22 @@ def test_prescription_create_lowercase():
     assert prescription.weekday() == 1
 
 
-def test_prescription_create_empty_name():
+def test_prescription_create_empty_medicine_name():
     with raises(InvalidMedicineNameError):
         Prescription(id=0, medicine_name='', dosage=2, weekday=3)
+
+
+def test_prescription_create_medicine_name_too_long():
+    with raises(InvalidMedicineNameError):
+        Prescription(id=0, medicine_name='01234567891234567', dosage=2, weekday=3)
+
+
+def test_prescription_create_medicine_name_edge():
+    prescription = Prescription(id=0, medicine_name="1", dosage=2, weekday=1)
+    assert prescription.id() == 0
+    assert prescription.medicine_name() == "1"
+    assert prescription.dosage() == 2
+    assert prescription.weekday() == 1
 
 
 def test_prescription_create_negative_dose():

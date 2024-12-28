@@ -61,6 +61,23 @@ def test_user_set_name_empty_name():
         user.set_name('')
 
 
+def test_user_set_name_empty_name_too_long():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.name() == 'Dad'
+    with raises(InvalidUserNameError):
+        user.set_name('01234567891234567')
+
+
+def test_user_set_name_edge_case_1():
+    user = User(0, name='0123456789123456', birth_date=date(1980, 1, 2))
+    assert user.name() == '0123456789123456'
+
+
+def test_user_set_name_edge_case_2():
+    user = User(0, name='1', birth_date=date(1980, 1, 2))
+    assert user.name() == '1'
+
+
 def test_user_set_birth_date_typical():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.birth_date() == date(1980, 1, 2)

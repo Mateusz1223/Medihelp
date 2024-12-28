@@ -9,7 +9,6 @@ from medihelp.user import User
 
 # @TODO
 # Fix display issues
-# Reload calendar when changes to the user aplied
 
 
 class Calendar(ctk.CTkFrame):
@@ -130,23 +129,22 @@ class CalendarTile(ctk.CTkFrame):
         self._gui = gui_handler
 
         self.padx = 2
-        self.pady = 2
+        self.pady = 5
 
         self._weekday = prescription.weekday()
 
         if user_name:
-            self._user_name_label = ctk.CTkLabel(self, wraplength=gs.min_width / 7 - 5,
-                                                 text=user_name, font=(gs.font_name, 12, 'bold'))
+            self._user_name_label = ctk.CTkLabel(self, text=user_name, justify='left',
+                                                 font=(gs.font_name, 12, 'bold'))
             self._user_name_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._medicine_name_label = ctk.CTkLabel(self, wraplength=gs.min_width / 7 - 5,
-                                                 text=f'Lek: {prescription.medicine_name()}',
+        self._medicine_name_label = ctk.CTkLabel(self, justify='left',
+                                                 text=f'Lek:\n{prescription.medicine_name()}',
                                                  font=(gs.font_name, 12))
         self._medicine_name_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
-        self._dosage_label = ctk.CTkLabel(self, wraplength=gs.min_width / 7 - 5,
-                                          text=f'Dawkowanie: {prescription.dosage()}',
-                                          font=(gs.font_name, 12))
+        self._dosage_label = ctk.CTkLabel(self, text=f'Dawkowanie: {prescription.dosage()}',
+                                          justify='left', font=(gs.font_name, 12))
         self._dosage_label.pack(padx=self.padx, pady=self.pady, anchor='w')
 
     def weekday(self):

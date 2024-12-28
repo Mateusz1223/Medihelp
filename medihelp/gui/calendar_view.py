@@ -11,10 +11,6 @@ class CalendarView(View):
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         super().__init__(system_handler, gui_handler, parent)
 
-        # Make scrollbar transparent
-        self.configure(scrollbar_button_color=self.cget("fg_color"))
-        self.configure(scrollbar_button_hover_color=self.cget("fg_color"))
-
         self.padx = 5
         self.pady = 10
 
@@ -44,7 +40,7 @@ class CalendarView(View):
         self._calendar = Calendar(self._system, self._gui, self)
         self._calendar.grid(row=1, column=0, padx=self.padx, pady=self.pady, sticky='we')
 
-        self.update_view()
+        self._setup_calendar()
 
     def _setup_calendar(self):
         '''
@@ -61,9 +57,14 @@ class CalendarView(View):
                 raise UserDoesNotExistError(user_id)
             self._calendar.load_prescriptions([user])
 
-
     def update_view(self):
         super().update_view()
+
+        # recreate _name_to_id_map
+        self._name_to_id_map.clear()
+        for user_id, user in self._system.users().items():
+            self._name_to_id_map[user.name()] = user_id
+        self._name_to_id_map['Wszyscy użytkownicy'] = None
 
         # Setup choose user dropdown
         user = self._system.users().get(self._gui.current_user_id())

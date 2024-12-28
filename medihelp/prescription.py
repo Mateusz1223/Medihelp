@@ -35,7 +35,7 @@ class Prescription:
         '''
         self._id = int(id)
         medicine_name = str(medicine_name).title()
-        if not medicine_name:
+        if len(medicine_name) < 1 or len(medicine_name) > 16:
             raise (InvalidMedicineNameError())
         self._medicine_name = medicine_name
         dosage = int(dosage)

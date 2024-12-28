@@ -561,7 +561,14 @@ def test_system_take_dose():
         system.take_dose(id + 1, user)
 
 
-def test_system_change_user_same_perscriptions():
+def test_system_change_user_same_perscriptions(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     user0 = User(id=0,
                  name='Dad',
                  birth_date=date(1982, 7, 12),
@@ -591,7 +598,13 @@ def test_system_change_user_same_perscriptions():
     assert system.users()[0] == user1
 
 
-def test_system_change_user_not_the_same_perscriptions():
+def test_system_change_user_not_the_same_perscriptions(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
     user0 = User(id=0,
                  name='Dad',
                  birth_date=date(1982, 7, 12),
@@ -620,7 +633,14 @@ def test_system_change_user_not_the_same_perscriptions():
     assert not system.users()[0] == user1
 
 
-def test_system_change_user_wrong_id():
+def test_system_change_user_wrong_id(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     user0 = User(id=0,
                  name='Dad',
                  birth_date=date(1982, 7, 12),
@@ -644,7 +664,14 @@ def test_system_change_user_wrong_id():
                            allergies={'weed', 'stuff'})
 
 
-def test_system_del_perscription():
+def test_system_del_perscription(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     presc0 = Prescription(id=0, medicine_name='med3', dosage=3, weekday=4)
     user0 = User(id=1,
                  name='Dad',
@@ -663,13 +690,27 @@ def test_system_del_perscription():
     assert system.users()[1].prescriptions().get(0) is None
 
 
-def test_system_del_perscription_wrong_user():
+def test_system_del_perscription_wrong_user(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     system = System()
     with raises(UserDoesNotExistError):
         system.del_prescription(1, 0)
 
 
-def test_system_add_perscription_typical():
+def test_system_add_perscription_typical(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     user0 = User(id=1,
                  name='Dad',
                  birth_date=date(1982, 7, 12),
@@ -684,6 +725,13 @@ def test_system_add_perscription_typical():
 
     assert system.users()[1].prescriptions().get(0) is None
     system.add_prescription(user_id=1, medicine_name='med3', dosage=3, weekday=4)
+
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     system.add_prescription(user_id=1, medicine_name='med1', dosage=1, weekday=2)
     presc0 = Prescription(id=0, medicine_name='med3', dosage=3, weekday=4)
     presc1 = Prescription(id=1, medicine_name='med1', dosage=1, weekday=2)
@@ -691,13 +739,27 @@ def test_system_add_perscription_typical():
     assert system.users()[1].prescriptions()[1] == presc1
 
 
-def test_system_add_perscription_wrong_user():
+def test_system_add_perscription_wrong_user(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     system = System()
     with raises(UserDoesNotExistError):
         system.add_prescription(user_id=1, medicine_name='med3', dosage=3, weekday=4)
 
 
-def test_system_change_perscription_typical():
+def test_system_change_perscription_typical(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     presc = Prescription(id=0, medicine_name='med3', dosage=3, weekday=4)
     user0 = User(id=1,
                  name='Dad',
@@ -721,7 +783,14 @@ def test_system_change_perscription_typical():
     assert system.users()[1].prescriptions()[0] == presc_new
 
 
-def test_system_change_perscription_wrong_user():
+def test_system_change_perscription_wrong_user(monkeypatch):
+    # Very important, otherwise the test will override data/users.json file !!!
+    file = StringIO()
+
+    def fake_open(path, mode, *args, **kwargs):
+        return file
+    monkeypatch.setattr(builtins, 'open', fake_open)
+
     presc = Prescription(id=0, medicine_name='med3', dosage=3, weekday=4)
     user0 = User(id=1,
                  name='Dad',
@@ -737,6 +806,6 @@ def test_system_change_perscription_wrong_user():
     system._users_database = database
 
     with raises(UserDoesNotExistError):
-        system.change_prescription(user_id=-111, prescription_id=0,
+        system.change_prescription(user_id=4, prescription_id=0,
                                    medicine_name='new_name',
                                    dosage=2, weekday=1)

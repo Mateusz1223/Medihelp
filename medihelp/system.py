@@ -314,7 +314,8 @@ class System:
                     illnesses: Iterable[str],
                     allergies: Iterable[str]):
         '''
-        Replaces old user object under the given id in the database with a new one.
+        Replaces old user object under the given id in the database with a new one
+            and saves users datatbase in the file
 
         :param user_id: User's ID
         :type user_id: int
@@ -342,9 +343,12 @@ class System:
         self.users_database().delete_user(user_id)
         self.users_database().add_user(new_user)
 
+        self.save_users_data()
+
     def del_prescription(self, user_id: int, prescription_id: int):
         '''
         Deletes prescription with given ID from the user with given ID
+            and saves users datatbase in the file
 
         :param user_id: ID of the user
         :type user_id: int
@@ -357,10 +361,13 @@ class System:
             raise UserDoesNotExistError(user_id)
         user.remove_prescription(prescription_id)
 
+        self.save_users_data()
+
     def add_prescription(self, user_id: int, medicine_name: str,
                          dosage: int, weekday: int):
         '''
         Adds prescription to the user with given ID
+            and saves users datatbase in the file
 
         :param user_id: ID of the user
         :type user_id: int
@@ -381,11 +388,14 @@ class System:
                                     weekday=weekday)
         user.add_prescription(prescription)
 
+        self.save_users_data()
+
     def change_prescription(self, user_id: int, prescription_id: int,
                             medicine_name: str, dosage: int, weekday: int):
         '''
         Replaces prescription with given ID in the user with given ID
             with a new prescription, created with passed data
+            and saves users datatbase in the file
 
         :param user_id: ID of the user
         :type user_id: int
@@ -411,3 +421,5 @@ class System:
                                         weekday=weekday)
         user.remove_prescription(prescription_id)
         user.add_prescription(new_prescription)
+
+        self.save_users_data()

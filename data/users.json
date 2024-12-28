@@ -8,8 +8,8 @@
             "xyz"
         ],
         "allergies": [
-            "cukier",
-            "nikotyna"
+            "nikotyna",
+            "cukier"
         ],
         "prescriptions": [
             {
@@ -33,11 +33,11 @@
         "illnesses": [
             "illnes3",
             "xyz",
-            "illness2"
+            "illness 2"
         ],
         "allergies": [
-            "stuff",
-            "weed"
+            "weed",
+            "stuff"
         ],
         "prescriptions": [
             {
@@ -51,13 +51,19 @@
                 "medicine_name": "Stoperanos",
                 "dosage": 1,
                 "weekday": 1
+            },
+            {
+                "id": 2,
+                "medicine_name": "Aaaaaaaaaabbbbb",
+                "dosage": 123456,
+                "weekday": 1
             }
         ]
     },
     {
         "id": 2,
         "name": "Dziecko",
-        "birth_date": "2018-01-02",
+        "birth_date": "2017-01-02",
         "illnesses": [],
         "allergies": [],
         "prescriptions": [
@@ -72,6 +78,78 @@
                 "medicine_name": "Ivermectinol",
                 "dosage": 5,
                 "weekday": 4
+            },
+            {
+                "id": 2,
+                "medicine_name": "Diabetex Pro Max",
+                "dosage": 2,
+                "weekday": 1
+            },
+            {
+                "id": 3,
+                "medicine_name": "Magnez",
+                "dosage": 1,
+                "weekday": 2
+            },
+            {
+                "id": 4,
+                "medicine_name": "Witamina B2",
+                "dosage": 1,
+                "weekday": 3
+            },
+            {
+                "id": 5,
+                "medicine_name": "Xxx",
+                "dosage": 1,
+                "weekday": 7
+            },
+            {
+                "id": 6,
+                "medicine_name": "Xyz",
+                "dosage": 1,
+                "weekday": 5
+            },
+            {
+                "id": 7,
+                "medicine_name": "Aaa",
+                "dosage": 3,
+                "weekday": 6
+            },
+            {
+                "id": 9,
+                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "dosage": 2,
+                "weekday": 3
+            },
+            {
+                "id": 8,
+                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "dosage": 1,
+                "weekday": 2
+            },
+            {
+                "id": 10,
+                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "dosage": 1,
+                "weekday": 4
+            },
+            {
+                "id": 11,
+                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "dosage": 2,
+                "weekday": 5
+            },
+            {
+                "id": 12,
+                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "dosage": 1,
+                "weekday": 6
+            },
+            {
+                "id": 13,
+                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "dosage": 1,
+                "weekday": 7
             }
         ]
     }

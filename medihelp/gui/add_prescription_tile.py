@@ -101,6 +101,7 @@ class AddPrescriptionTile(ctk.CTkFrame):
         messagebox.showinfo(title='Informacja', message='Recepta została dodana!')
         self._cancel_button_handler()
         self._gui.update_view(view_name='modify-user-view')
+        self._gui.update_view('calendar-view')
 
     def _cancel_button_handler(self):
         '''

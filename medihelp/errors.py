@@ -7,7 +7,7 @@ Errors with the English descriptions are never meant to be seen by the user.
 
 class InvalidUserNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa użytkownika!')
+        super().__init__('Nieprawidłowa nazwa użytkownika! Nazwa użytkownika powinna mieć od 1 do 16 znaków.')
 
 
 class InvalidIllnessNameError(Exception):
@@ -22,12 +22,12 @@ class InvalidSubstanceNameError(Exception):
 
 class InvalidMedicineNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa leku!')
+        super().__init__('Nieprawidłowa nazwa leku! Nazwa leku powinna mieć od 1 do 16 znaków.')
 
 
 class InvalidManufacturerNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa producenta!')
+        super().__init__('Nieprawidłowa nazwa producenta! Nazwa producenta powinna mieć od 1 do 16 znaków.')
 
 
 class InvalidDosesError(Exception):

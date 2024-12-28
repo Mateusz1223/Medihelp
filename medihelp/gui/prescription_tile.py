@@ -91,13 +91,9 @@ class PrescriptionTile(ctk.CTkFrame):
         except Exception as e:
             messagebox.showerror(title="Błąd", message=f"{e}")
             return
-        try:
-            self._system.save_users_data()
-        except DataLoadingError as e:
-            messagebox.showerror(title='Błąd', message=f'{e}')
-            return
         messagebox.showinfo(title='Informacja', message='Zmiany zostały zapisane!')
         self._gui.update_view(view_name='modify-user-view')
+        self._gui.update_view('calendar-view')
 
     def _discard_changes_button_handler(self):
         self._form.clear_form(self._prescription)
@@ -108,10 +104,6 @@ class PrescriptionTile(ctk.CTkFrame):
             return
         self._system.del_prescription(user_id=self._gui.current_user_id(),
                                       prescription_id=self._prescription.id())
-        try:
-            self._system.save_users_data()
-        except DataLoadingError as e:
-            messagebox.showerror(title='Błąd', message=f'{e}')
-            return
         messagebox.showinfo(title='Informacja', message='Recepta została usunieta!')
         self._gui.update_view('modify-user-view')
+        self._gui.update_view('calendar-view')

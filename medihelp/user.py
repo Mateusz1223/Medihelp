@@ -116,7 +116,7 @@ class User:
         '''
 
         name = str(name)
-        if not name:
+        if len(name) < 1 or len(name) > 16:
             raise (InvalidUserNameError)
         self._name = name.title()
 

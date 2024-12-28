@@ -112,6 +112,11 @@ class ModifyUserForm(ctk.CTkFrame):
             self._illnesses_textbox.insert('0.0', 'Podaj nazwy chorób i dolegliwości oddzielone przecinkiem.')
 
     def _save_changes_button_handler(self):
+        # Save old user name in order to check whether it changed or not.
+        # If so update all views
+        user = self._system.users().get(self._gui.current_user_id())
+        old_name = user.name()
+
         # Extract data from the form
         name = self._name_entry.get()
         try:
@@ -120,19 +125,26 @@ class ModifyUserForm(ctk.CTkFrame):
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa lekarstwa: {e}")
             return
 
-        illnesses = self._illnesses_textbox.get("1.0", "end").split(',')
+        illnesses = self._illnesses_textbox.get("1.0", "end")
+        if illnesses == 'Podaj nazwy chorób i dolegliwości oddzielone przecinkiem.\n':
+            illnesses = ''
+        illnesses = illnesses.split(',')
         try:
             illnesses = normalize_list_of_names(illnesses)
         except IllegalCharactersInANameError as e:
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy chorób: {e}")
             return
 
-        allergies = self._allergies_textbox.get("1.0", "end").split(',')
+        allergies = self._allergies_textbox.get("1.0", "end")
+        if allergies == 'Podaj nazwy substancji oddzielone przecinkiem.\n':
+            allergies = ''
+        allergies = allergies.split(',')
         try:
             allergies = normalize_list_of_names(allergies)
         except IllegalCharactersInANameError as e:
             messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy substancji (alergie): {e}")
             return
+
         try:
             birth_date = datetime.strptime(self._birth_date_entry.get(), '%Y-%m-%d').date()
         except Exception:
@@ -150,10 +162,12 @@ class ModifyUserForm(ctk.CTkFrame):
         except Exception as e:
             messagebox.showerror(title="Błąd", message=f"{e}")
             return
-        # @TODO
-        # Save changes in the database
         messagebox.showinfo(title='Informacja', message='Zmiany zostały zapisane!')
-        self._gui.update_view('modify-user-view')
+
+        if name != old_name:
+            self._gui.update_views()
+        else:
+            self._gui.update_view('modify-user-view')
 
     def _discard_changes_button_handler(self):
         self.clear_form()
