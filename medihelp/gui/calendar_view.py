@@ -8,6 +8,9 @@ from .view import View
 
 
 class CalendarView(View):
+    '''
+    View that shows a weekly calendar of prescriptions.
+    '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         super().__init__(system_handler, gui_handler, parent)
 
@@ -21,9 +24,7 @@ class CalendarView(View):
 
         # Choose user dropdown
         self._name_to_id_map = {}
-        names = ['Wszyscy użytkownicy']
         for user_id, user in self._system.users().items():
-            names.append(user.name())
             self._name_to_id_map[user.name()] = user_id
         self._name_to_id_map['Wszyscy użytkownicy'] = None
         self._selected_name = ctk.StringVar(value='Wszyscy użytkownicy')
@@ -44,7 +45,7 @@ class CalendarView(View):
 
     def _setup_calendar(self):
         '''
-        Loads prescription tiles to the calender based on user's choice
+        Loads prescription tiles to the calendar based on user's choice
         '''
         self._calendar.clear_calendar()
         user_id = self._name_to_id_map[self._selected_name.get()]
@@ -66,7 +67,8 @@ class CalendarView(View):
             self._name_to_id_map[user.name()] = user_id
         self._name_to_id_map['Wszyscy użytkownicy'] = None
 
-        # Setup choose user dropdown
+        # Update choose user dropdown
+        self._choose_user_dropdown.configure(values=list(self._name_to_id_map.keys()))
         user = self._system.users().get(self._gui.current_user_id())
         if not user:
             self._selected_name.set('Wszyscy użytkownicy')

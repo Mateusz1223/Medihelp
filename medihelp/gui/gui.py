@@ -7,7 +7,8 @@ from medihelp.errors import WrongArgumentsError, ViewDoesNotExist, UserDoesNotEx
 
 class GUI(ctk.CTk):
     '''
-    Responsible for providing a way of communication with the user. Comunicates with System object via _system handler.
+    Responsible for providing a way of communication with the user.
+    Manages views and current user.
     Inherites from tkinter.Tk so it is a window of the application.
 
     Attributes
@@ -53,9 +54,9 @@ class GUI(ctk.CTk):
 
         # fiixing a library key binding issue on linux
         # For Linux scroll up
-        self.bind_all("<Button-4>", lambda e: self._views[self._current_view]._parent_canvas.yview("scroll", -1, "units"))
+        self.bind_all("<Button-4>", lambda e: self._views[self._current_view].scroll_up(e))
         # For Linux scroll down
-        self.bind_all("<Button-5>", lambda e: self._views[self._current_view]._parent_canvas.yview("scroll", 1, "units"))
+        self.bind_all("<Button-5>", lambda e: self._views[self._current_view].scroll_down(e))
 
         self.mainloop()
 

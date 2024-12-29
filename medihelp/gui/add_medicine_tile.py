@@ -13,7 +13,6 @@ class AddMedicineTile(ctk.CTkFrame):
     '''
     Class AddMedicineTile responsible for providing an interface to add new medicine.
     '''
-
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''
         :param system_handler: System object handler
@@ -25,7 +24,6 @@ class AddMedicineTile(ctk.CTkFrame):
         :param parent: parent object used for initialization of tkinter objects
         :type parent: tkinter.Misc
         '''
-
         super().__init__(parent, border_width=1)
 
         self._system = system_handler

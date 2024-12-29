@@ -6,6 +6,9 @@ from .view import View
 
 
 class ChooseUserView(View):
+    '''
+    View that provides an interface to choose a current user.
+    '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         super().__init__(system_handler, gui_handler, parent)
 

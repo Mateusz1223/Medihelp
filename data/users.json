@@ -1,39 +1,12 @@
 [
     {
-        "id": 0,
-        "name": "Tata",
-        "birth_date": "1982-07-12",
-        "illnesses": [
-            "cold",
-            "xyz"
-        ],
-        "allergies": [
-            "nikotyna",
-            "cukier"
-        ],
-        "prescriptions": [
-            {
-                "id": 1,
-                "medicine_name": "Med1",
-                "dosage": 1,
-                "weekday": 2
-            },
-            {
-                "id": 0,
-                "medicine_name": "Med2",
-                "dosage": 2,
-                "weekday": 7
-            }
-        ]
-    },
-    {
         "id": 1,
         "name": "Mama",
         "birth_date": "1985-08-04",
         "illnesses": [
-            "illnes3",
             "xyz",
-            "illness 2"
+            "illness 2",
+            "illnes3"
         ],
         "allergies": [
             "weed",
@@ -149,6 +122,33 @@
                 "id": 13,
                 "medicine_name": "Aaaaaaaaaabbbbb1",
                 "dosage": 1,
+                "weekday": 7
+            }
+        ]
+    },
+    {
+        "id": 0,
+        "name": "Tata",
+        "birth_date": "1982-07-12",
+        "illnesses": [
+            "cold",
+            "xyz"
+        ],
+        "allergies": [
+            "cukier",
+            "nikotyna"
+        ],
+        "prescriptions": [
+            {
+                "id": 1,
+                "medicine_name": "Med1",
+                "dosage": 1,
+                "weekday": 2
+            },
+            {
+                "id": 0,
+                "medicine_name": "Med2",
+                "dosage": 2,
                 "weekday": 7
             }
         ]

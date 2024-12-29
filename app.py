@@ -13,7 +13,7 @@ def main():
                              message=f"Błąd krytyczny podczas ładowania danych niezbędnych do działania programu:\n{e} -> {e.__context__}")
         return
 
-    # temporary
+    # Load medicine database from data/medicines.csv as default
     system.load_medicines_database_from('data/medicines.csv')
 
     GUI(system)

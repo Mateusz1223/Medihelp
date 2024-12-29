@@ -7,8 +7,7 @@ from medihelp.system import System
 
 class MedicineForm(ctk.CTkFrame):
     '''
-    MedicineForm is a component of a MedicineTile
-        and is responsible for providing an interface for editing medicine informations.
+    Class MedicineForm represents a form with inputs corresponding to Medicine class object attributes (except for notes)
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''
@@ -32,9 +31,6 @@ class MedicineForm(ctk.CTkFrame):
         self.padx = 20
         self.pady = 2
 
-        self.setup_form()
-
-    def setup_form(self):
         self._name_label = ctk.CTkLabel(self, justify='left', wraplength=gs.min_width - 100,
                                         text='Nazwa leku: ', font=(gs.font_name, 10, 'bold'))
         self._name_label.pack(padx=self.padx, pady=self.pady, anchor='w')
