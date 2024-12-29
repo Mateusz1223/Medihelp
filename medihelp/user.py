@@ -11,7 +11,7 @@ from datetime import date
 
 class User:
     '''
-    A class to represent user.
+    A class that encapsulates user-related data.
 
     Attributes
     ----------

@@ -11,7 +11,7 @@ from .common import normalize_list_of_names, normalize_name
 
 class AddMedicineTile(ctk.CTkFrame):
     '''
-    Class AddMedicineTile responsible for providing an interface to add new medicine.
+    Class AddMedicineTile represents a tile responsible for providing an interface to add new medicine.
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''

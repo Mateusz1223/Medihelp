@@ -4,8 +4,8 @@
         "name": "Mama",
         "birth_date": "1985-08-04",
         "illnesses": [
-            "xyz",
             "illness 2",
+            "xyz",
             "illnes3"
         ],
         "allergies": [
@@ -40,12 +40,6 @@
         "illnesses": [],
         "allergies": [],
         "prescriptions": [
-            {
-                "id": 0,
-                "medicine_name": "Med3",
-                "dosage": 3,
-                "weekday": 4
-            },
             {
                 "id": 1,
                 "medicine_name": "Ivermectinol",
@@ -131,8 +125,8 @@
         "name": "Tata",
         "birth_date": "1982-07-12",
         "illnesses": [
-            "cold",
-            "xyz"
+            "xyz",
+            "cold"
         ],
         "allergies": [
             "cukier",

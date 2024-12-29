@@ -10,7 +10,8 @@ from medihelp.errors import IllegalCharactersInANameError, DataLoadingError
 
 class AddPrescriptionTile(ctk.CTkFrame):
     '''
-    PrescriptionTile class is responsble for displaying precriptions info and providing an interface to edit it
+    AddPrescriptionTile class represents a tile with an interface
+        to add new prescription to the user.
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''

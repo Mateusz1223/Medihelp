@@ -7,7 +7,7 @@ from medihelp.system import System
 
 class UserNoteTile(ctk.CTkFrame):
     '''
-    Class UserNoteTile responsible for displaying user note attached to a medicine
+    Class UserNoteTile represent a tile responsible for displaying user note attached to a medicine
         and providing an interface to edit the note.
 
     :ivar _author_id: Id of the author

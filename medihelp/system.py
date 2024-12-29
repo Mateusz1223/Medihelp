@@ -1,4 +1,4 @@
-from .medicine_database import MedicineDatabase
+from .medicines_database import MedicinesDatabase
 from .users_database import UsersDatabase
 from .medicine import Medicine
 from .user import User
@@ -14,12 +14,14 @@ from datetime import date
 
 class System:
     '''
-    Class System is the main class of the programs logic. Manages users and medicines databases.
+    Class System is the main class of the program logic.
+    Provides interface for GUI to communicate with users and medicines databases.
+    Provides a method to load users database from file data/users.json
 
     Attributes
     ----------
     :ivar _medicines_database: Database with all the medicines registered in the system
-    :vartype _medicines_database: MedicineDatabase
+    :vartype _medicines_database: MedicinesDatabase
 
     :ivar _users_database: Database of users
     :vartype _users_database: UsersDatabase
@@ -32,7 +34,7 @@ class System:
     '''
 
     def __init__(self):
-        self._medicines_database = MedicineDatabase()
+        self._medicines_database = MedicinesDatabase()
         self._users_database = UsersDatabase()
         self._medicines_file_path = None
         self._medicines_file_saved = True

@@ -8,7 +8,8 @@ from medihelp.system import System
 
 class MedicineListView(View):
     '''
-    View that shows informations about all the medicines stored in a database
+    View that shows informations about all the medicines stored in a database.
+    Allows user to add new medicines, edit existing medicines informations and add notes.
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''

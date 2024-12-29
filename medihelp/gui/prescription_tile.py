@@ -2,7 +2,6 @@ import customtkinter as ctk
 from medihelp.system import System
 from medihelp.prescription import Prescription
 from .prescription_form import PrescriptionForm
-from medihelp.errors import DataLoadingError
 from .gui import GUI
 from . import global_settings as gs
 from .common import normalize_name
@@ -12,7 +11,8 @@ from medihelp.errors import IllegalCharactersInANameError
 
 class PrescriptionTile(ctk.CTkFrame):
     '''
-    PrescriptionTile class is responsble for displaying precriptions info and providing an interface to edit it
+    PrescriptionTile class represents a tile responsble for displaying precription info
+        and providing an interface to edit it.
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent, prescription: Prescription):
         '''

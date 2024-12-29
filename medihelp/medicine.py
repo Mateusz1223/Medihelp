@@ -18,7 +18,7 @@ from typing import Iterable
 
 class Medicine:
     '''
-    A class to represent a single medicine.
+    A class that encapsulates infromations abot a medicine.
 
     Attributes
     ----------
@@ -34,7 +34,7 @@ class Medicine:
     :ivar _illnesses: Set of illnesses that are cured by this medicine. Illness names are written in lowercase.
     :vartype _illnesses: iterable of str
 
-    :ivar _recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child)
+    :ivar _recipients: Set of the IDs of the users who are taking the medicine.
     :vartype _recipients: iterable of int
 
     :ivar _substances: Set of active substances in the medicine. Substance names are in lowercase.
@@ -86,7 +86,7 @@ class Medicine:
         :type doses_left: int
         :param expiration_date: Expiration date.
         :type expiration_date: date
-        :param recipients: Set of the IDs of the users who are taking the medicine. (0 - Dad, 1 - Mom, 2 - Child) (optional)
+        :param recipients: Set of the IDs of the users who are taking the medicine. (optional)
         :type recipients: iterable of int
         :param notes: Dictionary of notes where IDs of authors are the keys and values are comments themselves (optional)
         :type notes: dict[int, str]

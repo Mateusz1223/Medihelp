@@ -7,7 +7,8 @@ from medihelp.system import System
 
 class MedicineForm(ctk.CTkFrame):
     '''
-    Class MedicineForm represents a form with inputs corresponding to Medicine class object attributes (except for notes)
+    Class MedicineForm represents a form with inputs corresponding
+        to Medicine class object attributes (except for notes)
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
         '''

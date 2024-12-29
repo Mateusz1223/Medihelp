@@ -1,6 +1,6 @@
 from .gui import GUI
 from .view import View
-from .modify_user_form import ModifyUserForm
+from .modify_user_tile import ModifyUserTile
 from .prescription_tile import PrescriptionTile
 from .add_prescription_tile import AddPrescriptionTile
 from medihelp.system import System
@@ -10,7 +10,8 @@ from . import global_settings as gs
 
 class ModifyUserView(View):
     '''
-    Class ModifyUserView responsible for displaying user info and providing an interface to edit it.
+    Class ModifyUserView represents a view responsible for displaying user info
+        and providing an interface to edit it.
     '''
 
     def __init__(self, system_handler: System, gui_handler: GUI, parent):
@@ -31,7 +32,7 @@ class ModifyUserView(View):
         self._empty_row += 1
 
         # Form used to modify all user info except for perscriptions
-        self._modify_user_form = ModifyUserForm(self._system, self._gui, self)
+        self._modify_user_form = ModifyUserTile(self._system, self._gui, self)
         self._modify_user_form.grid(row=self._empty_row, column=0, padx=20, pady=10, sticky='we')
         self._empty_row += 1
 

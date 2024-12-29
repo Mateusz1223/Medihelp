@@ -9,7 +9,8 @@ from medihelp.prescription import Prescription
 
 class UsersDatabase:
     '''
-    Loads from a file and stores instances of User in a dictionary.
+    Stores a dictionary of users where IDs of those users are the keys.
+        Provides methodes to load users database from a .json file and write it to a .json file
 
     Attributes
     ----------

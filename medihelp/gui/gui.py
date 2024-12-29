@@ -9,7 +9,7 @@ class GUI(ctk.CTk):
     '''
     Responsible for providing a way of communication with the user.
     Manages views and current user.
-    Inherites from tkinter.Tk so it is a window of the application.
+    Inherites from customtkinter.CTk so it is a window of the application.
 
     Attributes
     ----------

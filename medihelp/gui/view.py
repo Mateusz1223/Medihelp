@@ -5,7 +5,7 @@ from medihelp.system import System
 
 class View(ctk.CTkScrollableFrame):
     '''
-    Parent class for all the views in the GUI.
+    Parent class for all the views.
     '''
     def __init__(self, system_handler: System, gui_handler: GUI, parent, width=200, height=200, corner_radius=None, border_width=None, bg_color="transparent", fg_color=None, border_color=None, scrollbar_fg_color=None, scrollbar_button_color=None, scrollbar_button_hover_color=None, label_fg_color=None, label_text_color=None, label_text="", label_font=None, label_anchor="center", orientation="vertical"):
         '''
@@ -33,10 +33,10 @@ class View(ctk.CTkScrollableFrame):
 
     def scroll_up(self, e):
         scroll_poition_from_the_top = self._parent_canvas.yview()[0]
-        if scroll_poition_from_the_top > 0.0001: # makes sure it wont scroll up when it's already at the top
+        if scroll_poition_from_the_top > 0.0001:  # makes sure it wont scroll up when it's already at the top
             self._parent_canvas.yview("scroll", -1, "units")
 
     def scroll_down(self, e):
         scroll_poition_from_the_bottom = self._parent_canvas.yview()[1]
-        if scroll_poition_from_the_bottom > 0.0001: # makes sure it wont scroll down when it's already at the bottom
+        if scroll_poition_from_the_bottom > 0.0001:  # makes sure it wont scroll down when it's already at the bottom
             self._parent_canvas.yview("scroll", 1, "units")

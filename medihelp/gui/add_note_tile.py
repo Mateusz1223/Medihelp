@@ -7,7 +7,7 @@ from . import global_settings as gs
 
 class AddNoteTile(ctk.CTkFrame):
     '''
-    Class AddNoteTile responsible for providing an interface to add new note
+    Class AddNoteTile represent a tile responsible for providing an interface to add new note.
 
     :ivar _medicine_id: ID of the medicine the note is assigned to.
     :vartype _medicine_id: int

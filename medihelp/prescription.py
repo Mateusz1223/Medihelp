@@ -5,7 +5,8 @@ from .errors import (InvalidMedicineNameError,
 
 class Prescription:
     '''
-    A class to represent user's prescription
+    Class Prescription represents informations about medicine that user takes regularly.
+        Those informations are the name of the medicine, number of doses that user should take and the day of the week.
 
     Attributes
     ----------

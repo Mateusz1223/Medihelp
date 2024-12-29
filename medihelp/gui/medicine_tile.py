@@ -14,8 +14,8 @@ from medihelp.system import System
 
 class MedicineTile(ctk.CTkFrame):
     '''
-    Class MedicineTile is responsible for displaying informations contained in medicine object
-        and provides an interface to modify the medicine instance in the database it is responsible for.
+    Class MedicineTile represent a tile responsible for displaying informations contained in medicine object
+        and providing an interface to modify the medicine instance it is responsible for.
     '''
 
     def __init__(self, system_handler: System, gui_handler: GUI, parent, medicine: Medicine):
