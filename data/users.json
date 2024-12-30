@@ -1,24 +1,48 @@
 [
     {
-        "id": 1,
-        "name": "Mama",
-        "birth_date": "1985-08-04",
+        "id": 0,
+        "name": "Tata",
+        "birth_date": "1982-07-12",
         "illnesses": [
-            "illness 2",
-            "xyz",
-            "illnes3"
+            "przewlek\u0142e zapalenie w\u0105troby",
+            "nawracaj\u0105ce zapalenie p\u0142uc"
         ],
         "allergies": [
-            "weed",
-            "stuff"
+            "celuloza mikrokrystaliczna",
+            "cynk",
+            "kwas stearynowy 50",
+            "dimenhydrynat"
         ],
         "prescriptions": [
             {
                 "id": 0,
-                "medicine_name": "Lek 1",
+                "medicine_name": "Ivermectinol",
                 "dosage": 2,
-                "weekday": 7
+                "weekday": 1
             },
+            {
+                "id": 1,
+                "medicine_name": "Witamina B2",
+                "dosage": 1,
+                "weekday": 2
+            },
+            {
+                "id": 2,
+                "medicine_name": "Magnez",
+                "dosage": 2,
+                "weekday": 5
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Mama",
+        "birth_date": "1985-08-04",
+        "illnesses": [
+            "zesp\u00f3\u0142 jelita dra\u017cliwego"
+        ],
+        "allergies": [],
+        "prescriptions": [
             {
                 "id": 1,
                 "medicine_name": "Stoperanos",
@@ -26,10 +50,16 @@
                 "weekday": 1
             },
             {
+                "id": 0,
+                "medicine_name": "Witamina B2",
+                "dosage": 1,
+                "weekday": 6
+            },
+            {
                 "id": 2,
-                "medicine_name": "Aaaaaaaaaabbbbb",
-                "dosage": 123456,
-                "weekday": 1
+                "medicine_name": "Magnez",
+                "dosage": 1,
+                "weekday": 7
             }
         ]
     },
@@ -37,15 +67,11 @@
         "id": 2,
         "name": "Dziecko",
         "birth_date": "2017-01-02",
-        "illnesses": [],
+        "illnesses": [
+            "cukrzyca"
+        ],
         "allergies": [],
         "prescriptions": [
-            {
-                "id": 1,
-                "medicine_name": "Ivermectinol",
-                "dosage": 5,
-                "weekday": 4
-            },
             {
                 "id": 2,
                 "medicine_name": "Diabetex Pro Max",
@@ -65,85 +91,10 @@
                 "weekday": 3
             },
             {
-                "id": 5,
-                "medicine_name": "Xxx",
-                "dosage": 1,
-                "weekday": 7
-            },
-            {
-                "id": 6,
-                "medicine_name": "Xyz",
-                "dosage": 1,
-                "weekday": 5
-            },
-            {
-                "id": 7,
-                "medicine_name": "Aaa",
-                "dosage": 3,
-                "weekday": 6
-            },
-            {
-                "id": 9,
-                "medicine_name": "Aaaaaaaaaabbbbb1",
-                "dosage": 2,
-                "weekday": 3
-            },
-            {
-                "id": 8,
-                "medicine_name": "Aaaaaaaaaabbbbb1",
-                "dosage": 1,
-                "weekday": 2
-            },
-            {
-                "id": 10,
-                "medicine_name": "Aaaaaaaaaabbbbb1",
+                "id": 1,
+                "medicine_name": "Ivermectinol",
                 "dosage": 1,
                 "weekday": 4
-            },
-            {
-                "id": 11,
-                "medicine_name": "Aaaaaaaaaabbbbb1",
-                "dosage": 2,
-                "weekday": 5
-            },
-            {
-                "id": 12,
-                "medicine_name": "Aaaaaaaaaabbbbb1",
-                "dosage": 1,
-                "weekday": 6
-            },
-            {
-                "id": 13,
-                "medicine_name": "Aaaaaaaaaabbbbb1",
-                "dosage": 1,
-                "weekday": 7
-            }
-        ]
-    },
-    {
-        "id": 0,
-        "name": "Tata",
-        "birth_date": "1982-07-12",
-        "illnesses": [
-            "xyz",
-            "cold"
-        ],
-        "allergies": [
-            "cukier",
-            "nikotyna"
-        ],
-        "prescriptions": [
-            {
-                "id": 1,
-                "medicine_name": "Med1",
-                "dosage": 1,
-                "weekday": 2
-            },
-            {
-                "id": 0,
-                "medicine_name": "Med2",
-                "dosage": 2,
-                "weekday": 7
             }
         ]
     }
