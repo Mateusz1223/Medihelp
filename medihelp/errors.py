@@ -139,7 +139,7 @@ class EmptyNoteError(Exception):
 
 class TooManyLinesInTheNoteError(Exception):
     def __init__(self):
-        super().__init__('Notatka może mieć maksymalnie 6 linii!')
+        super().__init__('Notatka może mieć maksymalnie 5 linii!')
 
 
 class MedicineDoesNotExistError(Exception):

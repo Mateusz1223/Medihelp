@@ -1,7 +1,7 @@
 id,name,manufacturer,illnesses,recipients,substances,recommended_age,doses,doses_left,expiration_date,notes
-0,Ivermectinol,Polfarm,"{'ból głowy', 'przeziębienie', 'zatrucie pokarmowe'}","{0, 1, 2}","{'skrobia żelowana', 'iwermektyna', 'celuloza mikrokrystaliczna ph 102'}",18,10,6,2029-12-31,{}
-1,Paracetamolina,Usdrugs,"{'ból', 'gorączka'}",{0},"{'celuloza mikrokrystaliczna', 'skrobia żelowana kukurydziana', 'kroskarmeloza sodowa', 'powidon k30', 'paracetamolum', 'krospowidon a', 'magnezu stearynian', 'kwas stearynowy 50'}",12,5,5,2026-01-03,"{0: 'Polecam 2 na 10', 1: 'Ale dobre, mniam', 2: 'Mamo ja nie chcę'}"
-2,Stoperanos,Ups Choroba,{'biegunka'},"{0, 1, 2}","{'talk', 'laktoza jednowodna', 'loperamidu chlorowodorek'}",8,12,4,2019-01-31,"{0: 'Nie, wyrzucać! Może się przyda...', 1: 'Trzeba to w końcu wyrzucić'}"
-3,Urinocontloino,Marex S.A.,{'nietrzymanie moczu'},"{0, 1, 2}","{'cukier', 'żurawina'}",8,12,12,2020-02-28,{}
-4,Magnez,Pharmex S.A.,{'niedobór magnezu'},"{0, 1, 2}","{'celuloza', 'cytrynian potasu', 'mleczan magnezu'}",6,60,36,2030-12-31,{}
-5,Witamina B2,Pharmex S.A.,{'niedobór witaminy b2'},"{0, 1, 2}","{'mąka ryżowa', 'krzemionka', 'kwas stearynowy', 'żelatyna wołowa'}",6,60,48,2031-12-31,{}
+0,Ivermectinol,Polfarm,"{'zatrucie pokarmowe', 'ból głowy', 'przeziębienie'}","{0, 1}","{'skrobia żelowana', 'celuloza mikrokrystaliczna ph 102', 'iwermektyna'}",18,10,6,2029-12-31,{}
+1,Paracetamolina,Usdrugs,"{'ból', 'gorączka'}",{0},"{'krospowidon a', 'paracetamolum', 'powidon k30', 'celuloza mikrokrystaliczna', 'skrobia żelowana kukurydziana', 'magnezu stearynian', 'kwas stearynowy 50', 'kroskarmeloza sodowa'}",12,5,5,2026-01-03,"{0: 'Polecam 2 na 10', 1: 'Ale dobre, mniam', 2: 'Mamo ja nie chcę'}"
+2,Stoperanos,Ups Choroba,{'biegunka'},"{0, 1}","{'laktoza jednowodna', 'loperamidu chlorowodorek', 'talk'}",8,12,4,2019-01-31,"{0: 'Nie, wyrzucać! Może się przyda...', 1: 'Trzeba to w końcu wyrzucić'}"
+3,Urinocontloino,Marex S.A.,{'nietrzymanie moczu'},"{0, 1, 2}","{'cukier', 'żurawina'}",8,12,12,2026-02-28,{}
+4,Magnez,Pharmex S.A.,{'niedobór magnezu'},"{0, 1, 2}","{'mleczan magnezu', 'cytrynian potasu', 'celuloza'}",6,60,36,2030-12-31,{}
+5,Witamina B2,Pharmex S.A.,{'niedobór witaminy b2'},"{0, 1, 2}","{'żelatyna wołowa', 'kwas stearynowy', 'krzemionka', 'mąka ryżowa'}",6,60,48,2031-12-31,{}

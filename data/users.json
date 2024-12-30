@@ -8,18 +8,12 @@
             "nawracaj\u0105ce zapalenie p\u0142uc"
         ],
         "allergies": [
-            "celuloza mikrokrystaliczna",
-            "cynk",
             "kwas stearynowy 50",
-            "dimenhydrynat"
+            "dimenhydrynat",
+            "celuloza mikrokrystaliczna",
+            "cynk"
         ],
         "prescriptions": [
-            {
-                "id": 0,
-                "medicine_name": "Ivermectinol",
-                "dosage": 2,
-                "weekday": 1
-            },
             {
                 "id": 1,
                 "medicine_name": "Witamina B2",
@@ -31,6 +25,12 @@
                 "medicine_name": "Magnez",
                 "dosage": 2,
                 "weekday": 5
+            },
+            {
+                "id": 0,
+                "medicine_name": "Ivermectinol",
+                "dosage": 2,
+                "weekday": 4
             }
         ]
     },
@@ -89,12 +89,6 @@
                 "medicine_name": "Witamina B2",
                 "dosage": 1,
                 "weekday": 3
-            },
-            {
-                "id": 1,
-                "medicine_name": "Ivermectinol",
-                "dosage": 1,
-                "weekday": 4
             }
         ]
     }
