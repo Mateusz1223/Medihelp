@@ -11,8 +11,6 @@ Mateusz Piasecki, nr. indeksu 337273
 
 Celem projektu jest opracowanie programu służącego do śledzenia stanu domowej apteczki. Należy założyć, że w gospodarstwie domowym są trzy osoby - mama, tata i dziecko. Każdy z leków powinien zawierać takie informacje jak:
 
-
-
 - nazwa
 
 - producent
@@ -33,15 +31,9 @@ Celem projektu jest opracowanie programu służącego do śledzenia stanu domowe
 
 - notatka (użytkownik może do danego leku dodać swoją notatkę)
 
-
-
 Program powinien zapewniać możliwość wczytywania i zapisywania bazy danych leków do pliku CSV.
 
-
-
 Każda z osób z gospodarstwa domowego powinna zawierać takie informacje jak:
-
-
 
 - imię (mama, tata, dziecko)
 
@@ -53,11 +45,7 @@ Każda z osób z gospodarstwa domowego powinna zawierać takie informacje jak:
 
 - przyjmowane leki wraz z dawkowaniem (jaki lek, dawka i dzień tygodnia)
 
-
-
 Użytkownik programu powinien mieć możliwość dowolnej modyfikacji bazy danych apteczki domowej (dodawanie, usuwanie leków, zmiana poszczególnych zmiennych itp.). Dodatkowo przy każdym wywołaniu programu powinien on szukać w bazie leków przeterminowanych i przypominać o konieczności ich utylizacji. Program przy odpowiednim wywołaniu powinien również sprawdzić, czy dany lek jest bezpieczny dla danego domownika (użycie leku wyklucza np. uczulenie na jedną z substancji czynnych, czy też nieodpowiedni wiek) Program powinien zapewniać funkcjonalność wypisywania tygodniowego kalendarza przyjmowania leków dla każdego z uczestników.
-
-
 
 ## Podział programu na klasy
 
@@ -127,17 +115,19 @@ Aby uruchomić program należy wyjść do głównego katalogu projektu i wywoła
 ___
 Po uruchomieniu programu, klienta przywita okno wyboru użytkownika.
 <br/>
-
-Widok wyboru użytkownika
+<br/>
+*Widok wyboru użytkownika*
 
 <img  src="screenshots/choose_user_view.png"  width="700">
 <br/>
+<br/>
 Po wyborze użytkownika z listy i zatwierdzeniu wyboru, program przełączy się na widok listy leków. Domyślnie program ładuje listę leków z pliku ```data/medicines.csv```.
 <br/>
-
-Widok listy leków
+<br/>
+*Widok listy leków*
 
 <img  src="screenshots/medicine_list_view.png"  width="700">
+<br/>
 <br/>
 Na samej górze widoku znajduje się kafelek służący do dodawania nowych leków. Po kliknięciu w przycisk ```Dodaj lek+``` pojawi się odpowiedni formularz.
 
@@ -147,30 +137,34 @@ Kafelki te umożliwiają klientowi edycję i usuwanie leków oraz wyświetlanie 
 
 Klient może dodać własną notatkę, bądź edytować wcześniej dodaną. **Każdemu użytkownikowi przysługuje możliwość dodania maksymalnie jednej notatki do danego leku.**
 <br/>
-
-Notatki użytkownika do leku
+<br/>
+*Notatki użytkownika do leku*
 
 <img  src="screenshots/notes.png"  width="700">
 <br/>
-
-Możliwość dodania nowej notatki do leku
+<br/>
+<br/>
+*Możliwość dodania nowej notatki do leku*
 
 <img  src="screenshots/add_note.png"  width="700">
 <br/>
+<br/>
 Przycisk ```Weź dawkę``` sprawdza czy lek nie jest przeterminowany, czy użytkownik jest wpisany na listę biorców leku, czy użytkownik ma odpowiedni wiek oraz czy nie jest uczulony na żadną z substancji czynnych danego leku i jeśli wszystko jest w porządku to usuwa jedną dawkę danego leku. W przeciwnym wypadku pokazuje stosowne ostrzeżenie.
 <br/>
-
-Nieudana próba wzięcia dawki leku
+<br/>
+*Nieudana próba wzięcia dawki leku*
 
 <img  src="screenshots/take_dose_failed.png"  width="200">
+<br/>
 <br/>
 ___
 Na samej górze ekranu znajduje się pasek menu.
 <br/>
-
-Menu Pliku
+<br/>
+*Menu Pliku*
 
 <img  src="screenshots/file_menu.png"  width="200">
+<br/>
 <br/>
 - Opcje ```zapisz bazę leków``` oraz ```zapisz bazę leków jako``` służą
 
@@ -184,19 +178,21 @@ bazę leków``` pozwala załadować inny niż domyślny
 
 (```data/medicines.csv```) plik z bazą danych leków.
 <br/>
-
-Menu Widoku
+<br/>
+*Menu Widoku*
 
 <img  src="screenshots/view_menu.png"  width="200">
+<br/>
 <br/>
 Menu ```Widok``` pozwala użytkownikowi na przełączanie się między widokami listy leków, tygodniowego kalendarza przyjmowania leków oraz modyfikacji danych użytkownika. Pozwala również na powrót do widoku wyboru użytkownika.
 ___
 Na szczególną uwagę zasługuje widok modyfikacji użytkownika.
 <br/>
-
-Widok modyfikacji użytkownika
+<br/>
+*Widok modyfikacji użytkownika*
 
 <img  src="screenshots/modify_user_view.png"  width="700">
+<br/>
 <br/>
 Na górze tego widoku znajduje się formularz z danymi użytkownika, które można edytować. Po kliknięciu przycisku ```zapisz zmiany``` zostaną one zapisane w pliku ```data/users.json```  **Nie zaleca się manualnej modyfikacji tego pliku!**
 
@@ -205,10 +201,11 @@ Poniżej znajduje się lista leków przyjmowanych przez użytkownika, którą mo
 **Uwaga!!! Wszelkie zatwierdzone zmiany w widoku modyfikacji użytkownika zapisują się automatycznie, a więc są nieodwracalne!**
 ___
 <br/>
-
-Widok kalendarza
+<br/>
+*Widok kalendarza*
 
 <img  src="screenshots/calendar_view.png"  width="700">
+<br/>
 <br/>
 W widoku kalendarza wyświetla się tygodniowy kalendarz przyjmowanych leków poszczególnych użytkowników lub wszystkich użytkowników wedle wyboru klienta.
 
@@ -228,7 +225,3 @@ Chciałbym jednak zwrócić uwagę na kilka aspektów:
 
 - Po pierwsze, program zgodnie z poleceniem zakłada, że w gospodarstwie domowym są trzy osoby - Mama, Tata i Dziecko. Ilość użytkowników zależy jednak tylko i wyłącznie od ich ilości w pliki ```data/users.json```, a więc łatwo jest go rozszerzyć o opcje dodawania oraz usuwania użytkowników. Aby to zrobić nie trzeba modyfikować istniejącego już kodu.
 - Po drugie, inaczej niż w poleceniu, zamiast wieku użytkownika, program zapisuję datę urodzenia i na jej podstawie wylicza wiek. Uznałem, że takie rozwiązanie jest bardziej eleganckie.
-
-
-
-

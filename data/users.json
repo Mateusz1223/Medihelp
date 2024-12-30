@@ -8,10 +8,10 @@
             "nawracaj\u0105ce zapalenie p\u0142uc"
         ],
         "allergies": [
-            "kwas stearynowy 50",
+            "cynk",
             "dimenhydrynat",
-            "celuloza mikrokrystaliczna",
-            "cynk"
+            "kwas stearynowy 50",
+            "celuloza mikrokrystaliczna"
         ],
         "prescriptions": [
             {
@@ -31,35 +31,6 @@
                 "medicine_name": "Ivermectinol",
                 "dosage": 2,
                 "weekday": 4
-            }
-        ]
-    },
-    {
-        "id": 1,
-        "name": "Mama",
-        "birth_date": "1985-08-04",
-        "illnesses": [
-            "zesp\u00f3\u0142 jelita dra\u017cliwego"
-        ],
-        "allergies": [],
-        "prescriptions": [
-            {
-                "id": 1,
-                "medicine_name": "Stoperanos",
-                "dosage": 1,
-                "weekday": 1
-            },
-            {
-                "id": 0,
-                "medicine_name": "Witamina B2",
-                "dosage": 1,
-                "weekday": 6
-            },
-            {
-                "id": 2,
-                "medicine_name": "Magnez",
-                "dosage": 1,
-                "weekday": 7
             }
         ]
     },
@@ -89,6 +60,35 @@
                 "medicine_name": "Witamina B2",
                 "dosage": 1,
                 "weekday": 3
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Mama",
+        "birth_date": "1985-08-04",
+        "illnesses": [
+            "zesp\u00f3\u0142 jelita dra\u017cliwego"
+        ],
+        "allergies": [],
+        "prescriptions": [
+            {
+                "id": 0,
+                "medicine_name": "Witamina B2",
+                "dosage": 1,
+                "weekday": 6
+            },
+            {
+                "id": 2,
+                "medicine_name": "Magnez",
+                "dosage": 1,
+                "weekday": 7
+            },
+            {
+                "id": 1,
+                "medicine_name": "Stoperanos",
+                "dosage": 1,
+                "weekday": 1
             }
         ]
     }
