@@ -1,3 +1,4 @@
+
 # Medihelp
 ## Autor
 Mateusz Piasecki, nr. indeksu 337273
@@ -26,6 +27,7 @@ Każda z osób z gospodarstwa domowego powinna zawierać takie informacje jak:
 -   przyjmowane leki wraz z dawkowaniem (jaki lek, dawka i dzień tygodnia)
 
 Użytkownik programu powinien mieć możliwość dowolnej modyfikacji bazy danych apteczki domowej (dodawanie, usuwanie leków, zmiana poszczególnych zmiennych itp.). Dodatkowo przy każdym wywołaniu programu powinien on szukać w bazie leków przeterminowanych i przypominać o konieczności ich utylizacji. Program przy odpowiednim wywołaniu powinien również sprawdzić, czy dany lek jest bezpieczny dla danego domownika (użycie leku wyklucza np. uczulenie na jedną z substancji czynnych, czy też nieodpowiedni wiek) Program powinien zapewniać funkcjonalność wypisywania tygodniowego kalendarza przyjmowania leków dla każdego z uczestników.
+
 ## Podział programu na klasy
 
 ### 1) Klasy odpowiedzialne za logikę programu
@@ -60,3 +62,61 @@ Użytkownik programu powinien mieć możliwość dowolnej modyfikacji bazy danyc
  - **PrescriptionForm** - Klasa reprezentująca formularz pozwalający na wprowadzenie informacji o przyjmowanym leku. Wykorzystywana w klasach PrescriptionTile i AddPrescriptionTile.
  - **Calendar** - Klasa reprezentująca kalendarz wyświetlany w widoku kalendarza (CalendarView).
  - **CalendarTile** - Kafelek odpowiedziany za wyświetlanie informacji o branym leku. Wykorzystywany w  klasie Calendar.
+
+## Instrukcja użytkowania
+Program korzysta z plików ```users.json``` oraz ```medicines.csv ``` z katalogu ```data```. Pliki te zostały uzupełnione przykładowymi danymi
+
+Aby uruchomić program należy wyjść do głównego katalogu projektu i wywołać komendę ```python3 app.py```
+
+Po uruchomieniu programu, klienta przywita okno wyboru użytkownika.
+
+<img src="screenshots/choose_user_view.png" width="800">
+
+Po wyborze użytkownika z listy i zatwierdzeniu wyboru, program przełączy się na widok listy leków. Domyślnie program ładuje listę leków z pliku ```data/medicines.csv```.
+
+<img src="screenshots/medicine_list_view.png" width="800">
+
+Na samej górze widoku znajduje się kafelek służący do dodawania nowych leków. Po kliknięciu w przycisk ```Dodaj lek+``` pojawi się odpowiedni formularz.
+
+Poniżej wyświetlają się kafelki z istniejącymi lekami. Na samej górze pojawią się leki przeterminowane, a ich kafelki mają czerwone tło i informację przypominającą o konieczności utylizacji.
+
+Kafelki te umożliwiają klientowi edycję i usuwanie leków oraz wyświetlanie notatek dodanych przez użytkowników.
+
+Klient może dodać własną notatkę, bądź edytować wcześniej dodaną. **Każdemu użytkownikowi przysługuje możliwość dodania maksymalnie jednej notatki do danego leku.**
+
+<img src="screenshots/notes.png" width="800">
+
+<img src="screenshots/add_note.png" width="800">
+
+Przycisk ```Weź dawkę``` sprawdza czy lek nie jest przeterminowany, czy użytkownik ma odpowiedni wiek oraz czy nie jest uczulony na żadną z substancji czynnych danego leku i jeśli wszystko jest w porządku to usuwa jedną dawkę danego leku. W przeciwnym wypadku pokazuje stosowne ostrzeżenie
+
+<img src="screenshots/take_dose_failed.png" width="300">
+
+Na samej górze ekranu znajduje się pasek menu.
+<img src="screenshots/file_menu.png" width="300">
+ - Opcje ```zapisz bazę leków``` oraz ```zapisz bazę leków jako``` służą
+   do zapisywania zmian wprowadzonych przez klienta. **Uwaga!!! zmiany
+   dotyczące leków nie zapisują się automatycznie!** 
+  
+  - Opcja ```Załaduj
+   bazę leków``` pozwala załadować inny niż domyślny
+   (```data/medicines.csv```) plik z bazą danych leków.
+
+<img src="screenshots/view_menu.png" width="300">
+
+Menu ```Widok``` pozwala użytkownikowi na przełączanie się między widokami listy leków, tygodniowego kalendarza przyjmowania leków oraz modyfikacji danych użytkownika. Pozwala również na powrót do widoku wyboru użytkownika.
+
+Na szczególną uwagę zasługuje widok modyfikacji użytkownika.
+
+<img src="screenshots/modify_user_view.png" width="800">
+
+Na górze tego widoku znajduje się formularz z danymi użytkownika, które można edytować. Po kliknięciu przycisku ```zapisz zmiany``` zostaną one zapisane w pliku ```data/users.json``` **Nie zaleca się manualnej modyfikacji tego pliku!**
+
+Poniżej znajduje się lista leków przyjmowanych przez użytkownika, którą można dowolnie modyfikować.
+
+**Uwaga!!! Wszelkie zatwierdzone zmiany w widoku modyfikacji użytkownika zapisują się automatycznie, a więc są nieodwracalne!** 
+
+<img src="screenshots/calendar_view.png" width="800">
+
+W widoku kalendarza wyświetla się tygodniowy kalendarz przyjmowanych leków poszczególnych użytkowników lub wszystkich użytkowników wedle wyboru klienta.
+
