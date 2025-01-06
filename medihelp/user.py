@@ -6,7 +6,7 @@ from .errors import (InvalidUserNameError,
                      NoSuchIdInUserPrescriptionsError,
                      IllegalCharactersInANameError)
 from .prescription import Prescription
-from medihelp.gui.common import normalize_name
+from medihelp.common import normalize_name
 from typing import Iterable, Optional
 from datetime import date
 

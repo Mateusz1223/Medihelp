@@ -2,7 +2,7 @@ from .errors import (InvalidMedicineNameError,
                      InvalidDosesError,
                      InvalidWeekdayError,
                      IllegalCharactersInANameError)
-from medihelp.gui.common import normalize_name
+from medihelp.common import normalize_name
 
 
 class Prescription:

@@ -7,7 +7,7 @@ from medihelp.gui.gui import GUI
 from .medicine_form import MedicineForm
 from .user_note_tile import UserNoteTile
 from .add_note_tile import AddNoteTile
-from medihelp.gui.common import set_of_strings_to_string
+from medihelp.common import set_of_strings_to_string
 from medihelp.errors import UserDoesNotExistError
 from medihelp.system import System
 

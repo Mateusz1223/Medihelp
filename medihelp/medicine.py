@@ -16,7 +16,7 @@ from .errors import (InvalidMedicineNameError,
                      IllegalCharactersInANameError,
                      InvalidSubstanceNameError,
                      InvalidIllnessNameError)
-from medihelp.gui.common import normalize_name
+from medihelp.common import normalize_name
 from typing import Iterable
 
 
