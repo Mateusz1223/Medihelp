@@ -1,11 +1,11 @@
-from .gui import GUI
-from .view import View
+from medihelp.gui.gui import GUI
+from medihelp.gui.view import View
 from .modify_user_tile import ModifyUserTile
 from .prescription_tile import PrescriptionTile
 from .add_prescription_tile import AddPrescriptionTile
 from medihelp.system import System
 import customtkinter as ctk
-from . import global_settings as gs
+from medihelp.gui import global_settings as gs
 
 
 class ModifyUserView(View):

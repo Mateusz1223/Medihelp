@@ -23,10 +23,10 @@ class GUI(ctk.CTk):
     def __init__(self, system_handler: System):
         # Imports here in order to avoid circular import
         from .menu_bar import MenuBar
-        from .medicine_list_view import MedicineListView
-        from .choose_user_view import ChooseUserView
-        from .modify_user_view import ModifyUserView
-        from .calendar_view import CalendarView
+        from .medicine_list_view.medicine_list_view import MedicineListView
+        from .choose_user_view.choose_user_view import ChooseUserView
+        from .modify_user_view.modify_user_view import ModifyUserView
+        from .calendar_view.calendar_view import CalendarView
 
         super().__init__()
         self._system = system_handler

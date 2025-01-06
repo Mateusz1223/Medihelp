@@ -3,10 +3,10 @@ from tkinter import messagebox
 from datetime import datetime
 from medihelp.errors import IllegalCharactersInANameError
 from medihelp.system import System
-from .gui import GUI
+from medihelp.gui.gui import GUI
 from .medicine_form import MedicineForm
-from . import global_settings as gs
-from .common import normalize_list_of_names, normalize_name
+from medihelp.gui import global_settings as gs
+from medihelp.gui.common import normalize_list_of_names, normalize_name
 
 
 class AddMedicineTile(ctk.CTkFrame):

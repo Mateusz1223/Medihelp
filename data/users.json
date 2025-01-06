@@ -1,40 +1,5 @@
 [
     {
-        "id": 0,
-        "name": "Tata",
-        "birth_date": "1982-07-12",
-        "illnesses": [
-            "przewlek\u0142e zapalenie w\u0105troby",
-            "nawracaj\u0105ce zapalenie p\u0142uc"
-        ],
-        "allergies": [
-            "cynk",
-            "dimenhydrynat",
-            "kwas stearynowy 50",
-            "celuloza mikrokrystaliczna"
-        ],
-        "prescriptions": [
-            {
-                "id": 1,
-                "medicine_name": "Witamina B2",
-                "dosage": 1,
-                "weekday": 2
-            },
-            {
-                "id": 2,
-                "medicine_name": "Magnez",
-                "dosage": 2,
-                "weekday": 5
-            },
-            {
-                "id": 0,
-                "medicine_name": "Ivermectinol",
-                "dosage": 2,
-                "weekday": 4
-            }
-        ]
-    },
-    {
         "id": 2,
         "name": "Dziecko",
         "birth_date": "2017-01-02",
@@ -89,6 +54,41 @@
                 "medicine_name": "Stoperanos",
                 "dosage": 1,
                 "weekday": 1
+            }
+        ]
+    },
+    {
+        "id": 0,
+        "name": "Tata",
+        "birth_date": "1982-07-12",
+        "illnesses": [
+            "przewlek\u0142e zapalenie w\u0105troby",
+            "nawracaj\u0105ce zapalenie p\u0142uc"
+        ],
+        "allergies": [
+            "dimenhydrynat",
+            "celuloza mikrokrystaliczna",
+            "cynk",
+            "kwas stearynowy 50"
+        ],
+        "prescriptions": [
+            {
+                "id": 1,
+                "medicine_name": "Witamina B2",
+                "dosage": 1,
+                "weekday": 2
+            },
+            {
+                "id": 2,
+                "medicine_name": "Magnez",
+                "dosage": 2,
+                "weekday": 5
+            },
+            {
+                "id": 0,
+                "medicine_name": "Ivermectinol",
+                "dosage": 2,
+                "weekday": 4
             }
         ]
     }

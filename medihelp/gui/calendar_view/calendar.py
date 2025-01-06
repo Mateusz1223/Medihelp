@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from medihelp.system import System
 from medihelp.prescription import Prescription
-from . import global_settings as gs
-from .gui import GUI
+from medihelp.gui import global_settings as gs
+from medihelp.gui.gui import GUI
 from .calendar_tile import CalendarTile
 from typing import Iterable
 from medihelp.user import User

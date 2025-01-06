@@ -1,7 +1,6 @@
 import customtkinter as ctk
-from . import global_settings as gs
-from medihelp.medicine import Medicine
-from .gui import GUI
+from medihelp.gui import global_settings as gs
+from medihelp.gui.gui import GUI
 from medihelp.system import System
 
 
@@ -20,9 +19,6 @@ class MedicineForm(ctk.CTkFrame):
 
         :param parent: parent object used for initialization of tkinter objects
         :type parent: tkinter.Misc
-
-        :param medicine: Medicine object that is to be visualized
-        :type medicine: Medicine
         '''
         super().__init__(parent, border_width=0, fg_color=parent.cget('fg_color'))
 

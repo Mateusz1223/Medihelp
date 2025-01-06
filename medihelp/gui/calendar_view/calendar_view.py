@@ -2,9 +2,9 @@ import customtkinter as ctk
 from medihelp.system import System
 from .calendar import Calendar
 from medihelp.errors import UserDoesNotExistError
-from . import global_settings as gs
-from .gui import GUI
-from .view import View
+from medihelp.gui import global_settings as gs
+from medihelp.gui.gui import GUI
+from medihelp.gui.view import View
 
 
 class CalendarView(View):

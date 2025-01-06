@@ -1,13 +1,13 @@
 import customtkinter as ctk
 from tkinter import messagebox
 from datetime import datetime
-from . import global_settings as gs
+from medihelp.gui import global_settings as gs
 from medihelp.medicine import Medicine
-from .gui import GUI
+from medihelp.gui.gui import GUI
 from .medicine_form import MedicineForm
 from .user_note_tile import UserNoteTile
 from .add_note_tile import AddNoteTile
-from .common import set_of_strings_to_string, normalize_list_of_names, normalize_name
+from medihelp.gui.common import set_of_strings_to_string, normalize_list_of_names, normalize_name
 from medihelp.errors import IllegalCharactersInANameError, UserDoesNotExistError
 from medihelp.system import System
 

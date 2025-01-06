@@ -1,7 +1,7 @@
 import customtkinter as ctk
-from . import global_settings as gs
-from .common import normalize_list_of_names, normalize_name
-from .gui import GUI
+from medihelp.gui import global_settings as gs
+from medihelp.gui.common import normalize_list_of_names, normalize_name
+from medihelp.gui.gui import GUI
 from medihelp.errors import IllegalCharactersInANameError
 from medihelp.system import System
 from tkinter import messagebox

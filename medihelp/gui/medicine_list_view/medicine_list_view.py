@@ -1,7 +1,7 @@
 from .medicine_tile import MedicineTile
 from .add_medicine_tile import AddMedicineTile
-from .gui import GUI
-from .view import View
+from medihelp.gui.gui import GUI
+from medihelp.gui.view import View
 from medihelp.errors import MedicineDoesNotExistError
 from medihelp.system import System
 

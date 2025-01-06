@@ -1,9 +1,9 @@
 import customtkinter as ctk
 from medihelp.system import System
 from .prescription_form import PrescriptionForm
-from .gui import GUI
-from . import global_settings as gs
-from .common import normalize_name
+from medihelp.gui.gui import GUI
+from medihelp.gui import global_settings as gs
+from medihelp.gui.common import normalize_name
 from tkinter import messagebox
 from medihelp.errors import IllegalCharactersInANameError, DataLoadingError
 

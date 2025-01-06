@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from tkinter import messagebox
-from .gui import GUI
+from medihelp.gui.gui import GUI
 from medihelp.system import System
-from . import global_settings as gs
+from medihelp.gui import global_settings as gs
 
 
 class AddNoteTile(ctk.CTkFrame):
