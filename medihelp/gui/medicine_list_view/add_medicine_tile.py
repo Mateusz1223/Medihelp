@@ -1,12 +1,10 @@
 import customtkinter as ctk
 from tkinter import messagebox
 from datetime import datetime
-from medihelp.errors import IllegalCharactersInANameError
 from medihelp.system import System
 from medihelp.gui.gui import GUI
 from .medicine_form import MedicineForm
 from medihelp.gui import global_settings as gs
-from medihelp.gui.common import normalize_list_of_names, normalize_name
 
 
 class AddMedicineTile(ctk.CTkFrame):
@@ -67,29 +65,9 @@ class AddMedicineTile(ctk.CTkFrame):
         '''
         # Extract data from the form
         name = self._form.name()
-        try:
-            name = normalize_name(name)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa lekarstwa: {e}")
-            return
         manufacturer = self._form.manufacturer()
-        try:
-            manufacturer = normalize_name(manufacturer)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa producenta: {e}")
-            return
         illnesses = self._form.illnesses().split(',')
-        try:
-            illnesses = normalize_list_of_names(illnesses)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy chorób: {e}")
-            return
         substances = self._form.substances().split(',')
-        try:
-            substances = normalize_list_of_names(substances)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy substancji: {e}")
-            return
         try:
             recommended_age = int(self._form.recommended_age())
         except Exception:

@@ -1,8 +1,6 @@
 import customtkinter as ctk
 from medihelp.gui import global_settings as gs
-from medihelp.gui.common import normalize_list_of_names, normalize_name
 from medihelp.gui.gui import GUI
-from medihelp.errors import IllegalCharactersInANameError
 from medihelp.system import System
 from tkinter import messagebox
 from datetime import datetime
@@ -119,31 +117,14 @@ class ModifyUserTile(ctk.CTkFrame):
 
         # Extract data from the form
         name = self._name_entry.get()
-        try:
-            name = normalize_name(name)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa lekarstwa: {e}")
-            return
-
         illnesses = self._illnesses_textbox.get("1.0", "end")
         if illnesses == 'Podaj nazwy chorób i dolegliwości oddzielone przecinkiem.\n':
             illnesses = ''
         illnesses = illnesses.split(',')
-        try:
-            illnesses = normalize_list_of_names(illnesses)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy chorób: {e}")
-            return
-
         allergies = self._allergies_textbox.get("1.0", "end")
         if allergies == 'Podaj nazwy substancji oddzielone przecinkiem.\n':
             allergies = ''
         allergies = allergies.split(',')
-        try:
-            allergies = normalize_list_of_names(allergies)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy substancji (alergie): {e}")
-            return
 
         try:
             birth_date = datetime.strptime(self._birth_date_entry.get(), '%Y-%m-%d').date()

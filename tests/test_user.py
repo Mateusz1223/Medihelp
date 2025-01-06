@@ -61,6 +61,34 @@ def test_user_set_name_empty_name():
         user.set_name('')
 
 
+def test_user_set_name_all_white_spaces():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.name() == 'Dad'
+    with raises(InvalidUserNameError):
+        user.set_name('    \n  ')
+
+
+def test_user_set_name_illegal_character_1():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.name() == 'Dad'
+    with raises(InvalidUserNameError):
+        user.set_name(',')
+
+
+def test_user_set_name_illegal_character_2():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.name() == 'Dad'
+    with raises(InvalidUserNameError):
+        user.set_name("'")
+
+
+def test_user_set_name_illegal_character_3():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.name() == 'Dad'
+    with raises(InvalidUserNameError):
+        user.set_name('"')
+
+
 def test_user_set_name_empty_name_too_long():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.name() == 'Dad'
@@ -113,8 +141,43 @@ def test_user_add_illness_uppercase():
 def test_user_add_illness_empty_name():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.illnesses() == set()
+    user.add_illness('')
+    assert len(user.illnesses()) == 0
+
+
+def test_user_add_illness_all_white_spaces():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.illnesses() == set()
+    user.add_illness('   \n  ')
+    assert len(user.illnesses()) == 0
+
+
+def test_user_add_illness_illegal_character_1():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.illnesses() == set()
     with raises(InvalidIllnessNameError):
-        user.add_illness('')
+        user.add_illness(',')
+
+
+def test_user_add_illness_illegal_character_2():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.illnesses() == set()
+    with raises(InvalidIllnessNameError):
+        user.add_illness('"')
+
+
+def test_user_add_illness_illegal_character_3():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.illnesses() == set()
+    with raises(InvalidIllnessNameError):
+        user.add_illness('x\nx')
+
+
+def test_user_add_illness_illegal_character_4():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.illnesses() == set()
+    with raises(InvalidIllnessNameError):
+        user.add_illness("'")
 
 
 def test_user_remove_illness_typical():
@@ -147,8 +210,43 @@ def test_user_add_allergy_uppercase():
 def test_user_add_allergy_empty_name():
     user = User(0, name='Dad', birth_date=date(1980, 1, 2))
     assert user.allergies() == set()
+    user.add_allergy('')
+    assert user.allergies() == set()
+
+
+def test_user_add_allergy_all_white_spaces():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.allergies() == set()
+    user.add_allergy('  \n   ')
+    assert user.allergies() == set()
+
+
+def test_user_add_allergy_illegal_character_1():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.allergies() == set()
     with raises(InvalidSubstanceNameError):
-        user.add_allergy('')
+        user.add_allergy(',')
+
+
+def test_user_add_allergy_illegal_character_2():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.allergies() == set()
+    with raises(InvalidSubstanceNameError):
+        user.add_allergy('"')
+
+
+def test_user_add_allergy_illegal_character_3():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.allergies() == set()
+    with raises(InvalidSubstanceNameError):
+        user.add_allergy('x\nx')
+
+
+def test_user_add_allergy_illegal_character_4():
+    user = User(0, name='Dad', birth_date=date(1980, 1, 2))
+    assert user.allergies() == set()
+    with raises(InvalidSubstanceNameError):
+        user.add_allergy("'")
 
 
 def test_user_remove_allergy_typical():

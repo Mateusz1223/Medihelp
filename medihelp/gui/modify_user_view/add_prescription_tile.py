@@ -3,9 +3,8 @@ from medihelp.system import System
 from .prescription_form import PrescriptionForm
 from medihelp.gui.gui import GUI
 from medihelp.gui import global_settings as gs
-from medihelp.gui.common import normalize_name
 from tkinter import messagebox
-from medihelp.errors import IllegalCharactersInANameError, DataLoadingError
+from medihelp.errors import DataLoadingError
 
 
 class AddPrescriptionTile(ctk.CTkFrame):
@@ -73,11 +72,7 @@ class AddPrescriptionTile(ctk.CTkFrame):
 
     def _approve_button_handler(self):
         # Extract data from the form
-        try:
-            medicine_name = normalize_name(self._form.medicine_name())
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa lekarstwa: {e}")
-            return
+        medicine_name = self._form.medicine_name()
         try:
             dosage = int(self._form.dosage())
         except Exception:

@@ -12,7 +12,11 @@ from .errors import (InvalidMedicineNameError,
                      ExpiredMedicineError,
                      NoteIsToLongError,
                      TooManyLinesInTheNoteError,
-                     EmptyNoteError)
+                     EmptyNoteError,
+                     IllegalCharactersInANameError,
+                     InvalidSubstanceNameError,
+                     InvalidIllnessNameError)
+from medihelp.gui.common import normalize_name
 from typing import Iterable
 
 
@@ -95,27 +99,39 @@ class Medicine:
         self._id = int(id)
 
         name = str(name).title()
+        try:
+            name = normalize_name(name)
+        except IllegalCharactersInANameError:
+            raise InvalidMedicineNameError
         if len(name) < 1 or len(name) > 16:
             raise InvalidMedicineNameError
         self._name = name
 
         manufacturer = str(manufacturer).title()
+        try:
+            manufacturer = normalize_name(manufacturer)
+        except IllegalCharactersInANameError:
+            raise InvalidManufacturerNameError
         if len(manufacturer) < 1 or len(manufacturer) > 16:
             raise InvalidManufacturerNameError
         self._manufacturer = manufacturer
 
-        if not illnesses:
+        self._illnesses = set()
+        for illness in illnesses:
+            self._add_illness(illness)
+        if len(self._illnesses) == 0:
             raise EmptyListError("chorób")
-        self._illnesses = {str(illness).lower() for illness in illnesses}
 
         self._recipients = set()
         if recipients:
             for recipient in recipients:
                 self.add_recipient(recipient)
 
-        if not substances:
+        self._substances = set()
+        for substance in substances:
+            self._add_substance(substance)
+        if len(self._substances) == 0:
             raise EmptyListError("substancji")
-        self._substances = {str(substance).lower() for substance in substances}
 
         recommended_age = int(recommended_age)
         if recommended_age < 0:
@@ -243,6 +259,24 @@ class Medicine:
 
     def remove_recipient(self, user_id):
         self._recipients.remove(user_id)
+
+    def _add_substance(self, substance):
+        substance = str(substance).lower()
+        try:
+            substance = normalize_name(substance)
+        except IllegalCharactersInANameError:
+            raise InvalidSubstanceNameError
+        if substance:
+            self._substances.add(substance)
+
+    def _add_illness(self, illness):
+        illness = str(illness).lower()
+        try:
+            illness = normalize_name(illness)
+        except IllegalCharactersInANameError:
+            raise InvalidIllnessNameError
+        if illness:
+            self._illnesses.add(illness)
 
     def take_doses(self, doses, user):
         '''

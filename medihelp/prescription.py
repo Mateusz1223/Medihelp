@@ -1,6 +1,8 @@
 from .errors import (InvalidMedicineNameError,
                      InvalidDosesError,
-                     InvalidWeekdayError)
+                     InvalidWeekdayError,
+                     IllegalCharactersInANameError)
+from medihelp.gui.common import normalize_name
 
 
 class Prescription:
@@ -36,8 +38,12 @@ class Prescription:
         '''
         self._id = int(id)
         medicine_name = str(medicine_name).title()
+        try:
+            medicine_name = normalize_name(medicine_name)
+        except IllegalCharactersInANameError:
+            raise InvalidMedicineNameError
         if len(medicine_name) < 1 or len(medicine_name) > 16:
-            raise (InvalidMedicineNameError())
+            raise InvalidMedicineNameError
         self._medicine_name = medicine_name
         dosage = int(dosage)
         if dosage <= 0:

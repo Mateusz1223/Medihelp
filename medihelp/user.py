@@ -3,8 +3,10 @@ from .errors import (InvalidUserNameError,
                      InvalidSubstanceNameError,
                      InvalidBirthdateError,
                      IdAlreadyInUseError,
-                     NoSuchIdInUserPrescriptionsError)
+                     NoSuchIdInUserPrescriptionsError,
+                     IllegalCharactersInANameError)
 from .prescription import Prescription
+from medihelp.gui.common import normalize_name
 from typing import Iterable, Optional
 from datetime import date
 
@@ -114,8 +116,11 @@ class User:
         :param age: name to be set
         :type age: str
         '''
-
         name = str(name)
+        try:
+            name = normalize_name(name)
+        except IllegalCharactersInANameError:
+            raise InvalidUserNameError
         if len(name) < 1 or len(name) > 16:
             raise (InvalidUserNameError)
         self._name = name.title()
@@ -153,13 +158,18 @@ class User:
         '''
 
         illness = str(illness).lower()
-        if not illness:
-            raise (InvalidIllnessNameError)
-        self._illnesses.add(illness)
+        try:
+            illness = normalize_name(illness)
+        except IllegalCharactersInANameError:
+            raise InvalidIllnessNameError
+        if illness:
+            self._illnesses.add(illness)
 
     def remove_illness(self, illness):
         '''
-        Removes illness from the _ilnesses list
+        Removes illness from the _ilnesses list but first makes sure it doesn't contain any illegal characters.
+        If the name is all white spaces it is ignored.
+        The name is striped and set to lowercase.
 
         :param illness: ilness name
         :type illness: str
@@ -178,15 +188,20 @@ class User:
 
     def add_allergy(self, substance):
         '''
-        Adds substance to the __allergies list and makes sure it's in lower case.
+        Adds substance to the __allergies list but first makes sure it doesn't contain any illegal characters.
+        If the name is all white spaces it is ignored.
+        The name is striped and set to lowercase.
 
         :param substance: substance name
         :type substance: str
         '''
         substance = str(substance).lower()
-        if not substance:
-            raise (InvalidSubstanceNameError)
-        self._allergies.add(substance)
+        try:
+            substance = normalize_name(substance)
+        except IllegalCharactersInANameError:
+            raise InvalidSubstanceNameError
+        if substance:
+            self._allergies.add(substance)
 
     def remove_allergy(self, substance):
         '''

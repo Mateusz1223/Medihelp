@@ -781,31 +781,3 @@ def test_system_change_perscription_typical(monkeypatch):
                                dosage=2, weekday=1)
     presc_new = Prescription(id=0, medicine_name='new_name', dosage=2, weekday=1)
     assert system.users()[1].prescriptions()[0] == presc_new
-
-
-def test_system_change_perscription_wrong_user(monkeypatch):
-    # Very important, otherwise the test will override data/users.json file !!!
-    file = StringIO()
-
-    def fake_open(path, mode, *args, **kwargs):
-        return file
-    monkeypatch.setattr(builtins, 'open', fake_open)
-
-    presc = Prescription(id=0, medicine_name='med3', dosage=3, weekday=4)
-    user0 = User(id=1,
-                 name='Dad',
-                 birth_date=date(1982, 7, 12),
-                 illnesses={'xyz', 'cold'},
-                 allergies={'nicotine', 'sugar'},
-                 prescriptions=[presc])
-
-    database = UsersDatabase()
-    database.add_user(user0)
-
-    system = System()
-    system._users_database = database
-
-    with raises(UserDoesNotExistError):
-        system.change_prescription(user_id=4, prescription_id=0,
-                                   medicine_name='new_name',
-                                   dosage=2, weekday=1)

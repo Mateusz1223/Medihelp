@@ -7,8 +7,8 @@ from medihelp.gui.gui import GUI
 from .medicine_form import MedicineForm
 from .user_note_tile import UserNoteTile
 from .add_note_tile import AddNoteTile
-from medihelp.gui.common import set_of_strings_to_string, normalize_list_of_names, normalize_name
-from medihelp.errors import IllegalCharactersInANameError, UserDoesNotExistError
+from medihelp.gui.common import set_of_strings_to_string
+from medihelp.errors import UserDoesNotExistError
 from medihelp.system import System
 
 
@@ -296,29 +296,9 @@ class MedicineEditTile(ctk.CTkFrame):
         '''
         # Extract data from the form
         name = self._form.name()
-        try:
-            name = normalize_name(name)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa lekarstwa: {e}")
-            return
         manufacturer = self._form.manufacturer()
-        try:
-            manufacturer = normalize_name(manufacturer)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowa nazwa producenta: {e}")
-            return
         illnesses = self._form.illnesses().split(',')
-        try:
-            illnesses = normalize_list_of_names(illnesses)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy chorób: {e}")
-            return
         substances = self._form.substances().split(',')
-        try:
-            substances = normalize_list_of_names(substances)
-        except IllegalCharactersInANameError as e:
-            messagebox.showerror(title="Błąd", message=f"Nieprawidłowe nazwy substancji: {e}")
-            return
         try:
             recommended_age = int(self._form.recommended_age())
         except Exception:

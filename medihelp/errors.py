@@ -7,27 +7,27 @@ Errors with the English descriptions are never meant to be seen by the user.
 
 class InvalidUserNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa użytkownika! Nazwa użytkownika powinna mieć od 1 do 16 znaków.')
+        super().__init__('Nieprawidłowa nazwa użytkownika! Nazwa użytkownika powinna mieć od 1 do 16 znaków. Nazwa nie może zawierać następujących znaków: "\'", """, ",", "\\n"!')
 
 
 class InvalidIllnessNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa choroby!')
+        super().__init__('Nieprawidłowa nazwa choroby! Nazwa nie może pyć pusta, ani zawierać następujących znaków: "\'", """, ",", "\\n"!')
 
 
 class InvalidSubstanceNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa substancji!')
+        super().__init__('Nieprawidłowa nazwa substancji! Nazwa nie może pyć pusta, ani zawierać następujących znaków: "\'", """, ",", "\\n"!')
 
 
 class InvalidMedicineNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa leku! Nazwa leku powinna mieć od 1 do 16 znaków.')
+        super().__init__('Nieprawidłowa nazwa leku! Nazwa leku powinna mieć od 1 do 16 znaków. Nazwa nie może zawierać następujących znaków: "\'", """, ",", "\\n"!')
 
 
 class InvalidManufacturerNameError(Exception):
     def __init__(self):
-        super().__init__('Nieprawidłowa nazwa producenta! Nazwa producenta powinna mieć od 1 do 16 znaków.')
+        super().__init__('Nieprawidłowa nazwa producenta! Nazwa producenta powinna mieć od 1 do 16 znaków. Nazwa nie może zawierać następujących znaków: "\'", """, ",", "\\n"!')
 
 
 class InvalidDosesError(Exception):

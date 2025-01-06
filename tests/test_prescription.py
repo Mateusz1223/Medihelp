@@ -32,6 +32,31 @@ def test_prescription_create_empty_medicine_name():
         Prescription(id=0, medicine_name='', dosage=2, weekday=3)
 
 
+def test_prescription_create_medicine_name_all_white_spaces():
+    with raises(InvalidMedicineNameError):
+        Prescription(id=0, medicine_name='   \n   ', dosage=2, weekday=3)
+
+
+def test_prescription_create_medicine_name_illegal_character_1():
+    with raises(InvalidMedicineNameError):
+        Prescription(id=0, medicine_name='x\nx', dosage=2, weekday=3)
+
+
+def test_prescription_create_medicine_name_illegal_character_2():
+    with raises(InvalidMedicineNameError):
+        Prescription(id=0, medicine_name=',', dosage=2, weekday=3)
+
+
+def test_prescription_create_medicine_name_illegal_character_3():
+    with raises(InvalidMedicineNameError):
+        Prescription(id=0, medicine_name='"', dosage=2, weekday=3)
+
+
+def test_prescription_create_medicine_name_illegal_character_4():
+    with raises(InvalidMedicineNameError):
+        Prescription(id=0, medicine_name="'", dosage=2, weekday=3)
+
+
 def test_prescription_create_medicine_name_too_long():
     with raises(InvalidMedicineNameError):
         Prescription(id=0, medicine_name='01234567891234567', dosage=2, weekday=3)

@@ -15,7 +15,9 @@ from medihelp.errors import (InvalidMedicineNameError,
                              ExpiredMedicineError,
                              NoteIsToLongError,
                              EmptyNoteError,
-                             TooManyLinesInTheNoteError)
+                             TooManyLinesInTheNoteError,
+                             InvalidIllnessNameError,
+                             InvalidSubstanceNameError)
 
 
 def test_medicine_create():
@@ -46,7 +48,43 @@ def test_medicine_create():
 def test_medicine_create_empty_illneses_list():
     with raises(EmptyListError):
         Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                 illnesses=[],
+                 illnesses=['  ', '', '  \n  '],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_illness_1():
+    with raises(InvalidIllnessNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=[','],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_illness_2():
+    with raises(InvalidIllnessNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=['"'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_illness_3():
+    with raises(InvalidIllnessNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=['x\nx'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_illness_4():
+    with raises(InvalidIllnessNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=["'"],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=0, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -55,8 +93,44 @@ def test_medicine_create_empty_illneses_list():
 def test_medicine_create_empty_substances_list():
     with raises(EmptyListError):
         Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                 illnesses=['Illnes1, illness2, IllNes3'],
-                 substances=[],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['  ', '', '  \n  '],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_substances_1():
+    with raises(InvalidSubstanceNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=[','],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_substances_2():
+    with raises(InvalidSubstanceNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['"'],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_substances_3():
+    with raises(InvalidSubstanceNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['x\nx'],
+                 recommended_age=0, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_illegal_character_in_substances_4():
+    with raises(InvalidSubstanceNameError):
+        Medicine(0, name='iveRmectin', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=["'"],
                  recommended_age=0, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
 
@@ -64,7 +138,52 @@ def test_medicine_create_empty_substances_list():
 def test_medicine_create_empty_name():
     with raises(InvalidMedicineNameError):
         Medicine(0, name='', manufacturer='polfARma',
-                 illnesses=['Illnes1, illness2, IllNes3'],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_name_all_white_spaces():
+    with raises(InvalidMedicineNameError):
+        Medicine(0, name='   \n   ', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_name_illegal_character_1():
+    with raises(InvalidMedicineNameError):
+        Medicine(0, name=',', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_name_illegal_character_2():
+    with raises(InvalidMedicineNameError):
+        Medicine(0, name='"', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_name_illegal_character_3():
+    with raises(InvalidMedicineNameError):
+        Medicine(0, name='x\nx', manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_name_illegal_character_4():
+    with raises(InvalidMedicineNameError):
+        Medicine(0, name="'", manufacturer='polfARma',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -73,7 +192,7 @@ def test_medicine_create_empty_name():
 def test_medicine_create_name_too_long():
     with raises(InvalidMedicineNameError):
         Medicine(0, name='01234567891234567', manufacturer='polfARma',
-                 illnesses=['Illnes1, illness2, IllNes3'],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -81,7 +200,7 @@ def test_medicine_create_name_too_long():
 
 def test_medicine_create_name_edge_case():
     medicine = Medicine(0, name='1', manufacturer='polfARma',
-                        illnesses=['Illnes1, illness2, IllNes3'],
+                        illnesses=['Illnes1', 'illness2', 'IllNes3'],
                         substances=['nicoTine', 'caffeine'],
                         recommended_age=0, doses=10, doses_left=10,
                         expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -92,7 +211,52 @@ def test_medicine_create_name_edge_case():
 def test_medicine_create_empty_manufacturer():
     with raises(InvalidManufacturerNameError):
         Medicine(0, name='daadadsdas', manufacturer='',
-                 illnesses=['Illnes1, illness2, IllNes3'],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_manufacturer_all_white_spaces():
+    with raises(InvalidManufacturerNameError):
+        Medicine(0, name='daadadsdas', manufacturer='   \n   ',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_manufacturer_illegal_character_1():
+    with raises(InvalidManufacturerNameError):
+        Medicine(0, name='daadadsdas', manufacturer=',',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_manufacturer_illegal_character_2():
+    with raises(InvalidManufacturerNameError):
+        Medicine(0, name='daadadsdas', manufacturer='"',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_manufacturer_illegal_character_3():
+    with raises(InvalidManufacturerNameError):
+        Medicine(0, name='daadadsdas', manufacturer='x\nx',
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
+                 substances=['nicoTine', 'caffeine'],
+                 recommended_age=-1, doses=10, doses_left=10,
+                 expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
+
+
+def test_medicine_create_manufacturer_illegal_character_4():
+    with raises(InvalidManufacturerNameError):
+        Medicine(0, name='daadadsdas', manufacturer="'",
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -101,7 +265,7 @@ def test_medicine_create_empty_manufacturer():
 def test_medicine_create_empty_manufacturer_too_long():
     with raises(InvalidManufacturerNameError):
         Medicine(0, name='daadadsdas', manufacturer='01234567891234567',
-                 illnesses=['Illnes1, illness2, IllNes3'],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -109,7 +273,7 @@ def test_medicine_create_empty_manufacturer_too_long():
 
 def test_medicine_create_manufacturer_edge_case():
     medicine = Medicine(0, name='dsfsffe', manufacturer='1',
-                        illnesses=['Illnes1, illness2, IllNes3'],
+                        illnesses=['Illnes1', 'illness2', 'IllNes3'],
                         substances=['nicoTine', 'caffeine'],
                         recommended_age=0, doses=10, doses_left=10,
                         expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -120,7 +284,7 @@ def test_medicine_create_manufacturer_edge_case():
 def test_medicine_create_invalid_recommended_age():
     with raises(InvalidAgeError):
         Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                 illnesses=['Illnes1, illness2, IllNes3'],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=-1, doses=10, doses_left=10,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
@@ -129,7 +293,7 @@ def test_medicine_create_invalid_recommended_age():
 def test_medicine_create_invalid_doses():
     with raises(InvalidDosesError):
         Medicine(0, name='iveRmectin', manufacturer='polfARma',
-                 illnesses=['Illnes1, illness2, IllNes3'],
+                 illnesses=['Illnes1', 'illness2', 'IllNes3'],
                  substances=['nicoTine', 'caffeine'],
                  recommended_age=0, doses=0, doses_left=0,
                  expiration_date=date(2025, 12, 31), recipients=[0, 1, 2])
