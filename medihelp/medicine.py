@@ -70,7 +70,7 @@ class Medicine:
                  doses_left: int,
                  expiration_date: date,
                  recipients: Iterable[int],
-                 notes: dict[int: str] = None):
+                 notes: dict[int, str] = None):
         '''
         :param id: Unique Id of the medicine
         :type id: int

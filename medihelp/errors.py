@@ -73,7 +73,7 @@ class AllergyWarning(Exception):
         '''
         substances = list(substances)
         substances.sort()
-        info = f'Użytkownik nie może przyjąć leku, ponieważ jest uczulony na następujące substancje {', '.join([word for word in substances])}.'
+        info = f"Użytkownik nie może przyjąć leku, ponieważ jest uczulony na następujące substancje {', '.join([word for word in substances])}."
         super().__init__(info)
 
 
