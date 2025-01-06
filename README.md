@@ -111,7 +111,7 @@ Użytkownik programu powinien mieć możliwość dowolnej modyfikacji bazy danyc
 
 Program korzysta z plików ```users.json``` oraz ```medicines.csv ``` z katalogu ```data```. Pliki te zostały uzupełnione przykładowymi danymi
 
-Aby uruchomić program należy wejść do głównego katalogu projektu i wywołać komendę ```python3 app.py```
+Aby uruchomić program należy wejść do głównego katalogu projektu i wywołać komendę ```python3 app.py```. **Zaleca się aby kożystać z wersji Pythona 3.12.3.**
 ___
 Po uruchomieniu programu, klienta przywita okno wyboru użytkownika.
 <br/>
