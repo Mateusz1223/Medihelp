@@ -21,6 +21,8 @@ class GUI(ctk.CTk):
     '''
 
     def __init__(self, system_handler: System):
+        ctk.set_appearance_mode("light")
+
         # Imports here in order to avoid circular import
         from .menu_bar import MenuBar
         from .medicine_list_view.medicine_list_view import MedicineListView
