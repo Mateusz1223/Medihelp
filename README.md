@@ -219,7 +219,7 @@ ___
 W widoku kalendarza wyświetla się tygodniowy kalendarz przyjmowanych leków poszczególnych użytkowników lub wszystkich użytkowników wedle wyboru klienta.
 
 <br/>
-
+<br/>
 **Uwaga!!! Wszystkie formularze pozwalające na wprowadzanie zmian czy to w bazie danych leków czy użytkowników są kontrolowane pod względem poprawności wprowadzonych danych przed zatwierdzeniem zmian i wyświetlają odpowiednie informacje o błędach jeśli nie udało się zatwierdzić zmian.**
 
 Ograniczenia dotyczące wprowadzanych danych:

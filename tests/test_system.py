@@ -200,7 +200,9 @@ def test_system_medicines_database_loaded(monkeypatch):
 
     system = System()
     assert not system.medicines_database_loaded()
-    system.load_medicines_database_from('whatever_path')
+    system.load_medicines_database_from('whatever-path')
+    assert system.medicines_file_path() == 'whatever-path'
+    assert system.medicines_file_saved() is True
     assert system.medicines_database_loaded()
 
 
@@ -216,7 +218,9 @@ def test_system_medicines_database_loaded_false(monkeypatch):
     monkeypatch.setattr(builtins, 'open', fake_open)
 
     system = System()
-    system.load_medicines_database_from('whatever_path')
+    system.load_medicines_database_from('whatever-path')
+    assert system.medicines_file_path() == 'whatever-path'
+    assert system.medicines_file_saved() is True
     assert system.medicines_database_loaded()
 
 
@@ -241,8 +245,10 @@ def test_system_load_medicines_database_from(monkeypatch):
     monkeypatch.setattr(builtins, 'open', fake_open)
 
     system = System()
-    system.load_medicines_database_from('whatever_path')
+    system.load_medicines_database_from('whatever-path')
     assert system.medicines_database_loaded()
+    assert system.medicines_file_path() == 'whatever-path'
+    assert system.medicines_file_saved() is True
     assert medicine1 in system.medicines_database().medicines().values()
     assert medicine2 in system.medicines_database().medicines().values()
 
@@ -257,7 +263,7 @@ def test_system_medicines_database_loaded_false_error(monkeypatch):
 
     system = System()
     with raises(DataLoadingError):
-        system.load_medicines_database_from('whatever_path')
+        system.load_medicines_database_from('whatever-path')
 
 
 def test_system_save_medicines_database_no_file_opened(monkeypatch):
@@ -275,8 +281,11 @@ def test_system_save_medicines_database_1(monkeypatch):
     monkeypatch.setattr(builtins, 'open', fake_open)
 
     system = System()
+    system._medicines_file_saved = False
     # passing a path to the file so that it doesn't rise NoFileOpenedError
-    system.save_medicines_database('what-ever-path')
+    system.save_medicines_database('whatever-path')
+    assert system.medicines_file_path() == 'whatever-path'
+    assert system.medicines_file_saved() is True
 
 
 def test_system_save_medicines_database_2(monkeypatch):
@@ -297,7 +306,9 @@ def test_system_save_medicines_database_2(monkeypatch):
         return file
     monkeypatch.setattr(builtins, 'open', fake_open)
 
+    system._medicines_file_saved = False
     system.save_medicines_database()
+    assert system.medicines_file_saved() is True
 
 
 def test_system_set_note_typical():
@@ -320,8 +331,10 @@ def test_system_set_note_typical():
     system.medicines_database().add_medicine(medicine)
 
     assert medicine.notes() == {}
+    system._medicines_file_saved = True
     system.set_note(1, 0, "Hello!")
     assert medicine.note(0) == "Hello!"
+    assert system.medicines_file_saved() is False
 
 
 def test_system_set_note_wrong_medicine_id():
@@ -390,7 +403,9 @@ def test_system_del_note_typical():
     system.medicines_database().add_medicine(medicine)
 
     assert medicine.note(0) == "Hello!"
+    system._medicines_file_saved = True
     system.del_note(1, 0)
+    assert system.medicines_file_saved() is False
     assert medicine.notes() == {}
 
 
@@ -442,6 +457,7 @@ def test_system_del_note_wrong_medicine_id():
 
 def test_system_add_medicine():
     system = System()
+    assert system.medicines_file_saved() is True
 
     id1 = system.add_medicine(name='Ivermectin', manufacturer='polfarm',
                               illnesses=['Illness1', 'illness2', 'IllNess3'],
@@ -463,6 +479,8 @@ def test_system_add_medicine():
                          illnesses=['cold'], substances=['weed', 'stuff'],
                          recommended_age=12, doses=5, doses_left=5,
                          expiration_date=date(2026, 1, 3), recipients=[0])
+
+    assert system.medicines_file_saved() is False
 
     assert system.medicines()[id1] == medicine1
     assert system.medicines()[id2] == medicine2
@@ -537,8 +555,10 @@ def test_system_take_dose_typical():
                              expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
                              notes={1: 'Hello'})
     assert system.medicines()[id].doses_left() == 6
+    system._medicines_file_saved = True
     system.take_dose(id, user)
     assert system.medicines()[id].doses_left() == 5
+    assert system.medicines_file_saved() is False
 
 
 def test_system_take_dose():
@@ -557,6 +577,7 @@ def test_system_take_dose():
                              recommended_age=0, doses=10, doses_left=6,
                              expiration_date=date(2025, 12, 31), recipients=[0, 1, 2],
                              notes={1: 'Hello'})
+
     with raises(MedicineDoesNotExistError):
         system.take_dose(id + 1, user)
 

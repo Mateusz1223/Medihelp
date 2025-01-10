@@ -135,8 +135,7 @@ class System:
         except Exception as e:
             raise DataSavingError from e
         self._medicines_file_saved = True
-        if not self.medicines_database_loaded():
-            self._medicines_file_path = path
+        self._medicines_file_path = path
 
     def set_note(self, medicine_id: int, author_id: int, content: str):
         '''
@@ -156,6 +155,7 @@ class System:
         medicine = self.medicines_database().medicines().get(medicine_id)
         if medicine:
             medicine.set_note(author_id, content)
+            self._medicines_file_saved = False
         else:
             raise MedicineDoesNotExistError(medicine_id)
 
@@ -174,6 +174,7 @@ class System:
         medicine = self.medicines_database().medicines().get(medicine_id)
         if medicine:
             medicine.del_note(author_id)
+            self._medicines_file_saved = False
         else:
             raise MedicineDoesNotExistError(medicine_id)
 
@@ -230,6 +231,7 @@ class System:
                             recipients=recipients,
                             notes=notes)
         self.medicines_database().add_medicine(medicine)
+        self._medicines_file_saved = False
         return id
 
     def del_medicine(self, medicine_id: int):
@@ -240,6 +242,7 @@ class System:
         :type medicine_id: int
         '''
         self.medicines_database().delete_medicine(medicine_id)
+        self._medicines_file_saved = False
 
     def change_medicine(self,
                         medicine_id: int,
@@ -292,6 +295,7 @@ class System:
                                 notes=old_medicine.notes())
         self.medicines_database().delete_medicine(medicine_id)
         self.medicines_database().add_medicine(new_medicine)
+        self._medicines_file_saved = False
 
     def take_dose(self, medicine_id: int, user: User):
         '''
@@ -308,6 +312,7 @@ class System:
         if not medicine:
             raise MedicineDoesNotExistError(medicine_id)
         medicine.take_doses(doses=1, user=user)
+        self._medicines_file_saved = False
 
     def change_user(self,
                     user_id: int,
