@@ -5,7 +5,7 @@
 
 ## Autor
 
-Mateusz Piasecki, nr. indeksu 337273
+Mateusz Piasecki
 
 ## Cel i opis projektu
 
